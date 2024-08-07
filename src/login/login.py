@@ -5,15 +5,14 @@ class Login():
 
     def __init__(self) -> None:
         self.res_path = 'res/'
-        self.app = CTk()
+        self.app = CTk("PlayNexus")
         self.app.geometry("600x480")
         self.app.resizable(0,0)
-        
+
         side_img_data = Image.open(self.res_path + "side-img.png")
         email_icon_data = Image.open(self.res_path + "email-icon.png")
         password_icon_data = Image.open(self.res_path + "password-icon.png")
         google_icon_data = Image.open(self.res_path + "google-icon.png")
-        
 
         self.side_img = CTkImage(dark_image=side_img_data, light_image=side_img_data, size=(300, 480))
         self.email_icon = CTkImage(dark_image=email_icon_data, light_image=email_icon_data, size=(20,20))
