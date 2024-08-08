@@ -6,7 +6,7 @@
 
 > NOTA:
 >
-> Para o README em inglês, clique aqui: [![en](https://img.shields.io/badge/lang-en-green.svg)](./README.md)
+> Para o README em inglês, clique aqui: [![en](https://img.shields.io/badge/lang-en-green.svg)](../README.md)
 
 ## Introdução
 
