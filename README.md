@@ -66,5 +66,14 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 >
 > - Eu como usuário gostaria que outros usuários pudessem vizualizar em meu perfil os jogos que eu tenho em minha biblioteca e quais eu tenho jogado recentemente.
 
-## Backlog da sprint
+## Backlog da 1ª sprint
 
+> - Eu como administrador gostaria de cadastrar um jogo.
+>
+> - Eu como usuário gostaria de criar uma conta.
+>
+> - Eu como usuário gostaria de comprar um jogo na loja.
+>
+> - Eu como usuário gostaria de visualizar os jogos que estão na minha biblioteca.
+>
+> - Eu como usuário gostaria de iniciar um jogo da minha biblioteca.
