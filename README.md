@@ -13,8 +13,10 @@
 
 PlayNexus is an open-source Steam clone developed in Python 3.11.2+. The project aims to provide users with a comprehensive game management platform that allows them to:
 
-- Manage their game library (add, remove, edit games)
-- Launch games from various sources (local and non-local)
+- Browse and purchase computer games in a user-friendly store;
+- Manage their game library (list, add, remove and edit);
+- Create a custom profile and interact with other players;
+- And play a countless games and have fun like never before.
 
 The graphical interface is built using `customtkinter` to ensure a user-friendly experience. The backend is powered by a MySQL database.
 
