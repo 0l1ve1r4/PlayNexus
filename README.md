@@ -22,11 +22,11 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 
 ## Project Devs
 
-| Category   | Name               |
-|------------|--------------------|
-| ALL        | Guilherme Santos   |
-| BACK-END   | Lucas, Franklin    |
-| FRONT-END  | Arthur, Mateus     |
+| Category  | Name             |
+| --------- | ---------------- |
+| ALL       | Guilherme Santos |
+| BACK-END  | Lucas, Franklin  |
+| FRONT-END | Arthur, Mateus   |
 
 ## Structure
 
@@ -38,6 +38,7 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 │   ├── main.py
 └── run.sh                  # Main running file
 ```
+
 ## Backlog do produto
 
 > - Eu como administrador gostaria de cadastrar um jogo.
@@ -79,3 +80,7 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 > - Eu como usuário gostaria de visualizar os jogos que estão na minha biblioteca.
 >
 > - Eu como usuário gostaria de iniciar um jogo da minha biblioteca.
+>
+> - Eu como usuário gostaria de visualizar o meu progresso em cada jogo
+>
+> - Eu como administrador gostaria de poder atualizar os jogos
