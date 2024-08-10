@@ -39,48 +39,49 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 └── run.sh                  # Main running file
 ```
 
-## Backlog do produto
+## Product Backlog
 
-> - Eu como administrador gostaria de cadastrar um jogo.
->
-> - Eu como administrador gostaria de buscar um jogo cadastrado.
->
-> - Eu como administrador gostaria de vizualizar informações sobre um jogo cadastrado, incluindo informações de quantidade de vendas e receita gerada.
->
-> - Eu como usuário gostaria de criar uma conta.
->
-> - Eu como usuário gostaria de buscar um jogo na loja.
->
-> - Eu como usuário gostaria de vizualizar informações sobre um jogo na loja.
->
-> - Eu como usuário gostaria de comprar um jogo na loja.
->
-> - Eu como usuário gostaria de visualizar meu carrinho de compras na loja.
->
-> - Eu como usuário gostaria de visualizar os jogos que estão na minha biblioteca.
->
-> - Eu como usuário gostaria de iniciar um jogo da minha biblioteca.
->
-> - Eu como usuário gostaria de ter um perfil visivel a outros usuáios.
->
-> - Eu como usuário gostaria de buscar o perfil de outros usuários.
->
-> - Eu como usuário gostaria de personalizar meu perfil.
->
-> - Eu como usuário gostaria que outros usuários pudessem vizualizar em meu perfil os jogos que eu tenho em minha biblioteca e quais eu tenho jogado recentemente.
+> * As an administrator, I would like to register a game.
+> * As an administrator, I would like to search for a registered game.
+> * As an administrator, I would like to view information about a registered game, including sales quantity and revenue generated.
+> * As a user, I would like to create an account.
+> * As a user, I would like to search for a game in the store.
+> * As a user, I would like to view information about a game in the store.
+> * As a user, I would like to purchase a game in the store.
+> * As a user, I would like to view my shopping cart in the store.
+> * As a user, I would like to view the games that are in my library.
+> * As a user, I would like to start a game from my library.
+> * As a user, I would like to have a profile visible to other users.
+> * As a user, I would like to search for other users' profiles.
+> * As a user, I would like to customize my profile.
+> * As a user, I would like other users to be able to view on my profile the games I have in my library and which ones I have recently played.
 
-## Backlog da 1ª sprint
+## Sprint 1 Backlog
 
-> - Eu como administrador gostaria de cadastrar um jogo.
->
-> - Eu como usuário gostaria de criar uma conta.
->
-> - Eu como usuário gostaria de comprar um jogo na loja.
->
-> - Eu como usuário gostaria de visualizar os jogos que estão na minha biblioteca.
->
-> - Eu como usuário gostaria de iniciar um jogo da minha biblioteca.
->
-> - Eu como usuário gostaria de visualizar o meu progresso em cada jogo
->
-> - Eu como administrador gostaria de poder atualizar os jogos
+> * **As an administrator, I would like to register a game.**
+>   * Structure the database to store game information
+>   * Create the game registration form in the graphical interface
+>   * Implement validations in the game registration form
+>   * Develop the backend logic to process game registration
+>   * Conduct tests and adjustments to ensure the game registration process works correctly
+> * **As a user, I would like to create an account.**
+>   * Structure the database for storing user accounts
+>   * Develop the user account creation interface
+>   * Implement necessary validations to ensure input data is correct
+>   * Develop the backend logic to process user account creation
+>   * Test the account creation process to ensure it works properly
+> * **As a user, I would like to purchase a game in the store.**
+>   * Structure the database to store purchase information
+>   * Develop the game purchase interface in the store
+>   * Implement the backend logic to process purchases
+>   * Test the entire purchase process to ensure it works correctly
+> * **As a user, I would like to view the games that are in my library.**
+>   * Configure the database to store information about the games in the user's library
+>   * Create the interface to view the user's game library
+>   * Develop the backend logic to manage the viewing of the game library
+>   * Conduct tests to ensure the game library is displayed correctly
+> * **As a user, I would like to start a game from my library.**
+>   * Structure the database to store game installation information
+>   * Develop the interface to start games from the library
+>   * Implement the backend logic to enable game launching from the library
+>   * Test and adjust the game launching process to ensure it works correctly
