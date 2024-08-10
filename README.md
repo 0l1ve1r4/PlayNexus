@@ -56,32 +56,42 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 > * As a user, I would like to customize my profile.
 > * As a user, I would like other users to be able to view on my profile the games I have in my library and which ones I have recently played.
 
-## Sprint 1 Backlog
 
-> * **As an administrator, I would like to register a game.**
->   * Structure the database to store game information
->   * Create the game registration form in the graphical interface
->   * Implement validations in the game registration form
->   * Develop the backend logic to process game registration
->   * Conduct tests and adjustments to ensure the game registration process works correctly
-> * **As a user, I would like to create an account.**
->   * Structure the database for storing user accounts
->   * Develop the user account creation interface
->   * Implement necessary validations to ensure input data is correct
->   * Develop the backend logic to process user account creation
->   * Test the account creation process to ensure it works properly
-> * **As a user, I would like to purchase a game in the store.**
->   * Structure the database to store purchase information
->   * Develop the game purchase interface in the store
->   * Implement the backend logic to process purchases
->   * Test the entire purchase process to ensure it works correctly
-> * **As a user, I would like to view the games that are in my library.**
->   * Configure the database to store information about the games in the user's library
->   * Create the interface to view the user's game library
->   * Develop the backend logic to manage the viewing of the game library
->   * Conduct tests to ensure the game library is displayed correctly
-> * **As a user, I would like to start a game from my library.**
->   * Structure the database to store game installation information
->   * Develop the interface to start games from the library
->   * Implement the backend logic to enable game launching from the library
->   * Test and adjust the game launching process to ensure it works correctly
+## 1st Sprint Backlog
+
+> #### **As an administrator, I would like to register a game.**
+>
+> * Structure the database to store game information | **Lucas**
+> * Create the game registration form in the graphical interface | **Mateus**
+> * Implement validations in the game registration form | **Arthur**
+> * Develop the backend logic to process game registration | **Franklin**
+> * Perform tests and adjustments to ensure the game registration process works correctly | **Guilherme Santos**
+
+> #### **As a user, I would like to create an account.**
+>
+> * Structure the database to store user accounts | **Lucas**
+> * Develop the user account creation interface | **Arthur**
+> * Implement the necessary validations to ensure the input data is correct | **Mateus**
+> * Develop the backend logic to process user account creation | **Franklin**
+> * Test the user account creation process to ensure its functionality | **Guilherme Santos**
+
+> #### **As a user, I would like to buy a game in the store.**
+>
+> * Structure the database to store purchase information | **Franklin**
+> * Develop the game purchase interface in the store | **Mateus and Arthur**
+> * Implement the backend logic to process purchases | **Lucas**
+> * Test the entire purchase process to ensure it is working correctly | **Guilherme Santos**
+
+> #### **As a user, I would like to view the games that are in my library.**
+>
+> * Configure the database to store the user's library game information | **Lucas**
+> * Create the interface to view the user's game library | **Mateus and Arthur**
+> * Develop the backend logic to manage the game library view | **Franklin**
+> * Perform tests to ensure the game library is displayed correctly | **Guilherme Santos**
+
+> #### **As a user, I would like to start a game from my library.**
+>
+> * Structure the database to store game installation information | **Lucas**
+> * Develop the interface to start games from the library | **Mateus and Arthur**
+> * Implement the backend logic to allow game initialization from the library | **Franklin**
+> * Test and adjust the game initialization process to ensure it works correctly | **Guilherme Santos**

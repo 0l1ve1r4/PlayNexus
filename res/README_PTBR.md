@@ -53,32 +53,42 @@ A interface gráfica é construída usando `customtkinter` para garantir uma exp
 > * Eu como usuário gostaria de personalizar meu perfil.
 > * Eu como usuário gostaria que outros usuários pudessem vizualizar em meu perfil os jogos que eu tenho em minha biblioteca e quais eu tenho jogado recentemente.
 
-## Backlog da 1ª sprint
 
-> * **Eu como administrador gostaria de cadastrar um jogo.**
->   * Estruturar o banco de dados para armazenar as informações dos jogos
->   * Criar o formulário de cadastro de jogos na interface gráfica
->   * Implementar validações no formulário de cadastro de jogos
->   * Desenvolver a lógica no backend para processar o cadastro dos jogos
->   * Realizar testes e ajustes para garantir que o processo de cadastro de jogos funcione corretamente
-> * **Eu como usuário gostaria de criar uma conta.**
->   * Criar a estrutura do banco de dados para armazenamento de contas de usuários
->   * Desenvolver a interface de criação de contas de usuário
->   * Implementar as validações necessárias para garantir que os dados de entrada sejam corretos
->   * Desenvolver a lógica no backend para processar a criação de contas de usuários
->   * Testar o processo de criação de contas de usuários para assegurar seu funcionamento
-> * **Eu como usuário gostaria de comprar um jogo na loja.**
->   * Estruturar o banco de dados para armazenar informações sobre as compras
->   * Desenvolver a interface de compra de jogos na loja
->   * Implementar a lógica no backend para processar as compras
->   * Testar todo o processo de compra para garantir que esteja funcionando corretamente
-> * **Eu como usuário gostaria de visualizar os jogos que estão na minha biblioteca.**
->   * Configurar o banco de dados para armazenar as informações dos jogos na biblioteca do usuário
->   * Criar a interface de visualização da biblioteca de jogos do usuário
->   * Desenvolver a lógica no backend para gerenciar a visualização da biblioteca de jogos
->   * Realizar testes para garantir que a biblioteca de jogos seja exibida corretamente
-> * **Eu como usuário gostaria de iniciar um jogo da minha biblioteca.**
->   * Estruturar o banco de dados para armazenar as informações de instalação dos jogos
->   * Desenvolver a interface para iniciar jogos a partir da biblioteca
->   * Implementar a lógica no backend para permitir a inicialização de jogos da biblioteca
->   * Testar e ajustar o processo de inicialização dos jogos para garantir que funcione corretamente
+## Backlog da 1ª Sprint
+
+> #### **Eu como administrador gostaria de cadastrar um jogo.**
+>
+> * Estruturar o banco de dados para armazenar as informações dos jogos | **Lucas**
+> * Criar o formulário de cadastro de jogos na interface gráfica | **Mateus**
+> * Implementar validações no formulário de cadastro de jogos | **Arthur**
+> * Desenvolver a lógica no backend para processar o cadastro dos jogos | **Franklin**
+> * Realizar testes e ajustes para garantir que o processo de cadastro de jogos funcione corretamente | **Guilherme Santos**
+
+> #### **Eu como usuário gostaria de criar uma conta.**
+>
+> * Criar a estrutura do banco de dados para armazenamento de contas de usuários | **Lucas**
+> * Desenvolver a interface de criação de contas de usuário | **Arthur**
+> * Implementar as validações necessárias para garantir que os dados de entrada sejam corretos | **Mateus**
+> * Desenvolver a lógica no backend para processar a criação de contas de usuários | **Franklin**
+> * Testar o processo de criação de contas de usuários para assegurar seu funcionamento | **Guilherme Santos**
+
+> #### **Eu como usuário gostaria de comprar um jogo na loja.**
+>
+> * Estruturar o banco de dados para armazenar informações sobre as compras | **Franklin**
+> * Desenvolver a interface de compra de jogos na loja | **Mateus e Arthur**
+> * Implementar a lógica no backend para processar as compras | **Lucas**
+> * Testar todo o processo de compra para garantir que esteja funcionando corretamente | **Guilherme Santos**
+
+> #### **Eu como usuário gostaria de visualizar os jogos que estão na minha biblioteca.**
+>
+> * Configurar o banco de dados para armazenar as informações dos jogos na biblioteca do usuário | **Lucas**
+> * Criar a interface de visualização da biblioteca de jogos do usuário | **Mateus e Arthur**
+> * Desenvolver a lógica no backend para gerenciar a visualização da biblioteca de jogos | **Franklin**
+> * Realizar testes para garantir que a biblioteca de jogos seja exibida corretamente | **Guilherme Santos**
+
+> #### **Eu como usuário gostaria de iniciar um jogo da minha biblioteca.**
+>
+> * Estruturar o banco de dados para armazenar as informações de instalação dos jogos | **Lucas**
+> * Desenvolver a interface para iniciar jogos a partir da biblioteca | **Mateus e Arthur**
+> * Implementar a lógica no backend para permitir a inicialização de jogos da biblioteca | **Franklin**
+> * Testar e ajustar o processo de inicialização dos jogos para garantir que funcione corretamente | **Guilherme Santos**
