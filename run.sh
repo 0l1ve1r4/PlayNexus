@@ -25,12 +25,6 @@ License
 
 VENV_DIR="venv"
 
-# If new libs are added, put them here
-EXTERNAL_LIBRARIES=(
-  "customtkinter==5.2.2" \
-  "pillow==10.4.0"
-)               
-
 # Color codes for debug messages
 DEBUG_COLOR="\033[0;36m"  
 ERROR_COLOR="\033[0;31m"  
@@ -87,15 +81,7 @@ create_and_activate_venv() {
 }
 
 install_libs(){
-  for lib in "${EXTERNAL_LIBRARIES[@]}"; do
-    pip install $lib > /dev/null
-    if [ $? -eq 0 ]; then
-      _debug "Installed $lib successfully." 0
-    else
-      _debug "Failed to install $lib." 1
-      return 1
-    fi
-  done
+  pip install -r requirements.txt
 }
 
 # ================== Main ==================
