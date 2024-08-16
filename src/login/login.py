@@ -1,56 +1,103 @@
 import customtkinter as ctk
+
 from PIL import Image
+from typing import Tuple
 
-class Login():
-
+class Login:
     def __init__(self) -> None:
         self.res_path = 'res/'
         self.app = ctk.CTk()
         self.app.geometry("600x480")
-        self.app.resizable(0,0)
+        self.app.resizable(False, False)
         self.app.title("PlayNexus | Login")
 
-        side_img_data = Image.open(self.res_path + "side-img.png")
-        email_icon_data = Image.open(self.res_path + "email-icon.png")
-        password_icon_data = Image.open(self.res_path + "password-icon.png")
-        google_icon_data = Image.open(self.res_path + "google-icon.png")
+        self.side_img = self.load_image("side-img.png", (300, 480))
+        self.email_icon = self.load_image("email-icon.png", (20, 20))
+        self.password_icon = self.load_image("password-icon.png", (17, 17))
+        self.google_icon = self.load_image("google-icon.png", (17, 17))
 
-        self.side_img = ctk.CTkImage(dark_image=side_img_data, light_image=side_img_data, size=(300, 480))
-        self.email_icon = ctk.CTkImage(dark_image=email_icon_data, light_image=email_icon_data, size=(20,20))
-        self.password_icon = ctk.CTkImage(dark_image=password_icon_data, light_image=password_icon_data, size=(17,17))
-        self.google_icon = ctk.CTkImage(dark_image=google_icon_data, light_image=google_icon_data, size=(17,17))
+        self.missed_attempts = 0
+        self.is_logged_in = False
+        self.name_str = "Example Name"
+        self.email_str = ""
+        self.passw_str = ""
 
-        pass
+        self.create_widgets()
 
-    def run(self):
+    def load_image(self, filename: str, size: tuple) -> ctk.CTkImage:
+        """Load and return a CTkImage object with the specified size."""
+        image_data = Image.open(self.res_path + filename)
+        return ctk.CTkImage(dark_image=image_data, light_image=image_data, size=size)
+
+    def create_widgets(self) -> None:
+        """Create and place all widgets in the window."""
         ctk.CTkLabel(master=self.app, text="", image=self.side_img).pack(expand=True, side="left")
 
         frame = ctk.CTkFrame(master=self.app, width=300, height=480, fg_color="#ffffff")
-        frame.pack_propagate(0)
+        frame.pack_propagate(False)
         frame.pack(expand=True, side="right")
 
-        ctk.CTkLabel(master=frame, text="Welcome Back!", text_color="#601E88", anchor="w", justify="left", font=("Arial Bold", 24)).pack(anchor="w", pady=(50, 5), padx=(25, 0))
-        ctk.CTkLabel(master=frame, text="Sign in to your account", text_color="#7E7E7E", anchor="w", justify="left", font=("Arial Bold", 12)).pack(anchor="w", padx=(25, 0))
+        # Welcome and instructions
+        ctk.CTkLabel(master=frame, text="Welcome Back!", text_color="#601E88", anchor="w",
+                     justify="left", font=("Arial Bold", 24)).pack(anchor="w", pady=(50, 5), padx=(25, 0))
+        ctk.CTkLabel(master=frame, text="Sign in to your account", text_color="#7E7E7E", anchor="w",
+                     justify="left", font=("Arial Bold", 12)).pack(anchor="w", padx=(25, 0))
 
-        ctk.CTkLabel(master=frame, text="  Email:", text_color="#601E88", anchor="w", justify="left", font=("Arial Bold", 14), image=self.email_icon, compound="left").pack(anchor="w", pady=(38, 0), padx=(25, 0))
-        self.email_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88", border_width=1, text_color="#000000")
+        # Email entry
+        ctk.CTkLabel(master=frame, text="  Email:", text_color="#601E88", anchor="w", justify="left",
+                     font=("Arial Bold", 14), image=self.email_icon, compound="left").pack(anchor="w", pady=(38, 0), padx=(25, 0))
+        self.email_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88",
+                                        border_width=1, text_color="#000000")
         self.email_entry.pack(anchor="w", padx=(25, 0))
 
-        ctk.CTkLabel(master=frame, text="  Password:", text_color="#601E88", anchor="w", justify="left", font=("Arial Bold", 14), image=self.password_icon, compound="left").pack(anchor="w", pady=(21, 0), padx=(25, 0))
-        self.passw_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88", border_width=1, text_color="#000000", show="*")
+        # Password entry
+        ctk.CTkLabel(master=frame, text="  Password:", text_color="#601E88", anchor="w", justify="left",
+                     font=("Arial Bold", 14), image=self.password_icon, compound="left").pack(anchor="w", pady=(21, 0), padx=(25, 0))
+        self.passw_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88",
+                                        border_width=1, text_color="#000000", show="*")
         self.passw_entry.pack(anchor="w", padx=(25, 0))
 
-        login_button = ctk.CTkButton(master=frame, text="Login", fg_color="#601E88", hover_color="#E44982", font=("Arial Bold", 12), text_color="#ffffff", width=225, command=self.check_credentials)
+        # Error message label
+        self.error_label = ctk.CTkLabel(master=frame, text="Wrong email or password", text_color="#FF0000",
+                                       anchor="w", justify="left", font=("Arial Bold", 12))
+        self.error_label.pack(anchor="w", padx=(25, 0))
+        self.error_label.pack_forget()  # Hide initially
+
+        # Login button
+        login_button = ctk.CTkButton(master=frame, text="Login", fg_color="#601E88", hover_color="#E44982",
+                                     font=("Arial Bold", 12), text_color="#ffffff", width=225, command=self.check_credentials)
         login_button.pack(anchor="w", pady=(40, 0), padx=(25, 0))
-        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#EEEEEE", hover_color="#EEEEEE", font=("Arial Bold", 9), text_color="#601E88", width=225, image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(25, 0))
 
-        self.app.mainloop()
+        # Signup and Google buttons
+        ctk.CTkButton(master=frame, text="Sign up", fg_color="#ffffff", hover_color="#E44982",
+                      font=("Arial Bold", 12), text_color="#601E88", width=225).pack(anchor="w", pady=(20, 0), padx=(25, 0))
+        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#EEEEEE", hover_color="#EEEEEE",
+                      font=("Arial Bold", 9), text_color="#601E88", width=225, image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(25, 0))
 
-    # Check the frames in the database
     def check_credentials(self) -> None:
-        email_str = self.email_entry.get()
-        passw_str = self.passw_entry.get()
+        """Check the credentials and display error if necessary."""
+        self.email_str = self.email_entry.get()
+        self.passw_str = self.passw_entry.get()
 
-        print(f"Email: {email_str}, passw: {passw_str}")
+        # Replace the following line with actual authentication logic
+        wrong_credentials = not self.authenticate_user(self.email_str, self.passw_str)
 
-        pass
+        if wrong_credentials:
+            self.error_label.pack()
+        else:
+            self.error_label.pack_forget()
+            self.break_loop()
+
+    def authenticate_user(self, email: str, password: str) -> bool:
+        """Return true if founded in database, false otherwise."""
+        print(f"Email: {email}, Password: {password}")    
+        self.is_logged_in = True
+
+        if email == "admin" and password == "admin":
+            return True
+
+        return False
+
+    def break_loop(self) -> None:
+        """Break and return with user credentials."""   
+        self.app.destroy()  
