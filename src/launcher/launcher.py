@@ -2,6 +2,8 @@ import customtkinter as ctk
 import os as os
 from PIL import Image
 
+ctk.set_default_color_theme("res/themes/purple.json")
+
 class Launcher:
     def __init__(self) -> None:
         """Main class for the launcher application"""
