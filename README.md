@@ -6,8 +6,11 @@
 # PlayNexus
 
 
-![](res/_login_figma.png)
-![Alt text](res/_launcher_figma.png)
+<div style="display: flex;">
+    <img src="res/_login_figma.png" alt="Login Figma" style="width: 50%; margin-right: 10px;">
+    <img src="res/_launcher_figma.png" alt="Launcher Figma" style="width: 50%;">
+</div>
+
 
 
 > NOTA:
