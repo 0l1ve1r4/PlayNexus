@@ -11,16 +11,19 @@ class Launcher:
         self.create_main_view()
         self.app.mainloop()
 
+
     def configure_app(self) -> None:
         """Configure the main application window"""
         self.app.geometry("856x645")
         self.app.resizable(0, 0)
-        ctk.set_appearance_mode("light")
+        ctk.set_appearance_mode("dark")
         self.res_path = "res/"
+        self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
+
 
     def create_sidebar(self) -> None:
         """Create the sidebar frame with the logo and buttons"""
-        self.sidebar_frame = ctk.CTkFrame(master=self.app, fg_color="#302c2c", width=240, height=650, corner_radius=0)
+        self.sidebar_frame = ctk.CTkFrame(master=self.app, fg_color="#2a2a2a", width=240, height=650, corner_radius=0)
         self.sidebar_frame.pack_propagate(0)
         self.sidebar_frame.pack(fill="y", anchor="w", side="left")
 
@@ -30,15 +33,15 @@ class Launcher:
     def add_logo(self) -> None:
         """Add the logo image to the sidebar"""
         logo_img_data = Image.open(self.res_path + "primary-logo-white.png")
-        logo_img = ctk.CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(150, 50))
-        ctk.CTkLabel(master=self.sidebar_frame, text="", image=logo_img).pack(fill="x",pady=(38, 0), anchor="center")
+        logo_img = ctk.CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(182, 34))
+        ctk.CTkLabel(master=self.sidebar_frame, text="", image=logo_img).pack(fill="x",pady=(24, 0), anchor="center")
 
     def add_buttons(self) -> None:
         """Add the buttons to the sidebar"""
         button_data = [
-            ("analytics_icon.png", "Store", "transparent", "#201c1c", 60),
-            ("secondary-logo-colored.png", "Library", "transparent", "#201c1c", 16),
-            ("list_icon.png", "Downloads", "transparent", "#201c1c", 16),
+            ("home-smile.png", "Store", "transparent", "#201c1c", 60),
+            ("backpack.png", "Library", "transparent", "#201c1c", 16),
+            ("download.png", "Downloads", "transparent", "#201c1c", 16),
             ("settings_icon.png", "Settings", "transparent", "#201c1c", 16),
             ("person_icon.png", "Account", "transparent", "#201c1c", 160)
         ]

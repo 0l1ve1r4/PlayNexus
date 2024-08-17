@@ -7,11 +7,13 @@ class Login:
     def __init__(self) -> None:
         self.res_path = 'res/'
         self.app = ctk.CTk()
-        self.app.geometry("600x480")
+        self.app.geometry("300x480")
         self.app.resizable(False, False)
         self.app.title("PlayNexus | Login")
+        self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
 
-        self.side_img = self.load_image("side-img.png", (300, 480))
+        #self.side_img = self.load_image("side-img.png", (300, 480))
+        self.login_logo = self.load_image("secondary-logo-white.png", (42, 38))
         self.email_icon = self.load_image("email-icon.png", (20, 20))
         self.password_icon = self.load_image("password-icon.png", (17, 17))
         self.google_icon = self.load_image("google-icon.png", (17, 17))
@@ -31,31 +33,34 @@ class Login:
 
     def create_widgets(self) -> None:
         """Create and place all widgets in the window."""
-        ctk.CTkLabel(master=self.app, text="", image=self.side_img).pack(expand=True, side="left")
+        #ctk.CTkLabel(master=self.app, text="", image=self.side_img).pack(expand=True, side="left")
 
-        frame = ctk.CTkFrame(master=self.app, width=300, height=480, fg_color="#ffffff")
+        frame = ctk.CTkFrame(master=self.app, width=300, height=480, fg_color="#1a1a1a")
         frame.pack_propagate(False)
-        frame.pack(expand=True, side="right")
+        frame.pack(expand=True, fill="both")
+
+        self.login_logo = self.load_image("secondary-logo-white.png", (42, 38))
+        ctk.CTkLabel(master=frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24,0), pady=(24, 0))
 
         # Welcome and instructions
-        ctk.CTkLabel(master=frame, text="Welcome Back!", text_color="#601E88", anchor="w",
-                     justify="left", font=("Arial Bold", 24)).pack(anchor="w", pady=(50, 5), padx=(25, 0))
-        ctk.CTkLabel(master=frame, text="Sign in to your account", text_color="#7E7E7E", anchor="w",
-                     justify="left", font=("Arial Bold", 12)).pack(anchor="w", padx=(25, 0))
+        ctk.CTkLabel(master=frame, text="Welcome Back!", text_color="#ffffff", anchor="w",
+                     justify="left", font=("Arial Bold", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 0))
+        ctk.CTkLabel(master=frame, text="Sign in to your account", text_color="#b3b3b3", anchor="w",
+                     justify="left", font=("Arial Bold", 12)).pack(anchor="w", pady=(0,0), padx=(24, 0))
 
         # Email entry
-        ctk.CTkLabel(master=frame, text="  Email:", text_color="#601E88", anchor="w", justify="left",
-                     font=("Arial Bold", 14), image=self.email_icon, compound="left").pack(anchor="w", pady=(38, 0), padx=(25, 0))
+        ctk.CTkLabel(master=frame, text="  Email", text_color="#ffffff", anchor="w", justify="left",
+                     font=("Arial Bold", 12), image=self.email_icon, compound="left").pack(anchor="w", pady=(32, 0), padx=(24, 0))
         self.email_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88",
                                         border_width=1, text_color="#000000")
-        self.email_entry.pack(anchor="w", padx=(25, 0))
+        self.email_entry.pack(anchor="w", padx=(24, 0))
 
         # Password entry
-        ctk.CTkLabel(master=frame, text="  Password:", text_color="#601E88", anchor="w", justify="left",
-                     font=("Arial Bold", 14), image=self.password_icon, compound="left").pack(anchor="w", pady=(21, 0), padx=(25, 0))
+        ctk.CTkLabel(master=frame, text="  Password:", text_color="#ffffff", anchor="w", justify="left",
+                     font=("Arial Bold", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
         self.passw_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88",
                                         border_width=1, text_color="#000000", show="*")
-        self.passw_entry.pack(anchor="w", padx=(25, 0))
+        self.passw_entry.pack(anchor="w", padx=(24, 0))
 
         # Error message label
         self.error_label = ctk.CTkLabel(master=frame, text="Wrong email or password", text_color="#FF0000",
