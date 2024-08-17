@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import threading 
 import os as os
 
 from PIL import Image
@@ -28,6 +29,12 @@ class Login:
         self.passw_str = ""
 
         self.create_widgets()
+
+    def handle_enter(self, event : str) -> None:
+        """Handle the Enter key press event."""
+        print(f"{event} pressed")
+        self.check_credentials()
+
 
     def load_image(self, filename: str, size: tuple) -> ctk.CTkImage:
         """Load and return a CTkImage object with the specified size."""
@@ -80,6 +87,10 @@ class Login:
         ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#fff", hover_color="#fff",
                       font=("Arial Bold", 12), text_color="#000", image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(24, 24), fill="x")
 
+        self.handle_enter("<Return>")
+        self.app.bind("<Return>", self.handle_enter)
+        
+
     def check_credentials(self) -> None:
         """Check the credentials and display error if necessary."""
         self.email_str = self.email_entry.get()
@@ -88,6 +99,11 @@ class Login:
         # Replace the following line with actual authentication logic
         wrong_credentials = not self.authenticate_user(self.email_str, self.passw_str)
 
+        # If the user has missed the first attempt, allow one more without error message
+        if (wrong_credentials and self.missed_attempts == 0):
+            self.missed_attempts += 1
+            return
+        
         if wrong_credentials:
             self.error_label.pack()
         else:
