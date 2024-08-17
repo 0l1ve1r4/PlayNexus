@@ -2,12 +2,10 @@ import customtkinter as ctk
 import os as os
 from PIL import Image
 
-<<<<<<< HEAD
 ctk.set_default_color_theme("res/themes/purple.json")
-=======
 SIDE_BAR_COLOR = "#2a2a2a"
 MAIN_VIEW_COLOR = "#201c1c"
->>>>>>> ce4ea88 (Added:)
+
 
 class Launcher:
     def __init__(self) -> None:
