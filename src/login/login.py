@@ -3,6 +3,7 @@ import customtkinter as ctk
 from PIL import Image
 from typing import Tuple
 
+ctk.set_default_color_theme("res/themes/purple.json")
 class Login:
     def __init__(self) -> None:
         self.res_path = 'res/'
@@ -14,9 +15,9 @@ class Login:
 
         #self.side_img = self.load_image("side-img.png", (300, 480))
         self.login_logo = self.load_image("secondary-logo-white.png", (42, 38))
-        self.email_icon = self.load_image("email-icon.png", (20, 20))
-        self.password_icon = self.load_image("password-icon.png", (17, 17))
-        self.google_icon = self.load_image("google-icon.png", (17, 17))
+        self.email_icon = self.load_image("email-icon.png", (16, 16))
+        self.password_icon = self.load_image("password-icon.png", (16, 16))
+        self.google_icon = self.load_image("google-icon.png", (16, 16))
 
         self.missed_attempts = 0
         self.is_logged_in = False
@@ -35,7 +36,7 @@ class Login:
         """Create and place all widgets in the window."""
         #ctk.CTkLabel(master=self.app, text="", image=self.side_img).pack(expand=True, side="left")
 
-        frame = ctk.CTkFrame(master=self.app, width=300, height=480, fg_color="#1a1a1a")
+        frame = ctk.CTkFrame(master=self.app, width=300, height=480)
         frame.pack_propagate(False)
         frame.pack(expand=True, fill="both")
 
@@ -43,41 +44,39 @@ class Login:
         ctk.CTkLabel(master=frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24,0), pady=(24, 0))
 
         # Welcome and instructions
-        ctk.CTkLabel(master=frame, text="Welcome Back!", text_color="#ffffff", anchor="w",
-                     justify="left", font=("Arial Bold", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 0))
-        ctk.CTkLabel(master=frame, text="Sign in to your account", text_color="#b3b3b3", anchor="w",
-                     justify="left", font=("Arial Bold", 12)).pack(anchor="w", pady=(0,0), padx=(24, 0))
+        ctk.CTkLabel(master=frame, text="Welcome back!", anchor="w",
+                     justify="left", font=("Inter", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 24))
+        ctk.CTkLabel(master=frame, text="Sign in to your account", anchor="w",
+                     justify="left").pack(anchor="w", pady=(0,0), padx=(24, 24))
 
         # Email entry
-        ctk.CTkLabel(master=frame, text="  Email", text_color="#ffffff", anchor="w", justify="left",
-                     font=("Arial Bold", 12), image=self.email_icon, compound="left").pack(anchor="w", pady=(32, 0), padx=(24, 0))
-        self.email_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88",
-                                        border_width=1, text_color="#000000")
-        self.email_entry.pack(anchor="w", padx=(24, 0))
+        ctk.CTkLabel(master=frame, text="  Email", anchor="w", justify="left",
+                     image=self.email_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 24))
+        self.email_entry = ctk.CTkEntry(master=frame, border_width=2, placeholder_text="Enter your email")
+        self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Password entry
-        ctk.CTkLabel(master=frame, text="  Password:", text_color="#ffffff", anchor="w", justify="left",
+        ctk.CTkLabel(master=frame, text="  Password:", anchor="w", justify="left",
                      font=("Arial Bold", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=frame, width=225, fg_color="#EEEEEE", border_color="#601E88",
-                                        border_width=1, text_color="#000000", show="*")
-        self.passw_entry.pack(anchor="w", padx=(24, 0))
+        self.passw_entry = ctk.CTkEntry(master=frame,
+                                        border_width=2, show="*", placeholder_text="Enter your password")
+        self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Error message label
         self.error_label = ctk.CTkLabel(master=frame, text="Wrong email or password", text_color="#FF0000",
-                                       anchor="w", justify="left", font=("Arial Bold", 12))
+                                       anchor="w", justify="left")
         self.error_label.pack(anchor="w", padx=(25, 0))
         self.error_label.pack_forget()  # Hide initially
 
         # Login button
-        login_button = ctk.CTkButton(master=frame, text="Login", fg_color="#601E88", hover_color="#E44982",
-                                     font=("Arial Bold", 12), text_color="#ffffff", width=225, command=self.check_credentials)
-        login_button.pack(anchor="w", pady=(40, 0), padx=(25, 0))
+        login_button = ctk.CTkButton(master=frame, text="Login", command=self.check_credentials)
+        login_button.pack(anchor="w", pady=(32, 8), padx=(24, 24), fill="x")
 
         # Signup and Google buttons
-        ctk.CTkButton(master=frame, text="Sign up", fg_color="#ffffff", hover_color="#E44982",
-                      font=("Arial Bold", 12), text_color="#601E88", width=225).pack(anchor="w", pady=(20, 0), padx=(25, 0))
-        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#EEEEEE", hover_color="#EEEEEE",
-                      font=("Arial Bold", 9), text_color="#601E88", width=225, image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(25, 0))
+        ctk.CTkButton(master=frame, text="Sign up", fg_color="#2a2a2a", hover_color="#4d4d4d",
+                      font=("Arial Bold", 12), text_color="#fff", border_width=2, border_color="#b3b3b3").pack(anchor="w", pady=(0, 0), padx=(24, 24), fill="x")
+        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#fff", hover_color="#fff",
+                      font=("Arial Bold", 12), text_color="#000", image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(24, 24), fill="x")
 
     def check_credentials(self) -> None:
         """Check the credentials and display error if necessary."""
