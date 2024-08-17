@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import os as os
 from PIL import Image
 
 class Launcher:
@@ -18,7 +19,9 @@ class Launcher:
         self.app.resizable(0, 0)
         ctk.set_appearance_mode("dark")
         self.res_path = "res/"
-        self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
+
+        if (os.name == "nt"):
+            self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
 
 
     def create_sidebar(self) -> None:

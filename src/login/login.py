@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import os as os
 
 from PIL import Image
 from typing import Tuple
@@ -10,7 +11,8 @@ class Login:
         self.app.geometry("300x480")
         self.app.resizable(False, False)
         self.app.title("PlayNexus | Login")
-        self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
+        if (os.name == "nt"):
+            self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
 
         #self.side_img = self.load_image("side-img.png", (300, 480))
         self.login_logo = self.load_image("secondary-logo-white.png", (42, 38))

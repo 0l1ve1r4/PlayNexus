@@ -5,6 +5,11 @@
 
 # PlayNexus
 
+
+![](res/_login_figma.png)
+![Alt text](res/_launcher_figma.png)
+
+
 > NOTA:
 >
 > Para este arquivo em Português, clique aqui no ícone acima.
