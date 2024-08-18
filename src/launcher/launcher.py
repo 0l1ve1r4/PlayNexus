@@ -1,7 +1,11 @@
 import customtkinter as ctk
+import os as os
 from PIL import Image
 
 ctk.set_default_color_theme("res/themes/purple.json")
+SIDE_BAR_COLOR = "#2a2a2a"
+MAIN_VIEW_COLOR = "#201c1c"
+
 
 class Launcher:
     def __init__(self) -> None:
@@ -22,7 +26,9 @@ class Launcher:
         self.app.resizable(0, 0)
         ctk.set_appearance_mode("dark")
         self.res_path = "res/"
-        self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
+
+        if (os.name == "nt"):
+            self.app.iconbitmap(self.res_path + 'secondary-logo-colored.ico')
 
 
     def create_sidebar(self) -> None:
@@ -65,8 +71,6 @@ class Launcher:
 
         ctk.CTkLabel(master=self.sidebar_frame, text="", fg_color="#302c2c").pack(expand=True)
 
-<<<<<<< Updated upstream
-=======
     def create_search_bar(self, master: ctk.CTkFrame) -> None:
         """Create the first line of the main view with a search bar and a button."""
         self.first_line = ctk.CTkFrame(master=master, fg_color="transparent")
@@ -78,13 +82,13 @@ class Launcher:
 
         search_button = ctk.CTkButton(master=self.first_line, height=30, text="Search",
                                     font=("Roboto Medium", 12), text_color="#ffffff", width=225, command=self.search_in_store)
-        search_button.pack(anchor="w", padx=(10, 0))
 
     def create_labels_and_content(self, master):
         """Creates labels and content sections."""
 
         ctk.CTkLabel(master=master, text="Recently added", text_color="#ffffff", anchor="w",
                     justify="left", font=("Roboto Medium", 24)).pack(anchor="w", pady=(30, 10), padx=(0, 0))
+
         
         # Container frame for recently added games
         recently_added_frame = ctk.CTkFrame(master, fg_color="transparent")
@@ -105,6 +109,7 @@ class Launcher:
         for _ in tabs:
             ctk.CTkButton(master=tabs_frame, text=_, fg_color="transparent", text_color="#ffffff", 
                           font=("Roboto", 24), hover_color=SIDE_BAR_COLOR).pack(side="left", padx=10, pady=(0, 0))
+
         
 
         self.show_games(tabs_frame)
@@ -127,20 +132,18 @@ class Launcher:
 
             ctk.CTkLabel(master=game_frame, text="Price", text_color="#ffffff", anchor="w",
                         justify="left", font=("Roboto Medium", 12)).pack(anchor="w", pady=(0, 0))
+     justify="left", font=("Arial Bold", 12)).pack(anchor="w", pady=(0, 0))
 
->>>>>>> Stashed changes
     def create_main_view(self) -> None:
-        """Create the main view frame with the title and content"""
+        """Create the main view frame with the title and content."""
         self.main_view = ctk.CTkFrame(master=self.app, fg_color="#201c1c", width=680, height=650, corner_radius=0)
         self.main_view.pack_propagate(0)
         self.main_view.pack(side="left")
 
-<<<<<<< Updated upstream
         self.title_frame = ctk.CTkFrame(master=self.main_view, fg_color="transparent")
         self.title_frame.pack(anchor="n", fill="x", padx=27, pady=(29, 0))
 
-        ctk.CTkLabel(master=self.title_frame, text="there should be something here", font=("Arial Black", 25), text_color="#302c2c").pack(anchor="nw", side="left")
-=======
+
         self.home_page()
 
     def search_in_store(self) -> None:
@@ -170,4 +173,11 @@ class Launcher:
             self.frames["library_page"] = self.library_frame
         else:
             self.frames["library_page"].pack(fill="both", expand=True)
->>>>>>> Stashed changes
+
+        self.create_search_bar(self.title_frame)
+
+        self.create_labels_and_content(self.title_frame)
+
+    def search_in_store(self) -> None:
+        """Search for a game in the store."""
+        pass
