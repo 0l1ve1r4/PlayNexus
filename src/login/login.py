@@ -57,7 +57,7 @@ class Login:
 
         # Password entry
         ctk.CTkLabel(master=frame, text="  Password:", anchor="w", justify="left",
-                     font=("Arial Bold", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
+                     font=("Roboto Medium", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
         self.passw_entry = ctk.CTkEntry(master=frame,
                                         border_width=2, show="*", placeholder_text="Enter your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
@@ -74,9 +74,9 @@ class Login:
 
         # Signup and Google buttons
         ctk.CTkButton(master=frame, text="Sign up", fg_color="#2a2a2a", hover_color="#4d4d4d",
-                      font=("Arial Bold", 12), text_color="#fff", border_width=2, border_color="#b3b3b3").pack(anchor="w", pady=(0, 0), padx=(24, 24), fill="x")
+                      font=("Roboto Medium", 12), text_color="#fff", border_width=2, border_color="#b3b3b3").pack(anchor="w", pady=(0, 0), padx=(24, 24), fill="x")
         ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#fff", hover_color="#fff",
-                      font=("Arial Bold", 12), text_color="#000", image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(24, 24), fill="x")
+                      font=("Roboto Medium", 12), text_color="#000", image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(24, 24), fill="x")
 
     def check_credentials(self) -> None:
         """Check the credentials and display error if necessary."""
