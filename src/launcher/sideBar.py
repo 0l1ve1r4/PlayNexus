@@ -43,24 +43,46 @@ class SideBar(Pages):
 
     def add_buttons(self) -> None:
         """Add the buttons to the sidebar."""
-        button_data = [
-            ("home-smile.png", "Store", self.home_page, "transparent", "#4d4d4d", 60),
-            ("backpack.png", "Library", self.home_page, "transparent", "#4d4d4d", 16),
-            ("download.png", "Downloads", self.home_page, "transparent", "#4d4d4d", 16),
-            ("settings_icon.png", "Settings", self.home_page, "transparent", "#4d4d4d", 16),
-            ("person_icon.png", "Account", self.home_page, "transparent", "#4d4d4d", 160)
+        top_buttons_frame = ctk.CTkFrame(master=self.sidebar_frame, fg_color="transparent")
+        bottom_buttons_frame = ctk.CTkFrame(master=self.sidebar_frame, fg_color="transparent")
+        top_buttons_frame.pack(fill="x", pady=(24, 0), anchor="n", side="top")
+        bottom_buttons_frame.pack(fill="x", pady=(0, 16), anchor="s", side="bottom")
+
+        top_buttons_data = [
+            ("home-smile.png", "Store", self.home_page, "transparent", "#4d4d4d", 0),
+            ("backpack.png", "Library", self.library_page, "transparent", "#4d4d4d", 8),
         ]
 
-        for img_file, text, command, fg_color, hover_color, pady in button_data:
+        for img_file, text, command, fg_color, hover_color, pady in top_buttons_data:
             img_data = Image.open(self.res_path + img_file)
             img = ctk.CTkImage(dark_image=img_data, light_image=img_data)
             ctk.CTkButton(
-                master=self.sidebar_frame,
+                master=top_buttons_frame,
                 image=img,
                 text=text,
                 command=partial(self.show_frame, command),
                 fg_color=fg_color,
-                font=("Roboto Medium", 14),
+                font=("Roboto Bold", 16),
                 hover_color=hover_color,
                 anchor="w"
-            ).pack(anchor="center", fill="x", ipady=10, pady=(pady, 0), padx=10)
+            ).pack(anchor="center", fill="x", ipady=16, pady=(pady, 0), padx=16)
+
+        bottom_buttons_data = [
+            ("download.png", "Downloads", self.home_page, "transparent", "#4d4d4d", 0),
+            ("settings_icon.png", "Settings", self.home_page, "transparent", "#4d4d4d", 8),
+            ("person_icon.png", "Account", self.home_page, "transparent", "#4d4d4d", 8)
+        ]
+
+        for img_file, text, command, fg_color, hover_color, pady in bottom_buttons_data:
+            img_data = Image.open(self.res_path + img_file)
+            img = ctk.CTkImage(dark_image=img_data, light_image=img_data)
+            ctk.CTkButton(
+                master=bottom_buttons_frame,
+                image=img,
+                text=text,
+                command=partial(self.show_frame, command),
+                fg_color=fg_color,
+                font=("Roboto Bold", 16),
+                hover_color=hover_color,
+                anchor="w"
+            ).pack(anchor="center", fill="x", ipady=16, pady=(pady, 0), padx=16)
