@@ -3,6 +3,7 @@ import customtkinter as ctk
 from PIL import Image, ImageDraw
 from .pages import Pages
 from functools import partial
+import tkinter as tk
 
 class SideBar(Pages):
     def __init__(self, app) -> None:
@@ -69,7 +70,7 @@ class SideBar(Pages):
 
         bottom_buttons_data = [
             ("download.png", "Downloads", self.home_page, "transparent", "#4d4d4d", 0),
-            ("settings_icon.png", "Settings", self.home_page, "transparent", "#4d4d4d", 0),
+            ("settings_icon.png", "Settings", self.settings_page, "transparent", "#4d4d4d", 0),
         ]
 
         for img_file, text, command, fg_color, hover_color, pady in bottom_buttons_data:
@@ -87,12 +88,12 @@ class SideBar(Pages):
             ).pack(anchor="center", fill="x", ipady=16, pady=(pady, 0), padx=16)
         
         # Add the profile button
-        content_frame = ctk.CTkFrame(master=bottom_buttons_frame, border_color="#444444", border_width=2, height=42, corner_radius=8, fg_color="transparent")
+        content_frame = ctk.CTkFrame(master=bottom_buttons_frame, border_color="#4d4d4d", border_width=2, height=42, corner_radius=8, fg_color="transparent")
         content_frame.pack(fill="x", expand=False, padx=16, pady=(16,0))
 
         content_frame.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
 
-        profile_img= ctk.CTkImage(self.add_corners(Image.open(self.res_path + "secondary-logo-colored.png"),rad=8), size=(48, 48))
+        profile_img= ctk.CTkImage(Image.open(self.res_path + "secondary-logo-colored.png"), size=(48, 48))
         profile_img_label = ctk.CTkLabel(master=content_frame, image=profile_img, text="")
         profile_img_label.pack(anchor="center", side="left", padx=(8, 16), pady=8)
 
@@ -106,6 +107,12 @@ class SideBar(Pages):
         name.pack(anchor="sw")
         email.pack(anchor="nw")
 
+        name1 = "Admin"
+        email1 = "admin@gmail.com"
+
+        ctk.CTkButton(master=bottom_buttons_frame, text=name1 + "\n" + email1, fg_color="transparent",image=profile_img,hover_color="#4d4d4d",
+                                      border_width=2, border_color="#b3b3b3", anchor="w").pack(fill="x", pady=(16, 0), padx=24, expand=True)
+        
         #Mouse events for the profile button
         for widget in content_frame.winfo_children():
             widget.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
