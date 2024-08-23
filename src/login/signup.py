@@ -2,6 +2,7 @@ import customtkinter as ctk
 import os
 from PIL import Image
 from typing import Tuple
+import tkinter as tk
 
 from login import Login
 
@@ -78,21 +79,21 @@ class Signup:
         # Password entry
         if self.password_icon:
             ctk.CTkLabel(master=frame, text="  Password", anchor="w", justify="left",
-                         font=("Roboto Medium", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
+                         image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
         self.passw_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="Enter your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Confirm password entry
         if self.password_icon:
-            ctk.CTkLabel(master=frame, text="  Confirm Password*", anchor="w", justify="left",
-                         font=("Roboto Medium", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
+            ctk.CTkLabel(master=frame, text="Confirm Password*", anchor="w", justify="left",
+                         image=None, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
         self.passw_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="Please, confirm your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Birthdate entry
         if self.birth_icon:
             ctk.CTkLabel(master=frame, text="  Enter your birth date*", anchor="w", justify="left",
-                         font=("Roboto Medium", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
+                         image=self.birth_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
         self.birth_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="DD/MM/YY")
         self.birth_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
@@ -115,11 +116,36 @@ class Signup:
         agreements_frame = ctk.CTkFrame(master=frame, fg_color="transparent")
         agreements_frame.pack(anchor="w", fill="x", padx=(24, 24))
 
-        agreements_label = ctk.CTkLabel(master=agreements_frame, text="By creating a PlayNexus account you’re agreeing with our Privacy Policy and accept our Terms and Conditions.",
-                                        anchor="w", justify="left", wraplength=274, font=ctk.CTkFont(family='Roboto', size=12), text_color="#b3b3b3")
-        agreements_label.pack(anchor="w", fill="x")
+        self.create_agreement_label(agreements_frame)
 
         self.app.bind("<Return>")
+
+    def create_agreement_label(self, master):
+        text_widget = tk.Text(master, wrap="word", bg="#1a1a1a", fg="#b3b3b3", font=("Roboto", 12), borderwidth=0, highlightthickness=0)
+        text_widget.pack(fill="x")
+
+        text = "By creating a PlayNexus account you’re agreeing with our Privacy Policy and accept our Terms and Conditions."
+        text_widget.insert("1.0", text)
+        text_widget.config(state=tk.DISABLED)
+
+        text_widget.tag_add("privacy_policy", "1.57", "1.71")
+        text_widget.tag_add("terms_conditions", "1.87", "2.00")
+
+        text_widget.tag_config("privacy_policy", foreground="#7C439E", font=("Roboto", 12, "underline"))
+        text_widget.tag_config("terms_conditions", foreground="#7C439E", font=("Roboto", 12, "underline"))
+
+        text_widget.tag_bind("privacy_policy", "<Button-1>", self.open_privacy_policy)
+        text_widget.tag_bind("terms_conditions", "<Button-1>", self.open_terms_conditions)
+        text_widget.tag_bind("privacy_policy", "<Enter>", lambda event: event.widget.config(cursor="hand2"))
+        text_widget.tag_bind("privacy_policy", "<Leave>", lambda event: event.widget.config(cursor=""))
+        text_widget.tag_bind("terms_conditions", "<Enter>", lambda event: event.widget.config(cursor="hand2"))
+        text_widget.tag_bind("terms_conditions", "<Leave>", lambda event: event.widget.config(cursor=""))
+
+    def open_privacy_policy(self, event):
+        print("Privacy Policy clicked")
+
+    def open_terms_conditions(self, event):
+        print("Terms and Conditions clicked")
 
     def return_to_previous_page(self):
         self.app.destroy()

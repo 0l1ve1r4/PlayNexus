@@ -67,11 +67,21 @@ class Login:
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Password entry
+        headline_frame = ctk.CTkFrame(master=frame, fg_color="transparent")
+        headline_frame.pack(anchor="w", padx=(24, 24),pady=(16,0), fill="x")
+
         if self.password_icon:
-            ctk.CTkLabel(master=frame, text="  Password", anchor="w", justify="left",
-                         font=("Roboto Medium", 12), image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
+            ctk.CTkLabel(master=headline_frame, text="  Password", anchor="w", justify="left",
+                         font=("Roboto", 12), image=self.password_icon, compound="left").pack(anchor="w", side="left")
+        f_psswrd =ctk.CTkLabel(master=headline_frame, text="Forgot password?", anchor="w", justify="left", text_color="#7C439E",
+                     font=("Roboto", 12, "underline"))
+        f_psswrd.pack(anchor="w", side="right")
+        f_psswrd.bind("<Button-1>", lambda e: print("Forgot password?"))
+        f_psswrd.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
+        f_psswrd.bind("<Leave>", lambda event: event.widget.config(cursor=""))
+        
         self.passw_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="Enter your password")
-        self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
+        self.passw_entry.pack(anchor="w", fill="x", padx=(24, 24))
 
         # Error message label
         self.error_label = ctk.CTkLabel(master=frame, text="Wrong email or password", text_color="#FF0000",
@@ -81,18 +91,28 @@ class Login:
 
         # Login button
         login_button = ctk.CTkButton(master=frame, text="Login", command=self.check_credentials)
-        login_button.pack(anchor="w", pady=(32, 8), padx=(24, 24), fill="x")
+        login_button.pack(anchor="w", pady=(16, 8), padx=(24, 24), fill="x")
 
         # Signup and Google buttons
-        ctk.CTkButton(master=frame, text="Sign up", fg_color="transparent", hover_color="#4d4d4d",
-                      font=("Roboto Medium", 12), text_color="#fff", border_width=2, border_color="#b3b3b3").pack(anchor="w", pady=(0, 0), padx=(24, 24), fill="x")
-        
         ctk.CTkLabel(master=frame, text_color="#2a2a2a",
                      text="_______________________________________________________",
                      fg_color="transparent").pack(fill="x", pady=(0, 0))
         
-        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#fff", hover_color="#fff",
+        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#fff", hover_color="#b3b3b3",
                       font=("Roboto Medium", 12), text_color="#000", image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(24, 24), fill="x")
+        
+        # Signup label
+        signup_label = ctk.CTkFrame(master=frame, fg_color="transparent")
+        signup_label.pack(pady=10)
+
+        label1 = ctk.CTkLabel(master=signup_label, text="Don't have an account? ", text_color="#b3b3b3", font=("Roboto", 12))
+        label1.pack(side="left")
+
+        label2 = ctk.CTkLabel(master=signup_label, text="Sign up", text_color="#7C439E", font=("Roboto", 12, "underline"))
+        label2.pack(side="left")
+        label2.bind("<Button-1>", lambda e: print("Redirect to signup page"))
+        label2.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
+        label2.bind("<Leave>", lambda event: event.widget.config(cursor=""))
 
         self.app.bind("<Return>", self.handle_enter)
 
