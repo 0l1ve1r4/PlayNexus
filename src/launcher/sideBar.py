@@ -50,7 +50,7 @@ class SideBar(Pages):
         bottom_buttons_frame.pack(fill="x", pady=(0, 16), anchor="s", side="bottom")
 
         top_buttons_data = [
-            ("home-smile.png", "Store", self.home_page, "transparent", "#4d4d4d", 0),
+            ("home-smile.png", "Home", self.home_page, "transparent", "#4d4d4d", 0),
             ("backpack.png", "Library", self.library_page, "transparent", "#4d4d4d", 8),
         ]
 
@@ -88,40 +88,45 @@ class SideBar(Pages):
             ).pack(anchor="center", fill="x", ipady=16, pady=(pady, 0), padx=16)
         
         # Add the profile button
-        content_frame = ctk.CTkFrame(master=bottom_buttons_frame, border_color="#4d4d4d", border_width=2, height=42, corner_radius=8, fg_color="transparent")
-        content_frame.pack(fill="x", expand=False, padx=16, pady=(16,0))
-
-        content_frame.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
-
         profile_img= ctk.CTkImage(Image.open(self.res_path + "secondary-logo-colored.png"), size=(48, 48))
-        profile_img_label = ctk.CTkLabel(master=content_frame, image=profile_img, text="")
-        profile_img_label.pack(anchor="center", side="left", padx=(8, 16), pady=8)
 
-        textframe = ctk.CTkFrame(master=content_frame, fg_color="transparent", height=41,width=110)
-        textframe.pack( expand=True, anchor="w", side="right")
-
-        name = ctk.CTkLabel(master=textframe, text="Admin", fg_color="transparent", 
-                            font=ctk.CTkFont(family='Helvetica', size=16))
-        email = ctk.CTkLabel(master=textframe, text="admin@gmail.com", text_color="#b3b3b3",
-                             font=ctk.CTkFont(family='Helvetica', size=12), fg_color="transparent")
-        name.pack(anchor="sw")
-        email.pack(anchor="nw")
+        pbtn = ctk.CTkFrame(master=bottom_buttons_frame, fg_color="transparent", height=41,width=110)
+        pbtn.pack(fill="x", expand=False, padx=16, pady=(16,0))
 
         name1 = "Admin"
         email1 = "admin@gmail.com"
 
-        ctk.CTkButton(master=bottom_buttons_frame, text=name1 + "\n" + email1, fg_color="transparent",image=profile_img,hover_color="#4d4d4d",
-                                      border_width=2, border_color="#b3b3b3", anchor="w").pack(fill="x", pady=(16, 0), padx=24, expand=True)
-        
-        #Mouse events for the profile button
-        for widget in content_frame.winfo_children():
-            widget.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
-            widget.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
-            widget.bind("<Leave>", lambda event: event.widget.config(cursor=""))
+        profile_btn = ctk.CTkButton(master=pbtn, text="", fg_color="transparent",image=profile_img,hover_color="#4d4d4d",
+                                      border_width=2, border_color="#4d4d4d", anchor="w", command=partial(self.show_frame, self.library_page))
+        profile_btn.pack(fill="x", expand=True)
+        email = ctk.CTkLabel(master=profile_btn, text="admin@gmail.com", text_color="#b3b3b3",
+                             font=ctk.CTkFont(family='Helvetica', size=12), fg_color="transparent")
+        email.place(x=117,y=40, anchor="center")
+        name = ctk.CTkLabel(master=profile_btn, text="Admin", fg_color="transparent", 
+                            font=ctk.CTkFont(family='Helvetica', size=16), justify="center")
+        name.place(x=90,y=20, anchor="center")
 
-        for widget in textframe.winfo_children():
-            widget.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
-            widget.bind("<Leave>", lambda event: event.widget.config(cursor=""))
+        email.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
+        email.bind("<Leave>", lambda event: event.widget.config(cursor=""))
+        email.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
+
+        name.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
+        name.bind("<Leave>", lambda event: event.widget.config(cursor=""))
+        name.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
+
+        def on_enter(event):
+            event.widget.config(cursor="hand2")
+            email.configure(fg_color="#4d4d4d")
+            name.configure(fg_color="#4d4d4d")
+
+        def on_leave(event):
+            event.widget.config(cursor="")
+            email.configure(fg_color="transparent")
+            name.configure(fg_color="transparent")
+        
+        profile_btn.bind("<Enter>", on_enter)
+        profile_btn.bind("<Leave>", on_leave)
+
 
         
 

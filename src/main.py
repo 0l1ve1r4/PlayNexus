@@ -6,7 +6,5 @@ import launcher
 if __name__ == "__main__":
     login = login.Login()
     login.app.mainloop()
-    signup = signup.Signup()
-    signup.app.mainloop()
     
     launcher = launcher.Launcher()
