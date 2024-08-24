@@ -110,7 +110,7 @@ class Login:
 
         label2 = ctk.CTkLabel(master=signup_label, text="Sign up", text_color="#7C439E", font=("Roboto", 12, "underline"))
         label2.pack(side="left")
-        label2.bind("<Button-1>", lambda e: print("Redirect to signup page"))
+        label2.bind("<Button-1>", lambda e: self.go_to_signup())
         label2.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         label2.bind("<Leave>", lambda event: event.widget.config(cursor=""))
 
@@ -148,6 +148,13 @@ class Login:
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
+
+    def go_to_signup(self):
+        # vc vai ter que dar um jeito nessa função, pq ela é a causadora do import circular  
+        from .signup import Signup 
+        self.app.destroy()
+        signup = Signup()
+        signup.app.mainloop()
 
 if __name__ == "__main__":
     login_app = Login()

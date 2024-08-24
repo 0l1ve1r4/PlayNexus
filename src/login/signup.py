@@ -4,8 +4,6 @@ from PIL import Image
 from typing import Tuple
 import tkinter as tk
 
-from login import Login
-
 ctk.set_default_color_theme("res/themes/purple.json")
 
 class Signup:
@@ -148,6 +146,8 @@ class Signup:
         print("Terms and Conditions clicked")
 
     def return_to_previous_page(self):
+        # vc vai ter que dar um jeito nessa função, pq ela é a causadora do import circular  
+        from .login import Login  
         self.app.destroy()
         login = Login()
         login.app.mainloop()

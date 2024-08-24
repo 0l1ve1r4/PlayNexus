@@ -12,6 +12,13 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.frames = {}
+        self.Admin = True
+        #Fonts
+        self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
+        self.body = ctk.CTkFont(family="Roboto", size=16)
+        self.small = ctk.CTkFont(family="Roboto", size=12)
+        self.name = "Admin"
+        self.email = "admin@playnexus.com"
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -19,14 +26,39 @@ class Pages:
             home_frame = ctk.CTkScrollableFrame(master=self.main_view)
             home_frame.pack(fill="both", expand=True)
             self.frames["home_page"] = home_frame
-
-            content_frame = ctk.CTkFrame(master=home_frame, fg_color="transparent")
-            content_frame.pack(anchor="n", fill="both", padx=24, pady=24)
-
-            self.create_search_bar(content_frame, " Search in store")
-            self.create_labels_and_content(content_frame,"Recently added")
+            if self.Admin == False:
+                self.store_page(home_frame)
+            else:
+                self.admin_page(home_frame)
         else:
             self.frames["home_page"].pack(fill="both", expand=True)
+
+    def store_page(self,master) -> None:
+        content_frame = ctk.CTkFrame(master=master, fg_color="transparent")
+        content_frame.pack(anchor="n", fill="both", padx=24, pady=24)
+
+        self.create_search_bar(content_frame, " Search in store")
+        self.create_labels_and_content(content_frame,"Recently added")
+
+    def admin_page(self,master) -> None:
+        content_frame = ctk.CTkFrame(master=master, fg_color="transparent")
+        content_frame.pack(anchor="n", fill="both", padx=24, pady=24)
+
+        ctk.CTkLabel(master=content_frame, text="Hi, " + self.name + "!", anchor="w", font=self.h1).pack(fill="x")
+        ctk.CTkLabel(master=content_frame, text="What would you like to do today?", anchor="w", font=self.body).pack(fill="x")
+
+        plus_icon= ctk.CTkImage(dark_image=load_image("plus.png"), light_image=load_image("plus.png"), size=(16, 16))
+        list_icon = ctk.CTkImage(dark_image=load_image("list_icon.png"), light_image=load_image("list_icon.png"), size=(16, 16))
+
+        buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+        buttons_frame.pack(fill="x", pady=(24, 0))
+
+        add_button = ctk.CTkButton(master=buttons_frame, text="Add new game", fg_color="transparent", hover_color="#4d4d4d",
+                                        border_width=2, border_color="#b3b3b3", width=260, command=lambda: self.show_frame(self.new_game_page), image=plus_icon)
+        add_button.pack(anchor="w", side="left", padx=(0, 8))
+        list_button = ctk.CTkButton(master=buttons_frame, text="View games list", fg_color="transparent", hover_color="#4d4d4d",
+                                        border_width=2, border_color="#b3b3b3", width=260, image=list_icon)
+        list_button.pack(anchor="w", side="right")
 
     def library_page(self) -> None:
         """Show the user's library."""
@@ -74,25 +106,40 @@ class Pages:
             content_frame = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="both", padx=24, pady=24, expand=True)
 
-            self.add_header(content_frame, "Settings")
+            #self.add_header(content_frame, "Settings", self.home_page)
+            ctk.CTkLabel(master=content_frame, text="Settings", anchor="w", justify="left", font=self.h1).pack(anchor="w", fill="y", expand=True)
 
-            # Quick access buttons (This should be an Administator only feature)
-            buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            buttons_frame.pack(fill="x", pady=(24, 0))
+            #Account settings
+            account_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            account_frame.pack(fill="x", anchor="w", pady=(24, 0))
+            self.add_separator(account_frame)
+            ctk.CTkLabel(master=account_frame, text="Account settings", anchor="w", font=self.h1).pack(fill="x")
 
-            ctk.CTkLabel(master=buttons_frame, text="Quick access", anchor="w", font=("Helvetica", 16)).pack(fill="x", pady=(0, 16))
+            #Change name
+            change_name_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
+            change_name_frame.pack(fill="x", anchor="w", pady=(16, 0))
+            headline = ctk.CTkFrame(master=change_name_frame, fg_color="transparent")
+            headline.pack(fill="x", side="left",anchor="w")
 
-            add_button = ctk.CTkButton(master=content_frame, text="Add new game", fg_color="transparent", hover_color="#4d4d4d",
-                                        border_width=2, border_color="#b3b3b3", width=260, command=self.new_game_page)
-            add_button.pack(anchor="w", side="left", padx=(0, 8))
-            list_button = ctk.CTkButton(master=content_frame, text="View games list", fg_color="transparent", hover_color="#4d4d4d",
-                                        border_width=2, border_color="#b3b3b3", width=260)
-            list_button.pack(anchor="w", side="right")
+            ctk.CTkLabel(master=headline, text="Name", anchor="w", font=self.body).pack(anchor="w")
+            ctk.CTkLabel(master=headline, text="Change your name", anchor="w", font=self.small, text_color="#b3b3b3").pack()
+            ctk.CTkEntry(master=change_name_frame, border_width=2, placeholder_text=self.name, width=245).pack(side="right")
 
-            appearance_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            appearance_frame.pack(fill="x", anchor="w")
+            #Change email
+            change_email_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
+            change_email_frame.pack(fill="x", anchor="w", pady=(16, 0))
+            headline = ctk.CTkFrame(master=change_email_frame, fg_color="transparent")
+            headline.pack(fill="x", side="left",anchor="w")
 
-            ctk.CTkLabel(master=appearance_frame, text="Appearance", anchor="w", font=("Roboto", 24, "bold")).pack(fill="x", pady=(16, 0), padx=24)
+            ctk.CTkLabel(master=headline, text="Email", anchor="w", font=self.body).pack(anchor="w")
+            ctk.CTkLabel(master=headline, text="Change your email", anchor="w", font=self.small, text_color="#b3b3b3").pack()
+            ctk.CTkEntry(master=change_email_frame, border_width=2, placeholder_text=self.email, width=245).pack(side="right")
+
+            #App settings
+            app_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            app_frame.pack(fill="x", anchor="w", pady=(24, 24))
+            self.add_separator(app_frame)
+            ctk.CTkLabel(master=app_frame, text="App settings", anchor="w", font=self.h1).pack(fill="x")
 
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)
@@ -107,7 +154,7 @@ class Pages:
             content_frame = ctk.CTkFrame(master=new_game_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
 
-            self.add_header(content_frame, "Add new game")
+            self.add_header(content_frame, "Add new game", self.home_page)
 
             # Game title
             ctk.CTkLabel(master=content_frame, text="Game title", anchor="w", justify="left",
@@ -214,7 +261,7 @@ class Pages:
 
         self.show_frame(self.home_page)
 
-    def add_header(self, master: ctk.CTkFrame, title) -> None:
+    def add_header(self, master: ctk.CTkFrame, title: str, return_frame: str) -> None:
         """Add the header to the main view."""
         header = ctk.CTkFrame(master=master, fg_color="transparent")
         header.pack(fill="x")
@@ -222,10 +269,15 @@ class Pages:
         arrow_left = load_image("arrow-left.png")
         left_arrow = ctk.CTkImage(dark_image=arrow_left, light_image=arrow_left, size=(29, 29))
         ctk.CTkButton(master=header, image=left_arrow, fg_color="transparent", hover_color=SIDE_BAR_COLOR,
-                      command=self.home_page, text='', width=29, height=29).pack(anchor="w", side="left", padx=(0, 32), fill="y")
+                      command=lambda: self.show_frame(return_frame), text='', width=29, height=29).pack(anchor="w", side="left", padx=(0, 32), fill="y")
 
-        title_label = ctk.CTkLabel(master=header, text=title, text_color="#ffffff", anchor="w", justify="left",
-                                  font=("Roboto Bold", 24))
+        title_label = ctk.CTkLabel(master=header, text=title, anchor="w", justify="left",
+                                  font=self.h1)
         title_label.pack(anchor="w", fill="y", expand=True)
 
+    def add_separator(self, master) -> None:
+        """Add a separator to the main view."""
+        ctk.CTkLabel(master=master, text_color=SIDE_BAR_COLOR,
+                     text="__________________________________________________________________________________________",
+                     fg_color="transparent").pack(fill="x", pady=(0, 0))
     
