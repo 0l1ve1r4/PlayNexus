@@ -146,7 +146,6 @@ class Signup:
         print("Terms and Conditions clicked")
 
     def return_to_previous_page(self):
-        # vc vai ter que dar um jeito nessa função, pq ela é a causadora do import circular  
         from .login import Login  
         self.app.destroy()
         login = Login()
