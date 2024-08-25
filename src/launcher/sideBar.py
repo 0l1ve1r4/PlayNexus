@@ -97,7 +97,7 @@ class SideBar(Pages):
         email1 = "admin@gmail.com"
 
         profile_btn = ctk.CTkButton(master=pbtn, text="", fg_color="transparent",image=profile_img,hover_color="#4d4d4d",
-                                      border_width=2, border_color="#4d4d4d", anchor="w", command=partial(self.show_frame, self.library_page))
+                                      border_width=2, border_color="#4d4d4d", anchor="w", command=partial(self.show_frame, self.profile_page))
         profile_btn.pack(fill="x", expand=True)
         email = ctk.CTkLabel(master=profile_btn, text="admin@gmail.com", text_color="#b3b3b3",
                              font=ctk.CTkFont(family='Helvetica', size=12), fg_color="transparent")
@@ -108,11 +108,11 @@ class SideBar(Pages):
 
         email.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         email.bind("<Leave>", lambda event: event.widget.config(cursor=""))
-        email.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
+        email.bind("<Button-1>", lambda event: self.show_frame(self.profile_page))
 
         name.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         name.bind("<Leave>", lambda event: event.widget.config(cursor=""))
-        name.bind("<Button-1>", lambda event: self.show_frame(self.library_page))
+        name.bind("<Button-1>", lambda event: self.show_frame(self.profile_page))
 
         def on_enter(event):
             event.widget.config(cursor="hand2")
