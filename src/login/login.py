@@ -26,6 +26,8 @@ class Login:
         self.email_icon = self.load_image("email-icon.png", (16, 16))
         self.password_icon = self.load_image("password-icon.png", (16, 16))
         self.google_icon = self.load_image("google-icon.png", (16, 16))
+        self.login_icon = self.load_image("login.png", (16, 16))
+
 
         # Initialize variables
         self.missed_attempts = 0
@@ -90,7 +92,7 @@ class Login:
         self.error_label.pack_forget()  # Hide initially
 
         # Login button
-        login_button = ctk.CTkButton(master=frame, text="Login", command=self.check_credentials)
+        login_button = ctk.CTkButton(master=frame, text="Login", command=self.check_credentials, image=self.login_icon)
         login_button.pack(anchor="w", pady=(16, 8), padx=(24, 24), fill="x")
 
         # Signup and Google buttons
