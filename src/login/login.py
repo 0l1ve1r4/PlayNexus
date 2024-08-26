@@ -6,14 +6,22 @@ from typing import Tuple
 ctk.set_default_color_theme("res/themes/purple.json")
 
 class Login:
-    def __init__(self) -> None:
+    def __init__(self, previous_frame: ctk.CTkFrame = None, previous_app: ctk.CTk = None) -> None:
         """Initialize the login window and load necessary resources."""
         self.res_path = 'res/'
-        self.app = ctk.CTk()
-        self.app.geometry("322x480")
-        self.app.resizable(False, False)
-        self.app.title("PlayNexus | Login")
+
+        if previous_app == None:
+            self.app = ctk.CTk()
+            self.app.resizable(False, True)
+            self.app.title("PlayNexus | Login")
         
+        else:
+            self.app = previous_app
+
+        self.app.geometry("322x480")
+        self.frame = previous_frame
+
+
         if os.name == "nt":
             icon_path = os.path.join(self.res_path, 'secondary-logo-colored.ico')
             if os.path.exists(icon_path):
@@ -48,28 +56,29 @@ class Login:
 
     def create_widgets(self) -> None:
         """Create and place all widgets in the window."""
-        frame = ctk.CTkFrame(master=self.app, width=300, height=480)
-        frame.pack_propagate(False)
-        frame.pack(expand=True, fill="both")
+        if self.frame == None:
+            self.frame = ctk.CTkFrame(master=self.app, width=300, height=480)
+            self.frame.pack_propagate(False)
+            self.frame.pack(expand=True, fill="both")
 
         if self.login_logo:
-            ctk.CTkLabel(master=frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
+            ctk.CTkLabel(master=self.frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
 
         # Welcome and instructions
-        ctk.CTkLabel(master=frame, text="Welcome back!", anchor="w",
+        ctk.CTkLabel(master=self.frame, text="Welcome back!", anchor="w",
                      justify="left", font=("Inter", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 24))
-        ctk.CTkLabel(master=frame, text="Sign in to your account", anchor="w",
+        ctk.CTkLabel(master=self.frame, text="Sign in to your account", anchor="w",
                      justify="left").pack(anchor="w", pady=(0, 0), padx=(24, 24))
 
         # Email entry
         if self.email_icon:
-            ctk.CTkLabel(master=frame, text="  Email", anchor="w", justify="left",
+            ctk.CTkLabel(master=self.frame, text="  Email", anchor="w", justify="left",
                          image=self.email_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 24))
-        self.email_entry = ctk.CTkEntry(master=frame, border_width=2, placeholder_text="Enter your email")
+        self.email_entry = ctk.CTkEntry(master=self.frame, border_width=2, placeholder_text="Enter your email")
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Password entry
-        headline_frame = ctk.CTkFrame(master=frame, fg_color="transparent")
+        headline_frame = ctk.CTkFrame(master=self.frame, fg_color="transparent")
         headline_frame.pack(anchor="w", padx=(24, 24),pady=(16,0), fill="x")
 
         if self.password_icon:
@@ -82,29 +91,29 @@ class Login:
         f_psswrd.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         f_psswrd.bind("<Leave>", lambda event: event.widget.config(cursor=""))
         
-        self.passw_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="Enter your password")
+        self.passw_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="Enter your password")
         self.passw_entry.pack(anchor="w", fill="x", padx=(24, 24))
 
         # Error message label
-        self.error_label = ctk.CTkLabel(master=frame, text="Wrong email or password", text_color="#FF0000",
+        self.error_label = ctk.CTkLabel(master=self.frame, text="Wrong email or password", text_color="#FF0000",
                                         anchor="w", justify="left")
         self.error_label.pack(anchor="w", padx=(25, 0))
         self.error_label.pack_forget()  # Hide initially
 
         # Login button
-        login_button = ctk.CTkButton(master=frame, text="Login", command=self.check_credentials, image=self.login_icon)
+        login_button = ctk.CTkButton(master=self.frame, text="Login", command=self.check_credentials, image=self.login_icon)
         login_button.pack(anchor="w", pady=(16, 8), padx=(24, 24), fill="x")
 
         # Signup and Google buttons
-        ctk.CTkLabel(master=frame, text_color="#2a2a2a",
+        ctk.CTkLabel(master=self.frame, text_color="#2a2a2a",
                      text="_______________________________________________________",
                      fg_color="transparent").pack(fill="x", pady=(0, 0))
         
-        ctk.CTkButton(master=frame, text="Continue With Google", fg_color="#fff", hover_color="#b3b3b3",
+        ctk.CTkButton(master=self.frame, text="Continue With Google", fg_color="#fff", hover_color="#b3b3b3",
                       font=("Roboto Medium", 12), text_color="#000", image=self.google_icon).pack(anchor="w", pady=(20, 0), padx=(24, 24), fill="x")
         
         # Signup label
-        signup_label = ctk.CTkFrame(master=frame, fg_color="transparent")
+        signup_label = ctk.CTkFrame(master=self.frame, fg_color="transparent")
         signup_label.pack(pady=10)
 
         label1 = ctk.CTkLabel(master=signup_label, text="Don't have an account? ", text_color="#b3b3b3", font=("Roboto", 12))
@@ -154,9 +163,8 @@ class Login:
     def go_to_signup(self):
         # vc vai ter que dar um jeito nessa função, pq ela é a causadora do import circular  
         from .signup import Signup 
-        self.app.destroy()
-        signup = Signup()
-        signup.app.mainloop()
+        # self.app.destroy()
+        signup = Signup(self.frame, self.app)
 
 if __name__ == "__main__":
     login_app = Login()
