@@ -12,6 +12,7 @@ USE PlayNexus;
 CREATE TABLE Account (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    type ENUM('Gamer', 'Publisher') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (email)
 );
@@ -22,7 +23,7 @@ CREATE TABLE Gamer (
     username VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
     country VARCHAR(255) NOT NULL,
-    bio TEXT NOT NULL,
+    bio VARCHAR(255),
     PRIMARY KEY (account),
     FOREIGN KEY (account) REFERENCES Account(email) ON DELETE CASCADE
 );
@@ -42,9 +43,9 @@ CREATE TABLE Game (
     developer VARCHAR(255) NOT NULL,
     genre VARCHAR(255) NOT NULL,
     publication_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description TEXT NOT NULL,
-    logo BLOB NOT NULL,
-    installer BLOB NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    logo BLOB,
+    installer BLOB,
     price DECIMAL(5, 2) NOT NULL,
     PRIMARY KEY (title, publisher),
     FOREIGN KEY (publisher) REFERENCES Publisher(account) ON DELETE CASCADE
