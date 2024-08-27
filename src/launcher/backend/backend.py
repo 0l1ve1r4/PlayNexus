@@ -1,4 +1,9 @@
-import psycopg2  # Postgres SQL
+import mysql.connector as mysql # Import the MySQL connector library.
+
+db_host = "localhost"
+db_user = "root"
+db_password = "password"
+db_name = "PalyNexus"
 
 def search_in_store(query: str) -> dict:
     """Search for a game in the store."""
@@ -30,7 +35,16 @@ def authenticate_user(email: str, password: str) -> bool:
 
 def create_user(email: str, password: str, username: str) -> bool:
     """Create a new user in the database."""
-    pass
+    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name);
+    cursor = database.cursor();
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,));
+    if cursor.fetchone() is not None:
+        return False;
+    cursor.execute("INSERT INTO Account (email, password, username) VALUES (%s, %s, %s)", (email, password, username));
+    database.commit();
+    cursor.close();
+    database.close();
+    return True;
 
 def update_user_password(email: str, new_password: str) -> bool:
     """Update the user's password in the database."""
