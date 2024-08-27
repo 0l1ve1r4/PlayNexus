@@ -4,25 +4,16 @@ from PIL import Image
 from typing import Tuple
 import tkinter as tk
 
-from login import Login
-
-ctk.set_default_color_theme("res/themes/purple.json")
+ctk.set_default_color_theme("res/themes/purple.json") 
 
 class Signup:
-    def __init__(self) -> None:
+    def __init__(self, previous_frame : ctk.CTkFrame, previous_app: ctk.CTk) -> None:
         """Initialize the login window and load necessary resources."""
         self.res_path = 'res/'
-        self.app = ctk.CTk()
+        self.frame = previous_frame
+        self.app = previous_app
+
         self.app.geometry("322x600")
-        self.app.resizable(False, False)
-        self.app.title("PlayNexus | Sign up")
-        
-        if os.name == "nt":
-            icon_path = os.path.join(self.res_path, 'secondary-logo-colored.ico')
-            if os.path.exists(icon_path):
-                self.app.iconbitmap(icon_path)
-            else:
-                print(f"Icon file not found at {icon_path}")
 
         # Load images
         self.name_icon = self.load_image("type-square.png", (16, 16))
@@ -36,9 +27,15 @@ class Signup:
         self.missed_attempts = 0
         self.is_logged_in = False
 
+        self.destroy_previous_frame()
+
         # Create widgets
         self.create_widgets()
 
+    def destroy_previous_frame(self) -> None:
+        for child in self.frame.winfo_children():
+            child.destroy()
+        
     def load_image(self, filename: str, size: Tuple[int, int]) -> ctk.CTkImage:
         """Load and return a CTkImage object with the specified size."""
         image_path = os.path.join(self.res_path, filename)
@@ -51,60 +48,57 @@ class Signup:
 
     def create_widgets(self) -> None:
         """Create and place all widgets in the window."""
-        frame = ctk.CTkFrame(master=self.app, width=300, height=480)
-        frame.pack_propagate(False)
-        frame.pack(expand=True, fill="both")
 
         if self.login_logo:
-            ctk.CTkLabel(master=frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
+            ctk.CTkLabel(master=self.frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
 
         # Header
-        ctk.CTkLabel(master=frame, text="Create a new account", anchor="w",
+        ctk.CTkLabel(master=self.frame, text="Create a new account", anchor="w",
                      justify="left", font=("Inter", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 24))
 
         # Full name entry
         if self.email_icon:
-            ctk.CTkLabel(master=frame, text="  Full name", anchor="w", justify="left",
+            ctk.CTkLabel(master=self.frame, text="  Full name", anchor="w", justify="left",
                          image=self.name_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 24))
-        self.email_entry = ctk.CTkEntry(master=frame, border_width=2, placeholder_text="Enter your full name")
+        self.email_entry = ctk.CTkEntry(master=self.frame, border_width=2, placeholder_text="Enter your full name")
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Email entry
         if self.email_icon:
-            ctk.CTkLabel(master=frame, text="  Email", anchor="w", justify="left",
+            ctk.CTkLabel(master=self.frame, text="  Email", anchor="w", justify="left",
                          image=self.email_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 24))
-        self.email_entry = ctk.CTkEntry(master=frame, border_width=2, placeholder_text="Ex: playnexus@youremail.com")
+        self.email_entry = ctk.CTkEntry(master=self.frame, border_width=2, placeholder_text="Ex: playnexus@youremail.com")
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Password entry
         if self.password_icon:
-            ctk.CTkLabel(master=frame, text="  Password", anchor="w", justify="left",
+            ctk.CTkLabel(master=self.frame, text="  Password", anchor="w", justify="left",
                          image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="Enter your password")
+        self.passw_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="Enter your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Confirm password entry
         if self.password_icon:
-            ctk.CTkLabel(master=frame, text="Confirm Password*", anchor="w", justify="left",
+            ctk.CTkLabel(master=self.frame, text="Confirm Password*", anchor="w", justify="left",
                          image=None, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="Please, confirm your password")
+        self.passw_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="Please, confirm your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Birthdate entry
         if self.birth_icon:
-            ctk.CTkLabel(master=frame, text="  Enter your birth date*", anchor="w", justify="left",
+            ctk.CTkLabel(master=self.frame, text="  Enter your birth date*", anchor="w", justify="left",
                          image=self.birth_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.birth_entry = ctk.CTkEntry(master=frame, border_width=2, show="*", placeholder_text="DD/MM/YY")
+        self.birth_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="DD/MM/YY")
         self.birth_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Error message label
-        self.error_label = ctk.CTkLabel(master=frame, text="Wrong email or password", text_color="#FF0000",
+        self.error_label = ctk.CTkLabel(master=self.frame, text="Wrong email or password", text_color="#FF0000",
                                         anchor="w", justify="left")
         self.error_label.pack(anchor="w", padx=(25, 0))
         self.error_label.pack_forget()  # Hide initially
 
         # Login button
-        content_frame = ctk.CTkFrame(master=frame, fg_color="transparent")
+        content_frame = ctk.CTkFrame(master=self.frame, fg_color="transparent")
         content_frame.pack(anchor="w", fill="x", pady=(32, 8), padx=(24, 24))
 
         cancel_button = ctk.CTkButton(master=content_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
@@ -113,12 +107,12 @@ class Signup:
         login_button = ctk.CTkButton(master=content_frame, text="Create account", width=132)
         login_button.pack(anchor="w", side="right")
 
-        agreements_frame = ctk.CTkFrame(master=frame, fg_color="transparent")
+        agreements_frame = ctk.CTkFrame(master=self.frame, fg_color="transparent")
         agreements_frame.pack(anchor="w", fill="x", padx=(24, 24))
 
         self.create_agreement_label(agreements_frame)
 
-        self.app.bind("<Return>")
+        # self.app.bind("<Return>")
 
     def create_agreement_label(self, master):
         text_widget = tk.Text(master, wrap="word", bg="#1a1a1a", fg="#b3b3b3", font=("Roboto", 12), borderwidth=0, highlightthickness=0)
@@ -148,8 +142,10 @@ class Signup:
         print("Terms and Conditions clicked")
 
     def return_to_previous_page(self):
-        self.app.destroy()
-        login = Login()
+        from .login import Login  
+        
+        self.destroy_previous_frame()
+        login = Login(self.frame, self.app)
         login.app.mainloop()
 
 if __name__ == "__main__":
