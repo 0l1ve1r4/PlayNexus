@@ -42,7 +42,6 @@ def authenticate_user(email: str, password: str) -> bool:
     database.close()
     return False
     
-
 def create_user(email: str, password: str, type: str) -> bool:
     """Create a new user in the database."""
     if type not in ["Gamer", "Publisher"]: return False
@@ -83,7 +82,7 @@ def set_publisher(email: str, name: str) -> bool:
         cursor.close()
         database.close()
         return False
-    cursor.execute("INSERT INTO Publisher (account, company_name) VALUES (%s, %s)", (email, name))
+    cursor.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (email, name))
     database.commit()
     cursor.close()
     database.close()
