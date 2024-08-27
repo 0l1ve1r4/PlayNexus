@@ -44,15 +44,15 @@ CREATE TABLE Game (
     genre VARCHAR(255) NOT NULL,
     publication_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description VARCHAR(255) NOT NULL,
-    logo BLOB,
+    cover BLOB,
     installer BLOB,
     price DECIMAL(5, 2) NOT NULL,
     PRIMARY KEY (title, publisher),
     FOREIGN KEY (publisher) REFERENCES Publisher(account) ON DELETE CASCADE
 );
 
--- Creates the table that will store the buy's information:
-CREATE TABLE Buy (
+-- Creates the table that will store the purchase's information:
+CREATE TABLE Purchase (
     gamer VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     publisher VARCHAR(255) NOT NULL,
