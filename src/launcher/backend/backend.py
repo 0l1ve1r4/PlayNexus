@@ -31,20 +31,63 @@ def get_all_games() -> list:
 
 def authenticate_user(email: str, password: str) -> bool:
     """Check if the provided credentials are valid."""
-    pass
-
-def create_user(email: str, password: str, username: str) -> bool:
-    """Create a new user in the database."""
-    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name);
-    cursor = database.cursor();
-    cursor.execute("SELECT * FROM users WHERE email = %s", (email,));
+    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
+    cursor = database.cursor()
+    cursor.execute("SELECT * FROM Account WHERE email = %s AND password = %s", (email, password))
     if cursor.fetchone() is not None:
-        return False;
-    cursor.execute("INSERT INTO Account (email, password, username) VALUES (%s, %s, %s)", (email, password, username));
-    database.commit();
-    cursor.close();
-    database.close();
-    return True;
+        cursor.close()
+        database.close()
+        return True
+    cursor.close()
+    database.close()
+    return False
+    
+
+def create_user(email: str, password: str, type: str) -> bool:
+    """Create a new user in the database."""
+    if type not in ["Gamer", "Publisher"]: return False
+    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
+    cursor = database.cursor()
+    cursor.execute("SELECT * FROM Account WHERE email = %s", (email,))
+    if cursor.fetchone() is not None:
+        cursor.close()
+        database.close()
+        return False
+    cursor.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, type))
+    database.commit()
+    cursor.close()
+    database.close()
+    return True
+
+def set_gamer(email: str, username: str, birth_date: str, country: str) -> bool:
+    """Create and set gamer details in the database."""
+    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
+    cursor = database.cursor()
+    cursor.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (email,))
+    if cursor.fetchone() is None:
+        cursor.close()
+        database.close()
+        return False
+    cursor.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (email, username, birth_date, country))
+    database.commit()
+    cursor.close()
+    database.close()
+    return True
+
+def set_publisher(email: str, name: str) -> bool:
+    """Create and set publisher details in the database."""
+    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
+    cursor = database.cursor()
+    cursor.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (email,))
+    if cursor.fetchone() is None:
+        cursor.close()
+        database.close()
+        return False
+    cursor.execute("INSERT INTO Publisher (account, company_name) VALUES (%s, %s)", (email, name))
+    database.commit()
+    cursor.close()
+    database.close()
+    return True
 
 def update_user_password(email: str, new_password: str) -> bool:
     """Update the user's password in the database."""
