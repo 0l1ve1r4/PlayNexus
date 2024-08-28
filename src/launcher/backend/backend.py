@@ -1,4 +1,4 @@
-import psycopg2  # Postgres SQL
+#import psycopg2 
 
 def search_in_store(query: str) -> dict:
     """Search for a game in the store."""

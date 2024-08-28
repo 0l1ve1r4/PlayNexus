@@ -1,4 +1,3 @@
 customtkinter==5.2.2
 pillow==10.4.0
 CTkTable==1.1 
-psycopg2==2.9.9

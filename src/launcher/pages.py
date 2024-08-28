@@ -23,6 +23,7 @@ class Pages:
 
         self.name = "Admin"
         self.email = "admin@playnexus.com"
+        self.screen_size = ('1920x1080', '1080x720')
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -149,6 +150,16 @@ class Pages:
             app_frame.pack(fill="x", anchor="w", pady=(0, 24))
             self.add_separator(app_frame)
             ctk.CTkLabel(master=app_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
+            
+            ##Change screen size
+            change_screen_size_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            change_screen_size_frame.pack(fill="x", anchor="w", pady=(0, 16))
+            headline = ctk.CTkFrame(master=change_screen_size_frame, fg_color="transparent")
+            headline.pack(fill="x", side="left", anchor="w")
+
+            ctk.CTkLabel(master=headline, text="Screen Size", anchor="w", font=self.body).pack(anchor="w")
+            ctk.CTkComboBox(master=change_screen_size_frame, width=200, font=self.small, values=self.screen_size).pack(side="right")
+
 
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)

@@ -86,7 +86,7 @@ install_libs(){
 
 # ================== Main ==================
 
-check_install_package python3.11-venv
+check_install_package python3.10-venv
 check_install_package python3-pip
 
 create_and_activate_venv
