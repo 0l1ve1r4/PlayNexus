@@ -46,6 +46,11 @@ The graphical interface is built using `customtkinter` to ensure a user-friendly
 │   ├── main.py
 └── run.sh                  # Main running file
 ```
+## Database ER Model
+
+<div style="display: flex;">
+    <img src="res/_ER_PlayNexus.png" alt="PlayNexus Database" style="width: 100%;">
+</div>
 
 ## Product Backlog
 
