@@ -1,3 +1,4 @@
 customtkinter==5.2.2
 pillow==10.4.0
 CTkTable==1.1 
+mysql-connector-python==9.0.0
