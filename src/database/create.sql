@@ -45,7 +45,7 @@ CREATE TABLE Game (
     publication_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description VARCHAR(255) NOT NULL,
     cover BLOB,
-    installer BLOB,
+    installer LONGBLOB,
     price DECIMAL(5, 2) NOT NULL,
     PRIMARY KEY (title, publisher),
     FOREIGN KEY (publisher) REFERENCES Publisher(account) ON DELETE CASCADE

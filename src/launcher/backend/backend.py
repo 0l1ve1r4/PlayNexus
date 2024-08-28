@@ -1,9 +1,10 @@
-import mysql.connector as mysql # Import the MySQL connector library.
+import mysql.connector as mysql # Import the MySQL connector library for database operations.
+import zlib # Import the zlib library for data compression.
 
 db_host = "localhost"
 db_user = "root"
 db_password = "password"
-db_name = "PalyNexus"
+db_name = "PlayNexus"
 
 def search_in_store(query: str) -> dict:
     """Search for a game in the store."""
@@ -42,9 +43,9 @@ def authenticate_user(email: str, password: str) -> bool:
     database.close()
     return False
     
-def create_user(email: str, password: str, type: str) -> bool:
+def create_user(email: str, password: str, user_type: str) -> bool:
     """Create a new user in the database."""
-    if type not in ["Gamer", "Publisher"]: return False
+    if user_type not in ["Gamer", "Publisher"]: return False
     database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
     cursor = database.cursor()
     cursor.execute("SELECT * FROM Account WHERE email = %s", (email,))
@@ -52,7 +53,7 @@ def create_user(email: str, password: str, type: str) -> bool:
         cursor.close()
         database.close()
         return False
-    cursor.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, type))
+    cursor.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
     database.commit()
     cursor.close()
     database.close()
@@ -99,6 +100,28 @@ def fetch_user_details(email: str) -> dict:
 def log_user_activity(user_id: int, activity: str) -> None:
     """Log user activity."""
     pass
+
+def publish_game(publisher_accout: str, title: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
+    """Publish a game in the store."""
+    database = mysql.connect(host=db_host, user=db_user, password=db_password, database=db_name)
+    cursor = database.cursor()
+    cursor.execute("SELECT * FROM Publisher WHERE account = %s", (publisher_accout,))
+    if cursor.fetchone() is None:
+        cursor.close()
+        database.close()
+        return False
+    cursor.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher_accout))
+    if cursor.fetchone() is not None:
+        cursor.close()
+        database.close()
+        return False
+    cover = zlib.compress(open(cover_path, "rb").read())
+    installer = zlib.compress(open(installer_path, "rb").read())
+    cursor.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher_accout, developer, genre, description, cover, installer, price))
+    database.commit()
+    cursor.close()
+    database.close()
+    return True
 
 def get_downloads(user_id: int) -> list:
     """Fetch download history for a user."""
