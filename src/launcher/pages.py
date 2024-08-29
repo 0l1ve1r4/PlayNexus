@@ -13,7 +13,7 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.frames = {}
-        self.Admin = False
+        self.Admin = True
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
@@ -38,11 +38,11 @@ class Pages:
             self.frames["home_page"].pack(fill="both", expand=True)
 
     def store_page(self,master) -> None:
-        content_frame = ctk.CTkFrame(master=master, fg_color="transparent")
-        content_frame.pack(anchor="n", fill="both", padx=24, pady=24)
+        search_frame = ctk.CTkFrame(master=master, fg_color="transparent")
+        search_frame.pack(anchor="n", fill="both", padx=24, pady=24)
 
-        self.create_search_bar(content_frame, " Search in store")
-        self.create_labels_and_content(content_frame,"Recently added")
+        self.create_search_bar(search_frame, " Search in store")
+        self.create_labels_and_content(master,"Recently added")
 
     def admin_page(self,master) -> None:
         content_frame = ctk.CTkFrame(master=master, fg_color="transparent")
@@ -57,10 +57,10 @@ class Pages:
         buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
         buttons_frame.pack(fill="x", pady=(24, 0))
 
-        add_button = ctk.CTkButton(master=buttons_frame, text="Add new game", fg_color="transparent", hover_color="#4d4d4d",
+        add_button = ctk.CTkButton(master=buttons_frame, text="Publish new game", fg_color="transparent", hover_color="#4d4d4d",
                                         border_width=2, border_color="#b3b3b3", width=260, command=lambda: self.show_frame(self.new_game_page), image=plus_icon)
         add_button.pack(anchor="w", side="left", padx=(0, 8))
-        list_button = ctk.CTkButton(master=buttons_frame, text="View games list", fg_color="transparent", hover_color="#4d4d4d",
+        list_button = ctk.CTkButton(master=buttons_frame, text="View published games", fg_color="transparent", hover_color="#4d4d4d",
                                         border_width=2, border_color="#b3b3b3", width=260, image=list_icon)
         list_button.pack(anchor="w", side="right")
 
@@ -96,7 +96,7 @@ class Pages:
             ctk.CTkButton(master=header_frame, text="Add game", fg_color="transparent", hover_color="#4d4d4d",
                           border_width=2, border_color="#b3b3b3", image=img).pack(anchor="w", side="right")
             
-            self.create_labels_and_content(content_frame,"Last played")
+            self.create_labels_and_content(library_frame,"Last played")
         else:
             self.frames["library_page"].pack(fill="both", expand=True)
 
@@ -216,44 +216,74 @@ class Pages:
             new_game_frame.pack(fill="both", expand=True)
             self.frames["new_game_page"] = new_game_frame
 
-            content_frame = ctk.CTkFrame(master=new_game_frame, fg_color="transparent")
+            header_frame = ctk.CTkFrame(master=new_game_frame, fg_color="transparent")
+            header_frame.pack(fill="x", padx=24, pady=(24,16))
+            self.add_header(header_frame, "Add new game", self.home_page)
+
+            #Frame where all the content will be placed
+            content_frame = ctk.CTkFrame(master=new_game_frame, fg_color="#2a2a2a")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
 
-            self.add_header(content_frame, "Add new game", self.home_page)
+            ##Frame where the form will be placed
+            general_info = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            general_info.pack(fill="x", padx=16, pady=16)
+            ctk.CTkLabel(master=general_info, text="General info", anchor="w", justify="left",
+                        font=("Roboto", 20, "bold")).pack(fill="x")
+            ctk.CTkLabel(master=general_info, text="Title", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game title").pack(fill="x")
 
-            # Game title
-            ctk.CTkLabel(master=content_frame, text="Game title", anchor="w", justify="left",
-                        font=("Roboto", 16)).pack(fill="x", pady=(16, 0))
+            ctk.CTkLabel(master=general_info, text="Developer", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game developer").pack(fill="x")
 
-            game_title_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter the game title")
-            game_title_entry.pack(fill="x")
-
-            # Publisher
-            ctk.CTkLabel(master=content_frame, text="Publisher", anchor="w", justify="left",
-                        font=("Roboto", 16)).pack(fill="x", pady=(16, 0))
-
-            publisher_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter the publisher")
-            publisher_entry.pack(fill="x")
-
-            # Price
-            ctk.CTkLabel(master=content_frame, text="Price", anchor="w", justify="left",
-                        font=("Roboto", 16)).pack(fill="x", pady=(16, 0))
-
-            price_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter the price")
-            price_entry.pack(fill="x")
-
-            # Description
-            ctk.CTkLabel(master=content_frame, text="Description", anchor="w", justify="left",
-                        font=("Roboto", 16)).pack(fill="x", pady=(16, 0))
-
-            description_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter the description")
-            description_entry.pack(fill="x")
-
-            # Add game button
-            add_button = ctk.CTkButton(master=content_frame, text="Add game", fg_color="transparent", hover_color="#4d4d4d",
-                                    border_width=2, border_color="#b3b3b3", width=260, command=self.home_page)
+            ctk.CTkLabel(master=general_info, text="Game description", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Tell the users more about this game",
+                         height=68).pack(fill="x")
             
-            add_button.pack(anchor="w", side="left", padx=(0, 8))
+            ###Price frame
+            price = ctk.CTkFrame(master=general_info, fg_color="transparent")
+            price.pack(fill="x")
+
+            sale_price= ctk.CTkFrame(master=price, fg_color="transparent")
+            sale_price.pack(side="left", anchor="w")
+            ctk.CTkLabel(master=sale_price, text="Price", anchor="w", justify="left", width=250).pack()
+            ctk.CTkEntry(master=sale_price, border_width=2, placeholder_text="R$1000", width=250).pack(anchor="nw")
+
+            discount = ctk.CTkFrame(master=price, fg_color="transparent")
+            discount.pack(side="right")
+            ctk.CTkLabel(master=discount, text="Discount", anchor="w", justify="left", width=250).pack()
+            ctk.CTkEntry(master=discount, border_width=2, placeholder_text="R$0", width=250).pack()
+
+            ctk.CTkLabel(master=general_info, text="Publish date", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="DD/MM/YY").pack(fill="x")
+
+            ##Requirements frame
+            requirements = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            requirements.pack(fill="x", padx=16, pady=16)
+            ctk.CTkLabel(master=requirements, text="Requirements", anchor="w", justify="left", font=("Roboto",20,"bold")).pack(fill="x")
+
+            ctk.CTkLabel(master=requirements, text="Minimum", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
+                         height=68).pack(fill="x")
+            ctk.CTkLabel(master=requirements, text="Recommended", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
+                         height=68).pack(fill="x")
+            ctk.CTkLabel(master=requirements, text="Maximum", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
+                         height=68).pack(fill="x")
+            
+            ##Tags frame and complementary info
+            frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            frame.pack(fill="x", padx=16, pady=16)
+            ctk.CTkLabel(master=frame, text="Tags", anchor="w", justify="left", font=("Roboto",20,"bold")).pack(fill="x")
+            ctk.CTkCheckBox(master=frame, text="Action", fg_color="#4d4d4d").pack(anchor="w", side="left")
+
+
+            ##Buttons frame
+            buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            buttons_frame.pack(fill="x", pady=16, padx=16)
+            ctk.CTkButton(master=buttons_frame, text="Publish").pack(side="right")
+            ctk.CTkButton(master=buttons_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
+                          border_width=2, border_color="#b3b3b3").pack(side="right", padx=(0,8))            
 
         else:
             self.frames["new_game_page"].pack(fill="both", expand=True)
@@ -334,11 +364,16 @@ class Pages:
     def create_labels_and_content(self, master: ctk.CTkFrame, header) -> None:
         """Create labels and content sections."""
         ctk.CTkLabel(master=master, text=header, anchor="w", justify="left",
-                     font=("Roboto Bold", 24)).pack(anchor="w", pady=(30, 10))
+                     font=("Roboto Bold", 24)).pack(anchor="w", pady=(30, 10), padx=24)
 
         recently_added_frame = ctk.CTkFrame(master, fg_color="transparent")
-        recently_added_frame.pack(fill="x", pady=(10, 0))
-        self.game_card(recently_added_frame)
+        recently_added_frame.pack(fill="x", pady=(10, 0),padx=(24,0))
+
+        recently_added_frame.bind("<Enter>", lambda e: recently_added_frame.bind("<MouseWheel>", self._on_mouse_wheel_horizontal))
+        recently_added_frame.bind("<Leave>", lambda e: recently_added_frame.unbind("<MouseWheel>"))
+
+        for i in range(5):
+            self.game_card(recently_added_frame)
 
         ctk.CTkLabel(master=master, text_color=SIDE_BAR_COLOR,
                      text="__________________________________________________________________________________________",
@@ -356,13 +391,17 @@ class Pages:
 
         self.game_card(tabs_frame)
 
+    def _on_mouse_wheel_horizontal(self, event):
+        """Scroll the frame horizontally."""
+        event.widget.xview("scroll", int(-1*(event.delta/120)), "units")
+
     def game_card(self, master: ctk.CTkFrame) -> None: # This function is temporary
         """Display game cards in the provided frame."""
         game_frame = ctk.CTkFrame(master, corner_radius=8, fg_color="transparent", width=150, height=200)
         game_frame.pack(side="left", padx=(0,16), pady=10)
 
         game_img_data = load_image("secondary-logo-colored.png")
-        game_img = ctk.CTkImage(dark_image=game_img_data, light_image=game_img_data, size=(150, 150))
+        game_img = ctk.CTkImage(dark_image=game_img_data, light_image=game_img_data, size=(134, 134))
         ctk.CTkLabel(master=game_frame, image=game_img, text="").pack(padx=16,pady=(16,0))
 
         ctk.CTkLabel(master=game_frame, text="Game Title", text_color="#ffffff", anchor="w", justify="left",
