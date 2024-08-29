@@ -4,6 +4,7 @@ from PIL import Image
 from .utils import *
 from .backend.backend import *
 from functools import partial
+from launcher import Launcher
 import tkinter as tk
 
 SIDE_BAR_COLOR = "#2a2a2a"
@@ -23,7 +24,11 @@ class Pages:
 
         self.name = "Admin"
         self.email = "admin@playnexus.com"
-        self.screen_size = ('1920x1080', '1080x720')
+        self.screen_size = ['1920x1080', '1080x720', '856x645']
+        #
+        def selected_screen_size():
+            pass
+        #
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -146,20 +151,35 @@ class Pages:
             self.add_setting_btn(account_frame, "Manage accounts", self.go_to_manage, "right_arrow.png")
 
             #APP SETTINGS
-            app_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            app_frame.pack(fill="x", anchor="w", pady=(0, 24))
-            self.add_separator(app_frame)
-            ctk.CTkLabel(master=app_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
+            settings_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            settings_frame.pack(fill="x", anchor="w", pady=(24, 0))
+            self.add_separator(settings_frame)
+            ctk.CTkLabel(master=settings_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
             
             ##Change screen size
-            change_screen_size_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            change_screen_size_frame.pack(fill="x", anchor="w", pady=(0, 16))
+            change_screen_size_frame = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
+            change_screen_size_frame.pack(fill="x", anchor="w", pady=(24, 0))
             headline = ctk.CTkFrame(master=change_screen_size_frame, fg_color="transparent")
             headline.pack(fill="x", side="left", anchor="w")
 
             ctk.CTkLabel(master=headline, text="Screen Size", anchor="w", font=self.body).pack(anchor="w")
             ctk.CTkComboBox(master=change_screen_size_frame, width=200, font=self.small, values=self.screen_size).pack(side="right")
 
+            ##Change theme
+            change_theme = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
+            change_theme.pack(fill="x", anchor="w", pady=(24, 0))
+            headline = ctk.CTkFrame(master=change_theme, fg_color="transparent")
+            headline.pack(fill="x", side="left", anchor="w")
+
+            ctk.CTkLabel(master=headline, text="Theme Color", anchor="w", font=self.body).pack(anchor="w")
+
+            ##Theme options
+            change_color_btn = ctk.CTkFrame(master=change_theme, height=32, width=310, fg_color="#4d4d4d")
+            change_color_btn.pack(side="right") 
+
+            ctk.CTkButton(master=change_color_btn, text="Dark", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(master=change_color_btn, text="White", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(master=change_color_btn, text="System", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
 
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)
