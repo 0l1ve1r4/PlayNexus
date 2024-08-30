@@ -26,6 +26,10 @@ class connect_db:
     def commit(self):
         self.session.commit()
 
+######################################################################################################
+# The following methods are used to interact with the USERS.                                         #
+######################################################################################################
+
 def authenticate_user(email: str, password: str) -> bool:
     """Check if the provided credentials are valid."""
     database = connect_db()
@@ -43,7 +47,27 @@ def create_user(email: str, password: str, user_type: str) -> bool:
     database.commit()
     return True
 
-def set_gamer(email: str, username: str, birth_date: str, country: str) -> bool:
+def update_user_account_details(user_id: int, new_email: str, new_username: str) -> bool:
+    """Update user account details."""
+    pass
+
+def log_failed_login_attempt(email: str) -> None:
+    """Log a failed login attempt."""
+    pass
+
+def update_user_password(email: str, new_password: str) -> bool:
+    """Update the user's password in the database."""
+    pass
+
+def fetch_user_details(email: str) -> dict:
+    """Fetch user details from the database."""
+    pass
+
+def log_user_activity(user_id: int, activity: str) -> None:
+    """Log user activity."""
+    pass
+
+def create_gamer(email: str, username: str, birth_date: str, country: str) -> bool:
     """Create and set gamer details in the database."""
     database = connect_db()
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (email,))
@@ -51,12 +75,29 @@ def set_gamer(email: str, username: str, birth_date: str, country: str) -> bool:
     database.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (email, username, birth_date, country))
     return True
 
-def set_publisher(email: str, name: str) -> bool:
+def create_publisher(email: str, name: str) -> bool:
     """Create and set publisher details in the database."""
     database = connect_db()
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (email,))
     if database.result() is None: return False
     database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (email, name))
+    database.commit()
+    return True
+
+######################################################################################################
+# The following methods are used to interact with the GAME STORE.                                    #
+######################################################################################################
+
+def publish_game(publisher: str, title: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
+    """Publish a game in the store."""
+    database = connect_db()
+    database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher,))
+    if database.result() is None: return False
+    database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
+    if database.result() is not None: return False
+    cover = zlib.compress(open(cover_path, "rb").read())
+    installer = zlib.compress(open(installer_path, "rb").read())
+    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, installer, price))
     database.commit()
     return True
 
@@ -84,30 +125,17 @@ def get_all_games() -> list:
     """Fetch all games from the database."""
     pass
 
-def update_user_password(email: str, new_password: str) -> bool:
-    """Update the user's password in the database."""
-    pass
+######################################################################################################
+# The following methods are used to interact with the GAME LIBRARY.                                  #
+######################################################################################################
 
-def fetch_user_details(email: str) -> dict:
-    """Fetch user details from the database."""
-    pass
-
-def log_user_activity(user_id: int, activity: str) -> None:
-    """Log user activity."""
-    pass
-
-def publish_game(publisher_accout: str, title: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
-    """Publish a game in the store."""
+def fetch_library(gamer: str) -> list:
+    """Fetch all games in the user's library."""
     database = connect_db()
-    database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher_accout,))
-    if database.result() is None: return False
-    database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher_accout))
-    if database.result() is not None: return False
-    cover = zlib.compress(open(cover_path, "rb").read())
-    installer = zlib.compress(open(installer_path, "rb").read())
-    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher_accout, developer, genre, description, cover, installer, price))
-    database.commit()
-    return True
+    database.execute("SELECT title FROM Purchase WHERE gamer = %s", (gamer,))
+    result = database.result()
+    if result is None: return list()
+    return list(result)
 
 def get_downloads(user_id: int) -> list:
     """Fetch download history for a user."""
@@ -119,16 +147,4 @@ def add_game_to_library(user_id: int, game_id: int) -> bool:
 
 def remove_game_from_library(user_id: int, game_id: int) -> bool:
     """Remove a game from the user's library."""
-    pass
-
-def fetch_library(user_id: int) -> list:
-    """Fetch all games in the user's library."""
-    pass
-
-def update_user_account_details(user_id: int, new_email: str, new_username: str) -> bool:
-    """Update user account details."""
-    pass
-
-def log_failed_login_attempt(email: str) -> None:
-    """Log a failed login attempt."""
     pass
