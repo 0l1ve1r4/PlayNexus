@@ -10,8 +10,8 @@ USE PlayNexus;
 
 -- Creates the table that will store user's account information:
 CREATE TABLE Account (
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
     type ENUM('Gamer', 'Publisher') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (email)
@@ -19,10 +19,10 @@ CREATE TABLE Account (
 
 -- Creates the table that will store the gamer's information:
 CREATE TABLE Gamer (
-    account VARCHAR(255) NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    account VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL,
     birth_date DATE NOT NULL,
-    country VARCHAR(255) NOT NULL,
+    country VARCHAR(50) NOT NULL,
     bio VARCHAR(255),
     PRIMARY KEY (account),
     FOREIGN KEY (account) REFERENCES Account(email) ON DELETE CASCADE
@@ -30,18 +30,18 @@ CREATE TABLE Gamer (
 
 -- Creates the table that will store the publisher's information:
 CREATE TABLE Publisher (
-    account VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    account VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
     PRIMARY KEY (account),
     FOREIGN KEY (account) REFERENCES Account(email) ON DELETE CASCADE
 );
 
 -- Creates the table that will store the game's information:
 CREATE TABLE Game (
-    title VARCHAR(255) NOT NULL,
-    publisher VARCHAR(255) NOT NULL,
-    developer VARCHAR(255) NOT NULL,
-    genre VARCHAR(255) NOT NULL,
+    title VARCHAR(50) NOT NULL,
+    publisher VARCHAR(50) NOT NULL,
+    developer VARCHAR(50) NOT NULL,
+    genre VARCHAR(50) NOT NULL,
     publication_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description VARCHAR(255) NOT NULL,
     cover BLOB,
@@ -53,9 +53,9 @@ CREATE TABLE Game (
 
 -- Creates the table that will store the purchase's information:
 CREATE TABLE Purchase (
-    gamer VARCHAR(255) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    publisher VARCHAR(255) NOT NULL,
+    gamer VARCHAR(50) NOT NULL,
+    title VARCHAR(50) NOT NULL,
+    publisher VARCHAR(50) NOT NULL,
     purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (gamer, title, publisher),
     FOREIGN KEY (gamer) REFERENCES Gamer(account) ON DELETE CASCADE,
