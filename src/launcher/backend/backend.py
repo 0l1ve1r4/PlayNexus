@@ -1,5 +1,7 @@
 import mysql.connector as mysql # Import the MySQL connector library for database operations.
+import string # Import the string library for string operations.
 import zlib # Import the zlib library for data compression.
+import os # Import the os library for file operations.
 
 class connect_db:
     """Connect to the database."""
@@ -35,6 +37,9 @@ def authenticate_user(email: str, password: str) -> bool:
     database = connect_db()
     database.execute("SELECT * FROM Account WHERE email = %s AND password = %s", (email, password))
     if database.result() is not None: return True
+    if os.path.exists("users") is False: os.mkdir("users")
+    user_path = f"users/{email.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
+    if os.path.exists(user_path) is False: os.mkdir(user_path)
     return False
 
 def create_user(email: str, password: str, user_type: str) -> bool:
@@ -132,10 +137,8 @@ def get_all_games() -> list:
 def fetch_library(gamer: str) -> list:
     """Fetch all games in the user's library."""
     database = connect_db()
-    database.execute("SELECT title FROM Purchase WHERE gamer = %s", (gamer,))
-    result = database.result()
-    if result is None: return list()
-    return list(result)
+    database.execute("SELECT * FROM Purchase WHERE gamer = %s", (gamer,))
+    return database.result()
 
 def get_downloads(user_id: int) -> list:
     """Fetch download history for a user."""
@@ -148,3 +151,16 @@ def add_game_to_library(user_id: int, game_id: int) -> bool:
 def remove_game_from_library(user_id: int, game_id: int) -> bool:
     """Remove a game from the user's library."""
     pass
+
+def install_game(gamer: str, game: str, publisher: str) -> bool:
+    """Install a game from the user's library."""
+    database = connect_db()
+    database.execute("SELECT * FROM Purchase WHERE gamer = %s AND game = %s AND publisher", (gamer, game, publisher))
+    if database.result() is None: return False
+    games_path = f"users/{gamer.split("@")[0].translate(str.maketrans("", "", string.punctuation))}/games"
+    game_path = f"{games_path}{game.replace(" ", "_")}.run"
+    if os.path.exists(games_path) is False: os.mkdir(games_path)
+    if os.path.exists(game_path): return False
+    database.execute("SELECT installer FROM Game WHERE title = %s", (game,))
+    installer = zlib.decompress(database.result())
+    with open(game_path, "wb") as file: file.write(installer)

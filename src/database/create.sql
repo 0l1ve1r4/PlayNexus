@@ -54,10 +54,10 @@ CREATE TABLE Game (
 -- Creates the table that will store the purchase's information:
 CREATE TABLE Purchase (
     gamer VARCHAR(50) NOT NULL,
-    title VARCHAR(50) NOT NULL,
+    game VARCHAR(50) NOT NULL,
     publisher VARCHAR(50) NOT NULL,
     purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (gamer, title, publisher),
     FOREIGN KEY (gamer) REFERENCES Gamer(account) ON DELETE CASCADE,
-    FOREIGN KEY (title, publisher) REFERENCES Game(title, publisher) ON DELETE CASCADE
+    FOREIGN KEY (game, publisher) REFERENCES Game(title, publisher) ON DELETE CASCADE
 );
