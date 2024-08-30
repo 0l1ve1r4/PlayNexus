@@ -127,6 +127,10 @@ class SideBar(Pages):
         profile_btn.bind("<Enter>", on_enter)
         profile_btn.bind("<Leave>", on_leave)
 
+
+        
+
+
     def add_corners(self, im, rad):
         circle = Image.new('L', (rad * 2, rad * 2), 0)
         draw = ImageDraw.Draw(circle)
