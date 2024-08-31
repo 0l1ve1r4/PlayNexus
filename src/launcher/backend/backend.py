@@ -13,7 +13,11 @@ class connect_db:
 
     def __init__(self):
         self.session = mysql.connect(host=self.db_host, user=self.db_user, password=self.db_password, database=self.db_name)
-        self.cursor = self.database.cursor()
+        self.cursor = self.session.cursor()
+
+    def __del__(self):
+        self.cursor.close()
+        self.session.close()
 
     def __exit__(self):
         self.cursor.close()
@@ -28,19 +32,23 @@ class connect_db:
     def commit(self):
         self.session.commit()
 
-def create_user_directory(account: str) -> str:
-    """Create a directory for the user."""
+def get_user_path(account: str) -> str:
+    """Create a directory for the user and return the path."""
     if os.path.exists("users") is False: os.mkdir("users")
     user_path = f"users/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
     if os.path.exists(user_path) is False: os.mkdir(user_path)
     return user_path
 
-def create_games_directory(account: str) -> str:
-    """Create a directory for the game."""
-    user_path = create_user_directory(account)
-    games_path = f"{user_path}/games"
+def get_games_path(account: str) -> str:
+    """Create a directory for the game and return the path."""
+    games_path = f"{get_user_path(account)}/games"
     if os.path.exists(games_path) is False: os.mkdir(games_path)
     return games_path
+
+def get_game_path(account: str, game_title: str) -> str:
+    """Return the path to the game."""
+    game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
+    return game_path
 
 ######################################################################################################
 # The following methods are used to interact with the USERS.                                         #
@@ -51,7 +59,7 @@ def authenticate_user(email: str, password: str) -> bool:
     database = connect_db()
     database.execute("SELECT * FROM Account WHERE email = %s AND password = %s", (email, password))
     if database.result() is None: return False
-    create_user_directory(email)
+    get_user_path(email)
     return True
 
 def create_user(email: str, password: str, user_type: str) -> bool:
@@ -165,27 +173,30 @@ def remove_game_from_library(user_id: int, game_id: int) -> bool:
     """Remove a game from the user's library."""
     pass
 
+def game_is_installed(gamer: str, game_title: str) -> bool:
+    """Check if a game is installed in the system."""
+    return os.path.exists(get_game_path(gamer, game_title))
+
 def install_game(gamer: str, game_title: str, game_publisher: str) -> bool:
     """Install a game from the user's library."""
+    if game_is_installed(gamer, game_title): return False
     database = connect_db()
-    game_path = f"{create_games_directory(gamer)}/{game_title.replace(" ", "_")}.run"
-    if os.path.exists(game_path): return False
     database.execute("SELECT installer FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
     installer = zlib.decompress(database.result())
+    game_path = get_game_path(gamer, game_title)
     with open(game_path, "wb") as file: file.write(installer)
     return True
 
 def uninstall_game(gamer: str, game_title: str) -> bool:
     """Uninstall a game from the user's library."""
-    game_path = f"{create_games_directory(gamer)}/{game_title.replace(" ", "_")}.run"
-    if os.path.exists(game_path) is False: return False
-    os.remove(game_path)
+    if game_is_installed(gamer, game_title) is False: return False
+    os.remove(get_game_path(gamer, game_title))
     return True
 
 def play_game(gamer: str, game_title: str) -> bool:
     """Play a game from the user's library."""
-    game_path = f"{create_games_directory(gamer)}/{game_title.replace(" ", "_")}.run"
-    if os.path.exists(game_path) is False: return False
+    if game_is_installed(gamer, game_title) is False: return False
+    game_path = get_game_path(gamer, game_title)
     os.system(f"chmod +x {game_path}")
     os.system(f"./{game_path}")
     return True
