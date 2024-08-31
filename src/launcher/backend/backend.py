@@ -28,6 +28,20 @@ class connect_db:
     def commit(self):
         self.session.commit()
 
+def create_user_directory(account: str) -> str:
+    """Create a directory for the user."""
+    if os.path.exists("users") is False: os.mkdir("users")
+    user_path = f"users/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
+    if os.path.exists(user_path) is False: os.mkdir(user_path)
+    return user_path
+
+def create_games_directory(account: str) -> str:
+    """Create a directory for the game."""
+    user_path = create_user_directory(account)
+    games_path = f"{user_path}/games"
+    if os.path.exists(games_path) is False: os.mkdir(games_path)
+    return games_path
+
 ######################################################################################################
 # The following methods are used to interact with the USERS.                                         #
 ######################################################################################################
@@ -36,11 +50,9 @@ def authenticate_user(email: str, password: str) -> bool:
     """Check if the provided credentials are valid."""
     database = connect_db()
     database.execute("SELECT * FROM Account WHERE email = %s AND password = %s", (email, password))
-    if database.result() is not None: return True
-    if os.path.exists("users") is False: os.mkdir("users")
-    user_path = f"users/{email.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
-    if os.path.exists(user_path) is False: os.mkdir(user_path)
-    return False
+    if database.result() is None: return False
+    create_user_directory(email)
+    return True
 
 def create_user(email: str, password: str, user_type: str) -> bool:
     """Create a new user in the database."""
@@ -72,20 +84,20 @@ def log_user_activity(user_id: int, activity: str) -> None:
     """Log user activity."""
     pass
 
-def create_gamer(email: str, username: str, birth_date: str, country: str) -> bool:
+def create_gamer(account: str, username: str, birth_date: str, country: str) -> bool:
     """Create and set gamer details in the database."""
     database = connect_db()
-    database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (email,))
+    database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (account,))
     if database.result() is None: return False
-    database.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (email, username, birth_date, country))
+    database.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (account, username, birth_date, country))
     return True
 
-def create_publisher(email: str, name: str) -> bool:
+def create_publisher(account: str, name: str) -> bool:
     """Create and set publisher details in the database."""
     database = connect_db()
-    database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (email,))
+    database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (account,))
     if database.result() is None: return False
-    database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (email, name))
+    database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (account, name))
     database.commit()
     return True
 
@@ -93,13 +105,14 @@ def create_publisher(email: str, name: str) -> bool:
 # The following methods are used to interact with the GAME STORE.                                    #
 ######################################################################################################
 
-def publish_game(publisher: str, title: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
+def publish_game(title: str, publisher: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
     """Publish a game in the store."""
     database = connect_db()
     database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher,))
     if database.result() is None: return False
     database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
     if database.result() is not None: return False
+    if os.path.exists(cover_path) or os.path.exists(installer_path) is False: return False
     cover = zlib.compress(open(cover_path, "rb").read())
     installer = zlib.compress(open(installer_path, "rb").read())
     database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, installer, price))
@@ -152,15 +165,27 @@ def remove_game_from_library(user_id: int, game_id: int) -> bool:
     """Remove a game from the user's library."""
     pass
 
-def install_game(gamer: str, game: str, publisher: str) -> bool:
+def install_game(gamer: str, game_title: str, game_publisher: str) -> bool:
     """Install a game from the user's library."""
     database = connect_db()
-    database.execute("SELECT * FROM Purchase WHERE gamer = %s AND game = %s AND publisher", (gamer, game, publisher))
-    if database.result() is None: return False
-    games_path = f"users/{gamer.split("@")[0].translate(str.maketrans("", "", string.punctuation))}/games"
-    game_path = f"{games_path}{game.replace(" ", "_")}.run"
-    if os.path.exists(games_path) is False: os.mkdir(games_path)
+    game_path = f"{create_games_directory(gamer)}/{game_title.replace(" ", "_")}.run"
     if os.path.exists(game_path): return False
-    database.execute("SELECT installer FROM Game WHERE title = %s", (game,))
+    database.execute("SELECT installer FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
     installer = zlib.decompress(database.result())
     with open(game_path, "wb") as file: file.write(installer)
+    return True
+
+def uninstall_game(gamer: str, game_title: str) -> bool:
+    """Uninstall a game from the user's library."""
+    game_path = f"{create_games_directory(gamer)}/{game_title.replace(" ", "_")}.run"
+    if os.path.exists(game_path) is False: return False
+    os.remove(game_path)
+    return True
+
+def play_game(gamer: str, game_title: str) -> bool:
+    """Play a game from the user's library."""
+    game_path = f"{create_games_directory(gamer)}/{game_title.replace(" ", "_")}.run"
+    if os.path.exists(game_path) is False: return False
+    os.system(f"chmod +x {game_path}")
+    os.system(f"./{game_path}")
+    return True
