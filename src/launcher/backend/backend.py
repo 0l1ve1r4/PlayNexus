@@ -71,10 +71,6 @@ def create_user(email: str, password: str, user_type: str) -> bool:
     database.commit()
     return True
 
-def update_user_account_details(user_id: int, new_email: str, new_username: str) -> bool:
-    """Update user account details."""
-    pass
-
 def log_failed_login_attempt(email: str) -> None:
     """Log a failed login attempt."""
     pass
@@ -139,11 +135,15 @@ def publish_game(title: str, publisher: str, developer: str, genre: str, descrip
     database.commit()
     return True
 
-def count_games_in_store() -> int:
-    """Count the number of games in the store."""
+def get_all_games() -> list:
+    """Fetch all games from the database."""
     database = ConnectDB()
     database.execute("SELECT * FROM Game")
-    return len(database.results())
+    return database.results()
+
+def count_games_in_store() -> int:
+    """Count the number of games in the store."""
+    return len(get_all_games())
 
 def search_in_store(query: str) -> dict:
     """Search for a game in the store."""
@@ -165,15 +165,11 @@ def get_upcoming_games() -> list:
     """Fetch upcoming games from the database."""
     pass
 
-def get_all_games() -> list:
-    """Fetch all games from the database."""
-    pass
-
 ######################################################################################################
 # The following methods are used to interact with the GAME LIBRARY.                                  #
 ######################################################################################################
 
-def fetch_library(gamer: str) -> list:
+def get_library(gamer: str) -> list:
     """Fetch all games in the user's library."""
     database = ConnectDB()
     database.execute("SELECT * FROM Purchase WHERE gamer = %s", (gamer,))
@@ -181,7 +177,7 @@ def fetch_library(gamer: str) -> list:
 
 def count_games_in_library(gamer: str) -> int:
     """Count the number of games in the user's library."""
-    return len(fetch_library(gamer))
+    return len(get_library(gamer))
 
 def game_is_installed(gamer: str, game_title: str) -> bool:
     """Check if a game is installed in the system."""
