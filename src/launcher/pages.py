@@ -183,7 +183,7 @@ class Pages:
                                             hover_color="#4d4d4d", border_width=2, width=32)
             favorite_button.pack(anchor="w", side="right", fill="y")
             
-            #About section
+            ##About section
             about_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             about_frame.pack(fill="x")
             description = ctk.CTkFrame(master=about_frame, fg_color="transparent", width=431)
@@ -200,6 +200,58 @@ class Pages:
 
             self.add_separator(content_frame)
 
+            ##Requirements section
+            ctk.CTkLabel(master=content_frame, text="System requirements", anchor="w", font=self.h1).pack(fill="x", pady=(24,0))
+            tabview = ctk.CTkTabview(master=content_frame, fg_color="#2a2a2a")
+            tabview.pack(fill="x", pady=(16,24))
+
+            tabview.add("Minimum")
+            tabview.add("Recommended")
+            tabview.add("Maximum")
+
+            min_req_frame = ctk.CTkFrame(master=tabview.tab("Minimum"), fg_color="transparent")
+            min_req_frame.pack(fill="x", anchor="w")
+            rec_req_frame = ctk.CTkFrame(master=tabview.tab("Recommended"), fg_color="transparent")
+            rec_req_frame.pack(fill="x", anchor="w")
+            max_req_frame = ctk.CTkFrame(master=tabview.tab("Maximum"), fg_color="transparent")
+            max_req_frame.pack(fill="x", anchor="w")
+
+            min_requirements = {
+                "OS": "Windows 7",
+                "Processor": "Intel Core i5-3470 / AMD FX-6300",
+                "Memory": "4 GB RAM",
+                "Graphics card": "NVIDIA GeForce GTX 660 / AMD Radeon HD 7870",
+                "Storage": "30 GB available space"
+            }
+
+            for key, value in min_requirements.items():
+                ctk.CTkLabel(master=min_req_frame, text=key + ": " + value, anchor="w").pack(fill="x")
+
+            rec_requirements = {
+                "OS": "Windows 8",
+                "Processor": "Intel Core i5-3470 / AMD FX-6300",
+                "Memory": "8 GB RAM",
+                "Graphics card": "NVIDIA GeForce GTX 660 / AMD Radeon HD 7870",
+                "Storage": "40 GB available space"
+            }
+
+            for key, value in rec_requirements.items():
+                ctk.CTkLabel(master=rec_req_frame, text=key + ": " + value, anchor="w").pack(fill="x")
+
+            max_requirements = {
+                "OS": "Windows 10",
+                "Processor": "Intel Core i5-3470 / AMD FX-6300",
+                "Memory": "8 GB RAM",
+                "Graphics card": "NVIDIA GeForce GTX 660 / AMD Radeon HD 7870",
+                "Storage": "50 GB available space"
+            }
+
+            for key, value in max_requirements.items():
+                ctk.CTkLabel(master=max_req_frame, text=key + ": " + value, anchor="w").pack(fill="x")
+
+            self.add_separator(content_frame)
+
+            ##Reviews section
 
         else:
             self.frames["game_page"].pack(fill="both", expand=True)
@@ -274,7 +326,7 @@ class Pages:
             ##Tags frame and complementary info
             frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             frame.pack(fill="x", padx=16, pady=16)
-            ctk.CTkLabel(master=frame, text="Tags", anchor="w", justify="left", font=("Roboto",20,"bold")).pack(fill="x")
+            ctk.CTkLabel(master=frame, text="Tags", anchor="w", justify="left").pack(fill="x")
             ctk.CTkCheckBox(master=frame, text="Action", fg_color="#4d4d4d").pack(anchor="w", side="left")
 
 
