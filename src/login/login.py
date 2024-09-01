@@ -161,7 +161,6 @@ class Login:
         self.app.destroy()
 
     def go_to_signup(self):
-        # vc vai ter que dar um jeito nessa função, pq ela é a causadora do import circular  
         from .signup import Signup 
         # self.app.destroy()
         signup = Signup(self.frame, self.app)
