@@ -23,6 +23,7 @@ class Pages:
 
         self.name = "Admin"
         self.email = "admin@playnexus.com"
+        self.bio = "Welcome to PlayNexus! This is an administator account."
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -349,6 +350,48 @@ class Pages:
 
             content_frame = ctk.CTkFrame(master=profile_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
+
+            profile_info = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            profile_info.pack(fill="x")
+
+            profile_img = ctk.CTkImage(dark_image=load_image("secondary-logo-colored.png"), light_image=load_image("secondary-logo-colored.png"), size=(100, 100))
+            ctk.CTkLabel(master=profile_info, image=profile_img, text="", fg_color="#4d4d4d").pack(side="left")
+
+            user_info = ctk.CTkFrame(master=profile_info, fg_color="transparent")
+            user_info.pack(padx=(16, 0), side="left", anchor="nw")
+
+            ctk.CTkLabel(master=user_info, text=self.name, anchor="nw", justify="left", font=("Roboto", 24)).pack(fill="x")
+            ctk.CTkLabel(master=user_info, text=self.bio, anchor="nw", justify="left", font=("Roboto", 16), text_color="#b3b3b3", wraplength=250).pack(fill="x")
+
+            ctk.CTkButton(master=profile_info, text="Edit profile", fg_color="transparent", hover_color="#4d4d4d",
+                            border_width=2, border_color="#b3b3b3", width=len("Edit profile")).pack(side="right", anchor="s")
+
+            ##Account insights
+            insights_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            insights_frame.pack(fill="x", pady=24, expand=True)
+
+            clock=ctk.CTkImage(dark_image=load_image("clock.png"), light_image=load_image("clock.png"), size=(64,64))
+            reviews_icon=ctk.CTkImage(dark_image=load_image("review.png"), light_image=load_image("review.png"), size=(64,64))
+            gaming_pad=ctk.CTkImage(dark_image=load_image("gaming_pad.png"), light_image=load_image("gaming_pad.png"), size=(64,64))
+
+            inlibrary = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
+            inlibrary.pack(side="left", anchor="w", padx=(0,16), ipadx=16)
+            ctk.CTkLabel(master=inlibrary, text="Games in library").pack(fill="x", pady=16)
+            ctk.CTkLabel(master=inlibrary, text="", image=gaming_pad).pack(fill="x")
+            ctk.CTkLabel(master=inlibrary, text="0", font=self.h1).pack(fill="x", pady=16)
+
+            hrsplayed = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
+            hrsplayed.pack(side="left", anchor="e", padx=(0,16), ipadx=16)
+            ctk.CTkLabel(master=hrsplayed, text="Hours played").pack(fill="x", pady=16)
+            ctk.CTkLabel(master=hrsplayed, text="", image=clock).pack(fill="x")
+            ctk.CTkLabel(master=hrsplayed, text="0",font=self.h1).pack(fill="x", pady=16)
+
+            reviews = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
+            reviews.pack(side="left", pady=16, ipadx=16)
+            ctk.CTkLabel(master=reviews, text="Reviews").pack(fill="x", pady=16)
+            ctk.CTkLabel(master=reviews, text="", image=reviews_icon).pack(fill="x")
+            ctk.CTkLabel(master=reviews, text="0", font=self.h1).pack(fill="x", pady=16)
+
             
         else:
             self.frames["profile_page"].pack(fill="both", expand=True)
