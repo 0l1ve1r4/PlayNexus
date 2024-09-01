@@ -15,10 +15,6 @@ class connect_db:
         self.session = mysql.connect(host=self.db_host, user=self.db_user, password=self.db_password, database=self.db_name)
         self.cursor = self.session.cursor()
 
-    def __del__(self):
-        self.cursor.close()
-        self.session.close()
-
     def __exit__(self):
         self.cursor.close()
         self.session.close()
@@ -28,6 +24,9 @@ class connect_db:
 
     def result(self):
         return self.cursor.fetchone()
+    
+    def results(self):
+        return self.cursor.fetchall()
         
     def commit(self):
         self.session.commit()
@@ -98,6 +97,7 @@ def create_gamer(account: str, username: str, birth_date: str, country: str) -> 
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (account,))
     if database.result() is None: return False
     database.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (account, username, birth_date, country))
+    database.commit()
     return True
 
 def create_publisher(account: str, name: str) -> bool:
@@ -120,7 +120,7 @@ def publish_game(title: str, publisher: str, developer: str, genre: str, descrip
     if database.result() is None: return False
     database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
     if database.result() is not None: return False
-    if os.path.exists(cover_path) or os.path.exists(installer_path) is False: return False
+    if (os.path.exists(cover_path) and os.path.exists(installer_path)) is False: return False
     cover = zlib.compress(open(cover_path, "rb").read())
     installer = zlib.compress(open(installer_path, "rb").read())
     database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, installer, price))
@@ -159,7 +159,7 @@ def fetch_library(gamer: str) -> list:
     """Fetch all games in the user's library."""
     database = connect_db()
     database.execute("SELECT * FROM Purchase WHERE gamer = %s", (gamer,))
-    return database.result()
+    return database.results()
 
 def get_downloads(user_id: int) -> list:
     """Fetch download history for a user."""
@@ -182,7 +182,7 @@ def install_game(gamer: str, game_title: str, game_publisher: str) -> bool:
     if game_is_installed(gamer, game_title): return False
     database = connect_db()
     database.execute("SELECT installer FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
-    installer = zlib.decompress(database.result())
+    installer = zlib.decompress(database.result()[0])
     game_path = get_game_path(gamer, game_title)
     with open(game_path, "wb") as file: file.write(installer)
     return True
