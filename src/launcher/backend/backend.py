@@ -3,7 +3,7 @@ import string # Import the string library for string operations.
 import zlib # Import the zlib library for data compression.
 import os # Import the os library for file operations.
 
-class connect_db:
+class ConnectDB:
     """Connect to the database."""
 
     db_host = "localhost"
@@ -55,7 +55,7 @@ def get_game_path(account: str, game_title: str) -> str:
 
 def authenticate_user(email: str, password: str) -> bool:
     """Check if the provided credentials are valid."""
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT * FROM Account WHERE email = %s AND password = %s", (email, password))
     if database.result() is None: return False
     get_user_path(email)
@@ -64,16 +64,12 @@ def authenticate_user(email: str, password: str) -> bool:
 def create_user(email: str, password: str, user_type: str) -> bool:
     """Create a new user in the database."""
     if user_type not in ["Gamer", "Publisher"]: return False
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT * FROM Account WHERE email = %s", (email,))
     if database.result() is not None: return False
     database.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
     database.commit()
     return True
-
-def update_user_account_details(user_id: int, new_email: str, new_username: str) -> bool:
-    """Update user account details."""
-    pass
 
 def log_failed_login_attempt(email: str) -> None:
     """Log a failed login attempt."""
@@ -93,21 +89,33 @@ def log_user_activity(user_id: int, activity: str) -> None:
 
 def create_gamer(account: str, username: str, birth_date: str, country: str) -> bool:
     """Create and set gamer details in the database."""
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (account,))
     if database.result() is None: return False
     database.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (account, username, birth_date, country))
     database.commit()
     return True
 
+def count_gamers() -> int:
+    """Count the number of gamers in the database."""
+    database = ConnectDB()
+    database.execute("SELECT * FROM Gamer")
+    return len(database.results())
+
 def create_publisher(account: str, name: str) -> bool:
     """Create and set publisher details in the database."""
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (account,))
     if database.result() is None: return False
     database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (account, name))
     database.commit()
     return True
+
+def count_publishers() -> int:
+    """Count the number of publishers in the database."""
+    database = ConnectDB()
+    database.execute("SELECT * FROM Publisher")
+    return len(database.results())
 
 ######################################################################################################
 # The following methods are used to interact with the GAME STORE.                                    #
@@ -115,7 +123,7 @@ def create_publisher(account: str, name: str) -> bool:
 
 def publish_game(title: str, publisher: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
     """Publish a game in the store."""
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher,))
     if database.result() is None: return False
     database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
@@ -126,6 +134,16 @@ def publish_game(title: str, publisher: str, developer: str, genre: str, descrip
     database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, installer, price))
     database.commit()
     return True
+
+def get_all_games() -> list:
+    """Fetch all games from the database."""
+    database = ConnectDB()
+    database.execute("SELECT * FROM Game")
+    return database.results()
+
+def count_games_in_store() -> int:
+    """Count the number of games in the store."""
+    return len(get_all_games())
 
 def search_in_store(query: str) -> dict:
     """Search for a game in the store."""
@@ -147,31 +165,19 @@ def get_upcoming_games() -> list:
     """Fetch upcoming games from the database."""
     pass
 
-def get_all_games() -> list:
-    """Fetch all games from the database."""
-    pass
-
 ######################################################################################################
 # The following methods are used to interact with the GAME LIBRARY.                                  #
 ######################################################################################################
 
-def fetch_library(gamer: str) -> list:
+def get_library(gamer: str) -> list:
     """Fetch all games in the user's library."""
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT * FROM Purchase WHERE gamer = %s", (gamer,))
     return database.results()
 
-def get_downloads(user_id: int) -> list:
-    """Fetch download history for a user."""
-    pass
-
-def add_game_to_library(user_id: int, game_id: int) -> bool:
-    """Add a game to the user's library."""
-    pass
-
-def remove_game_from_library(user_id: int, game_id: int) -> bool:
-    """Remove a game from the user's library."""
-    pass
+def count_games_in_library(gamer: str) -> int:
+    """Count the number of games in the user's library."""
+    return len(get_library(gamer))
 
 def game_is_installed(gamer: str, game_title: str) -> bool:
     """Check if a game is installed in the system."""
@@ -180,7 +186,7 @@ def game_is_installed(gamer: str, game_title: str) -> bool:
 def install_game(gamer: str, game_title: str, game_publisher: str) -> bool:
     """Install a game from the user's library."""
     if game_is_installed(gamer, game_title): return False
-    database = connect_db()
+    database = ConnectDB()
     database.execute("SELECT installer FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
     installer = zlib.decompress(database.result()[0])
     game_path = get_game_path(gamer, game_title)
