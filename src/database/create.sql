@@ -25,7 +25,8 @@ CREATE TABLE Gamer (
     country VARCHAR(50) NOT NULL,
     bio VARCHAR(255),
     PRIMARY KEY (account),
-    FOREIGN KEY (account) REFERENCES Account(email) ON DELETE CASCADE
+    UNIQUE (username),
+    FOREIGN KEY (account) REFERENCES Account(email) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Creates the table that will store the publisher's information:
@@ -33,7 +34,8 @@ CREATE TABLE Publisher (
     account VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     PRIMARY KEY (account),
-    FOREIGN KEY (account) REFERENCES Account(email) ON DELETE CASCADE
+    UNIQUE (name),
+    FOREIGN KEY (account) REFERENCES Account(email) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Creates the table that will store the game's information:
@@ -43,12 +45,13 @@ CREATE TABLE Game (
     developer VARCHAR(50) NOT NULL,
     genre VARCHAR(50) NOT NULL,
     publication_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     cover BLOB,
     installer LONGBLOB,
     price DECIMAL(5, 2) NOT NULL,
     PRIMARY KEY (title, publisher),
-    FOREIGN KEY (publisher) REFERENCES Publisher(account) ON DELETE CASCADE
+    FOREIGN KEY (publisher) REFERENCES Publisher(account) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CHECK (price >= 0)
 );
 
 -- Creates the table that will store the purchase's information:
@@ -58,6 +61,6 @@ CREATE TABLE Purchase (
     game_publisher VARCHAR(50) NOT NULL,
     purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (gamer, game_title, game_publisher),
-    FOREIGN KEY (gamer) REFERENCES Gamer(account) ON DELETE CASCADE,
-    FOREIGN KEY (game_title, game_publisher) REFERENCES Game(title, publisher) ON DELETE CASCADE
+    FOREIGN KEY (gamer) REFERENCES Gamer(account) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (game_title, game_publisher) REFERENCES Game(title, publisher) ON DELETE CASCADE ON UPDATE CASCADE
 );
