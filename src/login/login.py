@@ -12,13 +12,13 @@ class Login:
 
         if previous_app == None:
             self.app = ctk.CTk()
-            self.app.resizable(False, True)
+            self.app.resizable(False, False)
             self.app.title("PlayNexus | Login")
         
         else:
             self.app = previous_app
 
-        self.app.geometry("322x480")
+        self.app.geometry("600x600")
         self.frame = previous_frame
 
 
@@ -59,7 +59,7 @@ class Login:
         if self.frame == None:
             self.frame = ctk.CTkFrame(master=self.app, width=300, height=480)
             self.frame.pack_propagate(False)
-            self.frame.pack(expand=True, fill="both")
+            self.frame.pack(expand=True)
 
         if self.login_logo:
             ctk.CTkLabel(master=self.frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
