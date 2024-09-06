@@ -31,11 +31,15 @@ class ConnectDB:
     def commit(self):
         self.session.commit()
 
+def get_home_path() -> str:
+    """Create a directory for PlayNexus in the user's home directory and return the path."""
+    home_path = f"{os.path.expanduser('~')}/.playnexus"
+    if os.path.exists(home_path) is False: os.mkdir(home_path)
+    return home_path
+
 def get_user_path(account: str) -> str:
     """Create a directory for the user and return the path."""
-    if os.path.exists("users") is False: os.mkdir("users")
-    #user_path = f"users/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
-    user_path = ""
+    user_path = f"{get_home_path()}/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
     if os.path.exists(user_path) is False: os.mkdir(user_path)
     return user_path
 
@@ -47,8 +51,7 @@ def get_games_path(account: str) -> str:
 
 def get_game_path(account: str, game_title: str) -> str:
     """Return the path to the game."""
-    #game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
-    game_path = ""
+    game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
     return game_path
 
 ######################################################################################################
