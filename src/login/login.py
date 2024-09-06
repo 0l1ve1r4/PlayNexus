@@ -87,7 +87,8 @@ class Login:
         f_psswrd =ctk.CTkLabel(master=headline_frame, text="Forgot password?", anchor="w", justify="left", text_color="#7C439E",
                      font=("Roboto", 12, "underline"))
         f_psswrd.pack(anchor="w", side="right")
-        f_psswrd.bind("<Button-1>", lambda e: print("Forgot password?"))
+        f_psswrd.bind("<Button-1>", lambda e: self.goto_passw_recovery())
+
         f_psswrd.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         f_psswrd.bind("<Leave>", lambda event: event.widget.config(cursor=""))
         
@@ -159,6 +160,10 @@ class Login:
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
+
+    def goto_passw_recovery(self):
+        from .passw_recovery import PasswRecovery
+        passw_recovery = PasswRecovery(self.frame, self.app)
 
     def go_to_signup(self):
         from .signup import Signup 
