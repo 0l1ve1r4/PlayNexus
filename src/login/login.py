@@ -12,13 +12,13 @@ class Login:
 
         if previous_app == None:
             self.app = ctk.CTk()
-            self.app.resizable(False, True)
+            self.app.resizable(False, False)
             self.app.title("PlayNexus | Login")
         
         else:
             self.app = previous_app
 
-        self.app.geometry("322x480")
+        self.app.geometry("600x600")
         self.frame = previous_frame
 
 
@@ -59,7 +59,7 @@ class Login:
         if self.frame == None:
             self.frame = ctk.CTkFrame(master=self.app, width=300, height=480)
             self.frame.pack_propagate(False)
-            self.frame.pack(expand=True, fill="both")
+            self.frame.pack(expand=True)
 
         if self.login_logo:
             ctk.CTkLabel(master=self.frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
@@ -87,7 +87,8 @@ class Login:
         f_psswrd =ctk.CTkLabel(master=headline_frame, text="Forgot password?", anchor="w", justify="left", text_color="#7C439E",
                      font=("Roboto", 12, "underline"))
         f_psswrd.pack(anchor="w", side="right")
-        f_psswrd.bind("<Button-1>", lambda e: print("Forgot password?"))
+        f_psswrd.bind("<Button-1>", lambda e: self.goto_passw_recovery())
+
         f_psswrd.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         f_psswrd.bind("<Leave>", lambda event: event.widget.config(cursor=""))
         
@@ -159,6 +160,10 @@ class Login:
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
+
+    def goto_passw_recovery(self):
+        from .passw_recovery import PasswRecovery
+        passw_recovery = PasswRecovery(self.frame, self.app)
 
     def go_to_signup(self):
         from .signup import Signup 

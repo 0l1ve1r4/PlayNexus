@@ -34,7 +34,8 @@ class ConnectDB:
 def get_user_path(account: str) -> str:
     """Create a directory for the user and return the path."""
     if os.path.exists("users") is False: os.mkdir("users")
-    user_path = f"users/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
+    #user_path = f"users/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
+    user_path = ""
     if os.path.exists(user_path) is False: os.mkdir(user_path)
     return user_path
 
@@ -46,7 +47,8 @@ def get_games_path(account: str) -> str:
 
 def get_game_path(account: str, game_title: str) -> str:
     """Return the path to the game."""
-    game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
+    #game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
+    game_path = ""
     return game_path
 
 ######################################################################################################
