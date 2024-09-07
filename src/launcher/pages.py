@@ -20,6 +20,8 @@ class Pages:
         self.body_bold = ctk.CTkFont(family="Roboto", size=16, weight="bold")
         self.small = ctk.CTkFont(family="Roboto", size=12)
 
+        self.game_in_library = False
+
 
         self.name = "Admin"
         self.email = "admin@playnexus.com"
@@ -161,6 +163,8 @@ class Pages:
             game_frame.pack(fill="both", expand=True)
             self.frames["game_page"] = game_frame
 
+
+
             content_frame = ctk.CTkFrame(master=game_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
 
@@ -171,20 +175,33 @@ class Pages:
             game_img = ctk.CTkImage(dark_image=game_img_data, light_image=game_img_data, size=(200, 168))
             ctk.CTkLabel(master=content_frame, image=game_img, text="", fg_color="#4d4d4d").pack(anchor="w", fill="x", pady=24,padx=0)
 
-            # Play/Download button (depending wether its in library or not), add to library button and favorite button frame
+            # Buttons
             btns_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent", height=32)
             btns_frame.pack(fill="x", pady=(0, 24))
 
-            icon = ctk.CTkImage(dark_image=load_image("bookmark.png"), light_image=load_image("bookmark.png"), size=(16, 16))
-            add_button = ctk.CTkButton(master=btns_frame,image=icon, text="Add to library", command=self.library_page)
-            add_button.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+            ##Play/Dowload button (depending wether its in library or not
 
-            icon = ctk.CTkImage(dark_image=load_image("heart.png"), light_image=load_image("heart.png"), size=(16, 16))
-            favorite_button = ctk.CTkButton(master=btns_frame, image=icon, text="", command=self.library_page, fg_color="transparent", border_color="#b3b3b3",
+            ##Button to add to library/In library button
+            bookmark = ctk.CTkImage(dark_image=load_image("bookmark.png"), light_image=load_image("bookmark.png"), size=(16, 16))
+            bookmarked = ctk.CTkImage(dark_image=load_image("bookmark_check.png"), light_image=load_image("bookmark_check.png"), size=(16, 16))
+            play = ctk.CTkImage(dark_image=load_image("play.png"), light_image=load_image("play.png"), size=(16, 16))
+
+            if self.game_in_library:
+                play_btn = ctk.CTkButton(master=btns_frame, image=play, text="Play", command=self.library_page)
+                play_btn.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+                in_library = ctk.CTkButton(master=btns_frame, image=bookmarked, text="In library", command=self.remove_game_from_library, fg_color="#4d4d4d", hover_color="#3c3c3c")
+                in_library.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+            else:
+                add_button = ctk.CTkButton(master=btns_frame,image=bookmark, text="Add to library", command=self.add_game_to_library)
+                add_button.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+            
+            ##Favorite button
+            favorite = ctk.CTkImage(dark_image=load_image("heart.png"), light_image=load_image("heart.png"), size=(16, 16))
+            favorite_button = ctk.CTkButton(master=btns_frame, image=favorite, text="", command=self.library_page, fg_color="transparent", border_color="#b3b3b3",
                                             hover_color="#4d4d4d", border_width=2, width=32)
             favorite_button.pack(anchor="w", side="right", fill="y")
             
-            ##About section
+            #About section
             about_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             about_frame.pack(fill="x")
             description = ctk.CTkFrame(master=about_frame, fg_color="transparent", width=431)
@@ -256,6 +273,14 @@ class Pages:
 
         else:
             self.frames["game_page"].pack(fill="both", expand=True)
+
+    def add_game_to_library(self) -> None:
+        """Add the game to the library."""
+        self.game_in_library = True
+
+    def remove_game_from_library(self) -> None:
+        """Remove the game from the library."""
+        pass
 
     def add_tag(self, master: ctk.CTkFrame, category: str) -> None:
         """Add a tag to the provided frame."""
