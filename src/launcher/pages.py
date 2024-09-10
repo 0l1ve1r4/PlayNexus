@@ -13,7 +13,9 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.frames = {}
+
         self.Admin = True
+
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
@@ -544,7 +546,7 @@ class Pages:
 
         ctk.CTkLabel(master=game_frame, text="Game Title", text_color="#ffffff", anchor="w", justify="left",
                      font=("Roboto Bold", 12)).grid(row=1, column=0, sticky="w", padx=16, pady=(16, 0))
-        ctk.CTkLabel(master=game_frame, text="Price", text_color="#ffffff", anchor="w", justify="left",
+        ctk.CTkLabel(master=game_frame, text="Publisher", text_color="#ffffff", anchor="w", justify="left",
                      font=("Roboto Bold", 12)).grid(row=2, column=0, sticky="w", padx=16, pady=(0, 16))
 
         def on_enter(event):
@@ -567,13 +569,6 @@ class Pages:
         return game_frame
 
 
-    def create_main_view(self) -> None:
-        """Create the main view frame with the title and content."""
-        self.main_view = ctk.CTkFrame(master=self.app, width=680, height=650, corner_radius=0)
-        self.main_view.pack_propagate(0)
-        self.main_view.pack(side="left")
-
-        self.show_frame(self.home_page)
 
     def add_header(self, master: ctk.CTkFrame, title: str, return_frame: str) -> None:
         """Add the header to the main view."""
@@ -639,3 +634,11 @@ class Pages:
     
     def change_password(self) -> None:
         print("Change password")
+
+    def create_main_view(self) -> None:
+        """Create the main view frame with the title and content."""
+        self.main_view = ctk.CTkFrame(master=self.app, width=680, height=650, corner_radius=0)
+        self.main_view.pack_propagate(0)
+        self.main_view.pack(side="left")
+
+        self.show_frame(self.home_page)
