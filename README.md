@@ -1,5 +1,9 @@
-<div style="text-align: center;">
+<div align="center">
   <img src="res/primary-logo-white.png" alt="PlayNexus Database" style="width: 50%;">
+
+  <p align="center">
+    <strong>Open-source game management platform.</strong>
+  </p>
 
   <hr>
 
@@ -9,9 +13,6 @@
   [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](./res/README_PTBR.md)
 </div>
 
-
-PlayNexus is an **open-source** game management platform inspired by [Hydra Launcher](https://github.com/hydralauncher/hydra).
-
 - 🔓 Browse and add computer games through an intuitive store 
 
 - 📥 Manage their game library (list, add, remove, and edit games)
@@ -20,18 +21,19 @@ PlayNexus is an **open-source** game management platform inspired by [Hydra Laun
 
 - 😀 Play a wide variety of games, offering endless entertainment
 
-**Made entirely in python 🐍**
+**Made entirely in python and inspired by [Hydra Launcher](https://github.com/hydralauncher/hydra) 🐍**
 
 ## Project Documentation Index 📚
 
-1. **Backlog and Project Description**
-    - 1.1. [Product Backlog](/docs/backlog/productBacklog.md)  
-    - 1.2. [First Sprint Backlog](/docs/backlog/SprintBacklog.md)
+- **Backlog and Project Description**
+    - [Product Backlog](/docs/backlog/productBacklog.md)  
+    - [First Sprint Backlog](/docs/backlog/SprintBacklog.md)
 
-2. **Database**
-    - 2.1. [Entity Relationship Model](/docs/database/entityRelationship.md)
+- **Database**
+    - [Entity Relationship Model](/docs/database/entityRelationship.md)
+    - [Relational Model](/docs/database/relational.md)
 
-3. **Diagram**
-    - 3.1. [Diagram Model](/docs/diagram/diagramModel.md)
+- **Diagram**
+    - [Diagram Model](/docs/diagram/diagramModel.md)
 
 ---
