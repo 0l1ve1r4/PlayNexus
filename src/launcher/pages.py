@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from PIL import Image
+from PIL import Image, ImageTk
 from .utils import *
 from .backend.backend import *
 from functools import partial
@@ -13,12 +13,16 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.frames = {}
+
         self.Admin = True
+
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
         self.body_bold = ctk.CTkFont(family="Roboto", size=16, weight="bold")
         self.small = ctk.CTkFont(family="Roboto", size=12)
+
+        self.game_in_library = False
 
 
         self.name = "Admin"
@@ -161,6 +165,8 @@ class Pages:
             game_frame.pack(fill="both", expand=True)
             self.frames["game_page"] = game_frame
 
+
+
             content_frame = ctk.CTkFrame(master=game_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
 
@@ -171,20 +177,33 @@ class Pages:
             game_img = ctk.CTkImage(dark_image=game_img_data, light_image=game_img_data, size=(200, 168))
             ctk.CTkLabel(master=content_frame, image=game_img, text="", fg_color="#4d4d4d").pack(anchor="w", fill="x", pady=24,padx=0)
 
-            # Play/Download button (depending wether its in library or not), add to library button and favorite button frame
+            # Buttons
             btns_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent", height=32)
             btns_frame.pack(fill="x", pady=(0, 24))
 
-            icon = ctk.CTkImage(dark_image=load_image("bookmark.png"), light_image=load_image("bookmark.png"), size=(16, 16))
-            add_button = ctk.CTkButton(master=btns_frame,image=icon, text="Add to library", command=self.library_page)
-            add_button.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+            ##Play/Dowload button (depending wether its in library or not
 
-            icon = ctk.CTkImage(dark_image=load_image("heart.png"), light_image=load_image("heart.png"), size=(16, 16))
-            favorite_button = ctk.CTkButton(master=btns_frame, image=icon, text="", command=self.library_page, fg_color="transparent", border_color="#b3b3b3",
+            ##Button to add to library/In library button
+            bookmark = ctk.CTkImage(dark_image=load_image("bookmark.png"), light_image=load_image("bookmark.png"), size=(16, 16))
+            bookmarked = ctk.CTkImage(dark_image=load_image("bookmark_check.png"), light_image=load_image("bookmark_check.png"), size=(16, 16))
+            play = ctk.CTkImage(dark_image=load_image("play.png"), light_image=load_image("play.png"), size=(16, 16))
+
+            if self.game_in_library:
+                play_btn = ctk.CTkButton(master=btns_frame, image=play, text="Play", command=self.library_page)
+                play_btn.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+                in_library = ctk.CTkButton(master=btns_frame, image=bookmarked, text="In library", command=self.remove_game_from_library, fg_color="#4d4d4d", hover_color="#3c3c3c")
+                in_library.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+            else:
+                add_button = ctk.CTkButton(master=btns_frame,image=bookmark, text="Add to library", command=self.add_game_to_library)
+                add_button.pack(anchor="w", side="left", padx=(0, 8), fill="y")
+            
+            ##Favorite button
+            favorite = ctk.CTkImage(dark_image=load_image("heart.png"), light_image=load_image("heart.png"), size=(16, 16))
+            favorite_button = ctk.CTkButton(master=btns_frame, image=favorite, text="", command=self.library_page, fg_color="transparent", border_color="#b3b3b3",
                                             hover_color="#4d4d4d", border_width=2, width=32)
             favorite_button.pack(anchor="w", side="right", fill="y")
             
-            ##About section
+            #About section
             about_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             about_frame.pack(fill="x")
             description = ctk.CTkFrame(master=about_frame, fg_color="transparent", width=431)
@@ -256,6 +275,14 @@ class Pages:
 
         else:
             self.frames["game_page"].pack(fill="both", expand=True)
+
+    def add_game_to_library(self) -> None:
+        """Add the game to the library."""
+        self.game_in_library = True
+
+    def remove_game_from_library(self) -> None:
+        """Remove the game from the library."""
+        pass
 
     def add_tag(self, master: ctk.CTkFrame, category: str) -> None:
         """Add a tag to the provided frame."""
@@ -459,54 +486,68 @@ class Pages:
     def create_labels_and_content(self, master: ctk.CTkFrame, header) -> None:
         """Create labels and content sections."""
         ctk.CTkLabel(master=master, text=header, anchor="w", justify="left",
-                     font=("Roboto Bold", 24)).pack(anchor="w", pady=(30, 10), padx=24)
+                     font=("Roboto Bold", 24)).pack(anchor="w", pady=(8, 16), padx=24)
 
         recently_added_frame = ctk.CTkFrame(master, fg_color="transparent")
         recently_added_frame.pack(fill="x", pady=(10, 0),padx=(24,0))
 
-        recently_added_frame.bind("<Enter>", lambda e: recently_added_frame.bind("<MouseWheel>", self._on_mouse_wheel_horizontal))
-        recently_added_frame.bind("<Leave>", lambda e: recently_added_frame.unbind("<MouseWheel>"))
-
         for i in range(5):
-            self.game_card(recently_added_frame)
+            self.game_card(recently_added_frame).pack(side="left", padx=(0,8), pady=8)
 
-        ctk.CTkLabel(master=master, text_color=SIDE_BAR_COLOR,
-                     text="__________________________________________________________________________________________",
-                     fg_color="transparent").pack(fill="x", pady=(0, 0))
+        self.add_separator(master)
 
         # Tabs:
-        tabs = ["Popular", "New", "Upcoming", "All"]
+        tabs = ["All", "Popular", "New", "Upcoming"]
 
-        tabs_frame = ctk.CTkFrame(master, fg_color="transparent")
-        tabs_frame.pack(fill="x", pady=(0, 0))
+        games_frame = ctk.CTkFrame(master, fg_color="transparent")
+        games_frame.pack(fill="x", pady=24, padx=24)
+
+        menu = ctk.CTkFrame(master=games_frame, fg_color="transparent")
+        menu.pack(fill="x", side="top")
 
         for tab in tabs:
-            ctk.CTkButton(master=tabs_frame, text=tab, fg_color="transparent", text_color="#ffffff",
-                          font=("Roboto", 24), hover_color=SIDE_BAR_COLOR).pack(side="left", padx=10)
+            btn = ctk.CTkButton(master=menu, text=tab, fg_color="transparent", text_color="#ffffff",
+                                font=("Roboto", 24), hover_color=SIDE_BAR_COLOR, width=len(tab))
+            btn.pack(side="left", padx=(0, 8), pady=(0, 16))
 
-        self.game_card(tabs_frame)
+        cards_frame = ctk.CTkFrame(master=games_frame, fg_color="transparent")
+        cards_frame.pack(fill="both", expand=True)
+
+        num_columns = 3
+
+        for i in range(6):
+            row = i // num_columns
+            column = i % num_columns
+            self.game_card(cards_frame).grid(row=row, column=column, padx=8, pady=8, sticky="nsew")
+
+        for col in range(num_columns):
+            cards_frame.grid_columnconfigure(col, weight=1)
+        cards_frame.grid_rowconfigure(0, weight=1)
 
     def _on_mouse_wheel_horizontal(self, event):
         """Scroll the frame horizontally."""
         event.widget.xview("scroll", int(-1*(event.delta/120)), "units")
 
-    def game_card(self, master: ctk.CTkFrame) -> None: # This function is temporary
-        """Display game cards in the provided frame."""
+    def game_card(self, master):
+        """Create and return a game card frame."""
         game_frame = ctk.CTkFrame(master, corner_radius=8, fg_color="transparent", width=150, height=200)
-        game_frame.pack(side="left", padx=(0,16), pady=10)
+        
+        try:
+            image = load_image("secondary-logo-colored.png")
+            image = image.resize((150, 200), Image.LANCZOS)  # Resize the image to fit the frame
+            ctk_image = ctk.CTkImage(light_image=image, dark_image=image, size=(134, 134))
+        except Exception as e:
+            print(f"Error loading image: {e}")
+            ctk_image = None
 
-        game_img_data = load_image("secondary-logo-colored.png")
-        game_img = ctk.CTkImage(dark_image=game_img_data, light_image=game_img_data, size=(134, 134))
-        ctk.CTkLabel(master=game_frame, image=game_img, text="").pack(padx=16,pady=(16,0))
+        if ctk_image:
+            image_label = ctk.CTkLabel(master=game_frame, image=ctk_image, text="")
+            image_label.grid(row=0, column=0, padx=16, pady=16, sticky="nsew")
 
         ctk.CTkLabel(master=game_frame, text="Game Title", text_color="#ffffff", anchor="w", justify="left",
-                        font=("Roboto", 16, "bold")).pack(anchor="w", pady=(8, 0), padx=16)
-
-        ctk.CTkLabel(master=game_frame, text="Publisher Name", text_color="#b3b3b3", anchor="w", justify="left",
-                        font=("Roboto Bold", 12)).pack(anchor="w", padx=16)
-
-        ctk.CTkLabel(master=game_frame, text="Price", text_color="#ffffff", anchor="w", justify="left",
-                        font=("Roboto Bold", 12)).pack(anchor="w", padx=16, pady=(0, 16))
+                     font=("Roboto Bold", 12)).grid(row=1, column=0, sticky="w", padx=16, pady=(16, 0))
+        ctk.CTkLabel(master=game_frame, text="Publisher", text_color="#ffffff", anchor="w", justify="left",
+                     font=("Roboto Bold", 12)).grid(row=2, column=0, sticky="w", padx=16, pady=(0, 16))
 
         def on_enter(event):
             event.widget.config(cursor="hand2")
@@ -524,16 +565,10 @@ class Pages:
             widget.bind("<Button-1>", lambda e: self.show_frame(self.game_page))
             widget.bind("<Enter>", on_enter)
             widget.bind("<Leave>", on_leave)
-                
-            
 
-    def create_main_view(self) -> None:
-        """Create the main view frame with the title and content."""
-        self.main_view = ctk.CTkFrame(master=self.app, width=680, height=650, corner_radius=0)
-        self.main_view.pack_propagate(0)
-        self.main_view.pack(side="left")
+        return game_frame
 
-        self.show_frame(self.home_page)
+
 
     def add_header(self, master: ctk.CTkFrame, title: str, return_frame: str) -> None:
         """Add the header to the main view."""
@@ -599,3 +634,11 @@ class Pages:
     
     def change_password(self) -> None:
         print("Change password")
+
+    def create_main_view(self) -> None:
+        """Create the main view frame with the title and content."""
+        self.main_view = ctk.CTkFrame(master=self.app, width=680, height=650, corner_radius=0)
+        self.main_view.pack_propagate(0)
+        self.main_view.pack(side="left")
+
+        self.show_frame(self.home_page)
