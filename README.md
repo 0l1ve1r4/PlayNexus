@@ -1,17 +1,16 @@
-<center>
+<div style="text-align: center;">
+  <img src="res/primary-logo-white.png" alt="PlayNexus Database" style="width: 50%;">
 
-<img src="res/primary-logo-white.png" alt="PlayNexus Database" style="width: 50%;">
+  <hr>
 
----
+  ![Commit activity](https://img.shields.io/github/commit-activity/m/iyksh/PlayNexus)
+  ![GitHub top language](https://img.shields.io/github/languages/top/iyksh/PlayNexus?logo=python&label=)
+  [![GitHub license](https://img.shields.io/github/license/iyksh/PlayNexus)](https://github.com/iyksh/PlayNexus/LICENSE)
+  [![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](./res/README_PTBR.md)
+</div>
 
-![Commit activity](https://img.shields.io/github/commit-activity/m/iyksh/PlayNexus)
-![GitHub top language](https://img.shields.io/github/languages/top/iyksh/PlayNexus?logo=python&label=)
-[![GitHub license](https://img.shields.io/github/license/iyksh/PlayNexus)](https://github.com/iyksh/PlayNexus/LICENSE)
-[![pt-br](https://img.shields.io/badge/lang-pt--br-green.svg)](./res/README_PTBR.md)
 
-</center>
-
-PlayNexus is an **open-source** game management platform inspired by [Hydra Launcher](https://github.com/hydralauncher/hydra):
+PlayNexus is an **open-source** game management platform inspired by [Hydra Launcher](https://github.com/hydralauncher/hydra).
 
 - 🔓 Browse and add computer games through an intuitive store 
 
