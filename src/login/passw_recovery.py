@@ -13,8 +13,7 @@ class PasswRecovery:
         self.frame = previous_frame
         self.app = previous_app
 
-        self.app.geometry("600x600")
-
+        self.app.geometry("900x650")
         # Load images
         self.name_icon = self.load_image("type-square.png", (16, 16))
         self.login_logo = self.load_image("secondary-logo-white.png", (42, 38))
@@ -78,7 +77,7 @@ class PasswRecovery:
             ctk.CTkLabel(master=content_frame, text="  More Information", anchor="w", justify="left",
                             image=self.name_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
 
-            ctk.CTkTextbox(master=content_frame, border_width=2, height=100, width=300, fg_color="#b3b3b3", 
+            ctk.CTkTextbox(master=content_frame, border_width=2, height=100, width=300, 
                            bg_color="#1a1a1a").pack(anchor="w", padx=(24, 24), pady=(8, 0))
 
         # Login button
