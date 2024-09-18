@@ -92,8 +92,9 @@ class Pages:
             icon = load_image("search-md.png")
             icon = ctk.CTkImage(dark_image=icon, light_image=icon, size=(16, 16))
 
-            search_button = ctk.CTkButton(master=first_line, height=30, text="Search", text_color="#ffffff",
-                                        width=112, command=search_in_store, compound="left", image=icon)
+            search_button = ctk.CTkButton(
+                master=first_line, height=30, text="Search", text_color="#ffffff",
+                width=112, command=lambda: self.execute_search(search_entry.get()), compound="left", image=icon)
             search_button.pack(anchor="w", padx=(8, 0), side="right")
 
             #Add external game button
@@ -472,6 +473,7 @@ class Pages:
         first_line = ctk.CTkFrame(master=master, fg_color="transparent")
         first_line.pack(anchor="n", fill="x")
 
+        # Entry field for the search query
         search_entry = ctk.CTkEntry(master=first_line, height=30,
                                     font=("Roboto", 12), placeholder_text=placeholder)
         search_entry.pack(side="left", fill="x", expand=True)
@@ -479,9 +481,42 @@ class Pages:
         icon = load_image("search-md.png")
         icon = ctk.CTkImage(dark_image=icon, light_image=icon, size=(16, 16))
 
-        search_button = ctk.CTkButton(master=first_line, height=30, text="Search", text_color="#ffffff",
-                                      width=112, command=search_in_store, compound="left", image=icon)
+        # Button com lambda para capturar o valor de search_entry e passar para execute_search
+        search_button = ctk.CTkButton(
+            master=first_line, height=30, text="Search", text_color="#ffffff",
+            width=112, command=lambda: self.execute_search(search_entry.get()), compound="left", image=icon
+        )
         search_button.pack(anchor="w", padx=(8, 0), side="right")
+
+
+    def execute_search(self, query: str) -> None:
+        """Handle the search action by querying the store and displaying results."""
+        if query:
+            try:
+                results = search_in_store(query)  # Chama a função de busca com o termo fornecido
+                self.display_search_results(results)
+            except Exception as e:
+                print(f"Erro ao buscar jogos: {e}")
+                # Opcional: exibir uma mensagem de erro na interface
+        else:
+            print("Por favor, insira um termo de pesquisa.")
+            # Opcional: exibir uma mensagem na interface solicitando o termo de pesquisa
+    def display_search_results(self, results: list) -> None:
+        """Display the search results in the interface."""
+        # Primeiro, criar um novo frame ou limpar o existente para exibir os resultados
+        results_frame = ctk.CTkFrame(master=self.main_view, fg_color="transparent")
+        results_frame.pack(fill="both", expand=True, padx=24, pady=24)
+
+        # Adicionar um título
+        ctk.CTkLabel(master=results_frame, text="Resultados da Busca", font=self.h1).pack(anchor="w", pady=(0, 16))
+
+        # Exibir cada jogo encontrado
+        for game in results:
+            game_info = f"Título: {game['title']}, Publisher: {game['publisher']}, Preço: R${game['price']}"
+            ctk.CTkLabel(master=results_frame, text=game_info, font=self.body).pack(anchor="w", pady=4)
+    
+    # Opcional: Adicionar botões ou outras funcionalidades para cada resultado
+
 
     def create_labels_and_content(self, master: ctk.CTkFrame, header) -> None:
         """Create labels and content sections."""
