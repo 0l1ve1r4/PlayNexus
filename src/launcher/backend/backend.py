@@ -166,8 +166,34 @@ def count_games_in_store() -> int:
     return len(get_all_games())
 
 def search_in_store(query: str) -> dict:
-    """Search for a game in the store."""
-    pass
+    """Search for a game in the store by title or description."""
+    database = ConnectDB()
+    # Usamos %query% para buscar termos parciais no título ou descrição
+    sql = """
+    SELECT title, publisher, developer, genre, price 
+    FROM Game 
+    WHERE title LIKE %s OR description LIKE %s
+    """
+    search_term = f"%{query}%"
+    database.execute(sql, (search_term, search_term))
+    
+    # Pega todos os resultados da consulta
+    results = database.results()
+
+    # Transformamos os resultados em uma lista de dicionários
+    games = []
+    for result in results:
+        game = {
+            "title": result[0],
+            "publisher": result[1],
+            "developer": result[2],
+            "genre": result[3],
+            "price": result[4]
+        }
+        games.append(game)
+
+    return games
+
 
 def get_recently_added_games(limit: int = 5) -> list:
     """Fetch recently added games from the database."""
