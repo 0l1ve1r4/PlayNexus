@@ -30,7 +30,7 @@
 - **Database**
 
   - [Entity Relationship Model](/docs/database/entityRelationship.md)
-  - [Relational Model](/docs/database/relationalModel.md)
+  - [Relational Model](docs\database\relationalModel.md)
 - **Diagram**
 
   - [Diagram Model](/docs/diagram/diagramModel.md)

@@ -1,6 +1,6 @@
 # Relational Model
 
-![1726697073826](image/entityRelationship/1726697073826.png)
+![1726704419942](image/relationalModel/1726704419942.png)
 
 ## 1. Account
 
