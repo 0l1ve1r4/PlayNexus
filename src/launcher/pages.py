@@ -21,11 +21,12 @@ class Pages:
         self.small = ctk.CTkFont(family="Roboto", size=12)
 
         self.game_in_library = False
+        self.editing = False
 
 
         self.name = "Admin"
+        self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
         self.email = "admin@playnexus.com"
-        self.screen_size = ["1920x1080"]
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -153,15 +154,6 @@ class Pages:
             settings_frame.pack(fill="x", anchor="w", pady=(24, 0))
             self.add_separator(settings_frame)
             ctk.CTkLabel(master=settings_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
-            
-            ##Change screen size
-            change_screen_size_frame = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
-            change_screen_size_frame.pack(fill="x", anchor="w", pady=(24, 0))
-            headline = ctk.CTkFrame(master=change_screen_size_frame, fg_color="transparent")
-            headline.pack(fill="x", side="left", anchor="w")
-
-            ctk.CTkLabel(master=headline, text="Screen Size", anchor="w", font=self.body).pack(anchor="w")
-            ctk.CTkComboBox(master=change_screen_size_frame, width=200, font=self.small, values=self.screen_size).pack(side="right")
 
             ##Change theme
             change_theme = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
@@ -188,8 +180,6 @@ class Pages:
             game_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             game_frame.pack(fill="both", expand=True)
             self.frames["game_page"] = game_frame
-
-
 
             content_frame = ctk.CTkFrame(master=game_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
@@ -395,6 +385,7 @@ class Pages:
     def profile_page(self) -> None:
         """Show the user's profile page."""
         if "profile_page" not in self.frames:
+            global name_Label, bio_Label, user_info
             profile_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             profile_frame.pack(fill="both", expand=True)
             self.frames["profile_page"] = profile_frame
@@ -411,41 +402,73 @@ class Pages:
             user_info = ctk.CTkFrame(master=profile_info, fg_color="transparent")
             user_info.pack(padx=(16, 0), side="left", anchor="nw")
 
-            ctk.CTkLabel(master=user_info, text=self.name, anchor="nw", justify="left", font=("Roboto", 24)).pack(fill="x")
-            ctk.CTkLabel(master=user_info, text=self.bio, anchor="nw", justify="left", font=("Roboto", 16), text_color="#b3b3b3", wraplength=250).pack(fill="x")
+            name_Label = ctk.CTkLabel(master=user_info, text=self.name, anchor="nw", justify="left", font=("Roboto", 24))
+            name_Label.pack(fill="x")
 
-            ctk.CTkButton(master=profile_info, text="Edit profile", fg_color="transparent", hover_color="#4d4d4d",
-                            border_width=2, border_color="#b3b3b3", width=len("Edit profile")).pack(side="right", anchor="s")
+            bio_Label = ctk.CTkLabel(master=user_info, text=self.bio, anchor="nw", justify="left", font=("Roboto", 16), text_color="#b3b3b3", wraplength=250)
+            bio_Label.pack()
+
+            ed = ctk.CTkButton(master=profile_info, text="Edit profile", command=self.edit_profile, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Edit profile"))
+            ed.pack(side="right", anchor="s")
 
             ##Account insights
             insights_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            insights_frame.pack(fill="x", pady=24, expand=True)
+            insights_frame.pack(fill="x", pady=24, ipady=16, side="left")
 
             clock=ctk.CTkImage(dark_image=load_image("clock.png"), light_image=load_image("clock.png"), size=(64,64))
             reviews_icon=ctk.CTkImage(dark_image=load_image("review.png"), light_image=load_image("review.png"), size=(64,64))
             gaming_pad=ctk.CTkImage(dark_image=load_image("gaming_pad.png"), light_image=load_image("gaming_pad.png"), size=(64,64))
 
             inlibrary = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
-            inlibrary.pack(side="left", anchor="w", padx=(0,16), ipadx=16)
+            inlibrary.pack(side="left", anchor="w", padx=(0,16), ipadx=36)
             ctk.CTkLabel(master=inlibrary, text="Games in library").pack(fill="x", pady=16)
             ctk.CTkLabel(master=inlibrary, text="", image=gaming_pad).pack(fill="x")
             ctk.CTkLabel(master=inlibrary, text="0", font=self.h1).pack(fill="x", pady=16)
 
             hrsplayed = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
-            hrsplayed.pack(side="left", anchor="e", padx=(0,16), ipadx=16)
-            ctk.CTkLabel(master=hrsplayed, text="Hours played").pack(fill="x", pady=16)
-            ctk.CTkLabel(master=hrsplayed, text="", image=clock).pack(fill="x")
-            ctk.CTkLabel(master=hrsplayed, text="0",font=self.h1).pack(fill="x", pady=16)
+            hrsplayed.pack(side="left", anchor="e", padx=(16,16), ipadx=38)
+            ctk.CTkLabel(master=hrsplayed, text="Hours played").pack(pady=16)
+            ctk.CTkLabel(master=hrsplayed, text="", image=clock).pack()
+            ctk.CTkLabel(master=hrsplayed, text="0",font=self.h1).pack(pady=16)
 
             reviews = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
-            reviews.pack(side="left", pady=16, ipadx=16)
-            ctk.CTkLabel(master=reviews, text="Reviews").pack(fill="x", pady=16)
-            ctk.CTkLabel(master=reviews, text="", image=reviews_icon).pack(fill="x")
-            ctk.CTkLabel(master=reviews, text="0", font=self.h1).pack(fill="x", pady=16)
+            reviews.pack(side="right", anchor="e",padx=(16,16), pady=16, ipadx=42)
+            ctk.CTkLabel(master=reviews, text="Reviews").pack(pady=16)
+            ctk.CTkLabel(master=reviews, text="", image=reviews_icon).pack()
+            ctk.CTkLabel(master=reviews, text="0", font=self.h1).pack( pady=16)
 
             
         else:
             self.frames["profile_page"].pack(fill="both", expand=True)
+
+    def edit_profile(self) -> None:
+        """Edit the user's profile."""
+        if self.editing:
+            new_name = self.name_entry.get()
+            self.name = new_name
+            name_Label.configure(text=self.name)
+            self.name_entry.pack_forget()
+            name_Label.pack(fill="x")
+
+            new_bio = self.bio_entry.get()
+            self.bio = new_bio
+            bio_Label.configure(text=self.bio)
+            self.bio_entry.pack_forget()
+            bio_Label.pack(fill="x")
+
+            self.editing = False
+        else:
+            name_Label.pack_forget()
+            self.name_entry = ctk.CTkEntry(master=user_info, border_width=2, placeholder_text=self.name, width=250)
+            self.name_entry.insert(0, self.name)
+            self.name_entry.pack()
+
+            bio_Label.pack_forget()
+            self.bio_entry = ctk.CTkEntry(master=user_info, border_width=2, height=50, placeholder_text=self.bio, width=250)
+            self.bio_entry.insert(0, self.bio)
+            self.bio_entry.pack(pady=10)
+
+            self.editing = True
 
     def manage_accounts_page(self) -> None:
         """Show the page to manage accounts."""

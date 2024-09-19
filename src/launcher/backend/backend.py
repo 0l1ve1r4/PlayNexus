@@ -60,8 +60,9 @@ def get_game_path(account: str, game_title: str) -> str:
     game_path = ""
     if platform.system() == "Linux": extension = ".run"
     elif platform.system() == "Windows": extension = ".exe"
-    else: return None
-    game_path = os.path.join(get_games_path(account), f"{game_title.replace(" ", "_")}{extension}")
+    else: 
+        return None
+    #game_path = os.path.join(get_games_path(account), f"{game_title.replace(" ", "_")}{extension}")
     return game_path
 
 ######################################################################################################
