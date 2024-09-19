@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import os
-from PIL import Image
+from PIL import Image, ImageTk
 from typing import Tuple
 
 ctk.set_default_color_theme("res/themes/purple.json")
@@ -13,14 +13,13 @@ class Login:
         if previous_app == None:
             self.app = ctk.CTk()
             self.app.resizable(False, True)
-            self.app.title("PlayNexus | Login")
-        
+            self.app.title("Welcome to PlayNexus")     
         else:
             self.app = previous_app
 
-        self.app.geometry("322x480")
+        self.app.geometry("900x650")
         self.frame = previous_frame
-
+        self.center_window(900, 650)
 
         if os.name == "nt":
             icon_path = os.path.join(self.res_path, 'secondary-logo-colored.ico')
@@ -36,13 +35,32 @@ class Login:
         self.google_icon = self.load_image("google-icon.png", (16, 16))
         self.login_icon = self.load_image("login.png", (16, 16))
 
-
         # Initialize variables
         self.missed_attempts = 0
         self.is_logged_in = False
 
+        self.set_background_image()
         # Create widgets
         self.create_widgets()
+
+    def center_window(self, width: int, height: int):
+        """Center the window on the screen."""
+        screen_width = self.app.winfo_screenwidth()
+        screen_height = self.app.winfo_screenheight()
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        self.app.geometry(f'{width}x{height}+{x}+{y}')
+
+    def set_background_image(self):
+        bg_image_path = os.path.join(self.res_path, 'Prancheta 2.png')
+        if os.path.exists(bg_image_path):
+            bg_image = Image.open(bg_image_path)
+            self.bg = ctk.CTkImage(dark_image=bg_image, light_image=bg_image, size=(900, 650))
+            bg_label = ctk.CTkLabel(master=self.app, image=self.bg)
+            bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+            bg_label.lower()  # Ensure the background label is at the bottom
+        else:
+            print(f"Background image file not found at {bg_image_path}")
 
     def load_image(self, filename: str, size: Tuple[int, int]) -> ctk.CTkImage:
         """Load and return a CTkImage object with the specified size."""
@@ -57,9 +75,9 @@ class Login:
     def create_widgets(self) -> None:
         """Create and place all widgets in the window."""
         if self.frame == None:
-            self.frame = ctk.CTkFrame(master=self.app, width=300, height=480)
+            self.frame = ctk.CTkFrame(master=self.app, width=300, height=500, corner_radius=8)
             self.frame.pack_propagate(False)
-            self.frame.pack(expand=True, fill="both")
+            self.frame.pack(pady=(64, 0), anchor="center")
 
         if self.login_logo:
             ctk.CTkLabel(master=self.frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
@@ -87,7 +105,8 @@ class Login:
         f_psswrd =ctk.CTkLabel(master=headline_frame, text="Forgot password?", anchor="w", justify="left", text_color="#7C439E",
                      font=("Roboto", 12, "underline"))
         f_psswrd.pack(anchor="w", side="right")
-        f_psswrd.bind("<Button-1>", lambda e: print("Forgot password?"))
+        f_psswrd.bind("<Button-1>", lambda e: self.goto_passw_recovery())
+
         f_psswrd.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         f_psswrd.bind("<Leave>", lambda event: event.widget.config(cursor=""))
         
@@ -159,6 +178,10 @@ class Login:
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
+
+    def goto_passw_recovery(self):
+        from .passw_recovery import PasswRecovery
+        passw_recovery = PasswRecovery(self.frame, self.app)
 
     def go_to_signup(self):
         from .signup import Signup 

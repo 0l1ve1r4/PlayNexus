@@ -2,6 +2,7 @@ import mysql.connector as mysql # Import the MySQL connector library for databas
 import string # Import the string library for string operations.
 import zlib # Import the zlib library for data compression.
 import os # Import the os library for file operations.
+import platform # Import the platform library for platform information.
 
 class ConnectDB:
     """Connect to the database."""
@@ -31,16 +32,25 @@ class ConnectDB:
     def commit(self):
         self.session.commit()
 
+######################################################################################################
+# The following methods are used to interact with the FILE SYSTEM.                                   #
+######################################################################################################
+
+def get_home_path() -> str:
+    """Create a directory for PlayNexus in the user's home directory and return the path."""
+    home_path = os.path.join(os.path.expanduser('~'), ".PlayNexus")
+    if os.path.exists(home_path) is False: os.mkdir(home_path)
+    return home_path
+
 def get_user_path(account: str) -> str:
     """Create a directory for the user and return the path."""
-    if os.path.exists("users") is False: os.mkdir("users")
-    user_path = f"users/{account.split("@")[0].translate(str.maketrans("", "", string.punctuation))}"
+    user_path = os.path.join(get_home_path(), account.split("@")[0].translate(str.maketrans("", "", string.punctuation)))
     if os.path.exists(user_path) is False: os.mkdir(user_path)
     return user_path
 
 def get_games_path(account: str) -> str:
     """Create a directory for the game and return the path."""
-    games_path = f"{get_user_path(account)}/games"
+    games_path = os.path.join(get_user_path(account), "games")
     if os.path.exists(games_path) is False: os.mkdir(games_path)
     return games_path
 
@@ -48,6 +58,10 @@ def get_game_path(account: str, game_title: str) -> str:
     """Return the path to the game."""
     #game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
     game_path = ""
+    if platform.system() == "Linux": extension = ".run"
+    elif platform.system() == "Windows": extension = ".exe"
+    else: return None
+    game_path = os.path.join(get_games_path(account), f"{game_title.replace(" ", "_")}{extension}")
     return game_path
 
 ######################################################################################################
@@ -122,17 +136,24 @@ def count_publishers() -> int:
 # The following methods are used to interact with the GAME STORE.                                    #
 ######################################################################################################
 
-def publish_game(title: str, publisher: str, developer: str, genre: str, description: str, cover_path: str, installer_path: str, price: float) -> bool:
+def publish_game(title: str, publisher: str, developer: str, genre: str, description: str, cover_path: str, linux_installer_path: str, windows_installer_path: str, price: float) -> bool:
     """Publish a game in the store."""
     database = ConnectDB()
     database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher,))
     if database.result() is None: return False
     database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
     if database.result() is not None: return False
-    if (os.path.exists(cover_path) and os.path.exists(installer_path)) is False: return False
+    if os.path.exists(cover_path) is False: return False
     cover = zlib.compress(open(cover_path, "rb").read())
-    installer = zlib.compress(open(installer_path, "rb").read())
-    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, installer, price))
+    if linux_installer_path is not None:
+        if os.path.exists(linux_installer_path) is False: return False
+        linux_installer = zlib.compress(open(linux_installer_path, "rb").read())
+    else: linux_installer = None
+    if windows_installer_path is not None:
+        if os.path.exists(windows_installer_path) is False: return False
+        windows_installer = zlib.compress(open(windows_installer_path, "rb").read())
+    else: windows_installer = None
+    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, linux_installer, windows_installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, linux_installer, windows_installer, price))
     database.commit()
     return True
 
@@ -148,8 +169,34 @@ def count_games_in_store() -> int:
 
 
 def search_in_store(query: str) -> dict:
-    """Search for a game in the store."""
-    pass
+    """Search for a game in the store by title or description."""
+    database = ConnectDB()
+    # Usamos %query% para buscar termos parciais no título ou descrição
+    sql = """
+    SELECT title, publisher, developer, genre, price 
+    FROM Game 
+    WHERE title LIKE %s OR description LIKE %s
+    """
+    search_term = f"%{query}%"
+    database.execute(sql, (search_term, search_term))
+    
+    # Pega todos os resultados da consulta
+    results = database.results()
+
+    # Transformamos os resultados em uma lista de dicionários
+    games = []
+    for result in results:
+        game = {
+            "title": result[0],
+            "publisher": result[1],
+            "developer": result[2],
+            "genre": result[3],
+            "price": result[4]
+        }
+        games.append(game)
+
+    return games
+
 
 def get_recently_added_games(limit: int = 5) -> list:
     """Fetch recently added games from the database."""
@@ -188,9 +235,15 @@ def game_is_installed(gamer: str, game_title: str) -> bool:
 def install_game(gamer: str, game_title: str, game_publisher: str) -> bool:
     """Install a game from the user's library."""
     if game_is_installed(gamer, game_title): return False
+    if platform.system() == "Linux": attribute = "linux_installer"
+    elif platform.system() == "Windows": attribute = "windows_installer"
+    else: return False
     database = ConnectDB()
-    database.execute("SELECT installer FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
-    installer = zlib.decompress(database.result()[0])
+    database.execute(f"SELECT {attribute} FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
+    result = database.result()
+    if result is None: return False
+    if result[0] is None: return False
+    installer = zlib.decompress(result[0])
     game_path = get_game_path(gamer, game_title)
     with open(game_path, "wb") as file: file.write(installer)
     return True
@@ -205,6 +258,10 @@ def play_game(gamer: str, game_title: str) -> bool:
     """Play a game from the user's library."""
     if game_is_installed(gamer, game_title) is False: return False
     game_path = get_game_path(gamer, game_title)
-    os.system(f"chmod +x {game_path}")
-    os.system(f"./{game_path}")
+    if platform.system() == "Linux":
+        print("oi")
+        os.system(f"chmod +x {game_path}")
+        os.system(f"{game_path}")
+    elif platform.system() == "Windows": os.system(game_path)
+    else: return False
     return True

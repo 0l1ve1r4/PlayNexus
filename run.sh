@@ -81,12 +81,16 @@ create_and_activate_venv() {
 }
 
 install_libs(){
-  pip install -r requirements.txt
+  _debug "Installing required libraries in 'requirements.txt'..." 0
+  pip install -r requirements.txt > /dev/null 
 }
 
 # ================== Main ==================
 
+clear
 check_install_package python3.10-venv
+
+check_install_package python3.11-venv
 check_install_package python3-pip
 
 create_and_activate_venv

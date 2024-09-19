@@ -13,7 +13,7 @@ class Signup:
         self.frame = previous_frame
         self.app = previous_app
 
-        self.app.geometry("322x600")
+        self.app.geometry("900x650")
 
         # Load images
         self.name_icon = self.load_image("type-square.png", (16, 16))
@@ -49,65 +49,65 @@ class Signup:
     def create_widgets(self) -> None:
         """Create and place all widgets in the window."""
 
+        content_frame = ctk.CTkFrame(master=self.frame, corner_radius=8)
+        content_frame.pack()
+
         if self.login_logo:
-            ctk.CTkLabel(master=self.frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
+            ctk.CTkLabel(master=content_frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
 
         # Header
-        ctk.CTkLabel(master=self.frame, text="Create a new account", anchor="w",
+        ctk.CTkLabel(master=content_frame, text="Create a new account", anchor="w",
                      justify="left", font=("Inter", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 24))
 
         # Full name entry
         if self.email_icon:
-            ctk.CTkLabel(master=self.frame, text="  Full name", anchor="w", justify="left",
-                         image=self.name_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 24))
-        self.email_entry = ctk.CTkEntry(master=self.frame, border_width=2, placeholder_text="Enter your full name")
+            ctk.CTkLabel(master=content_frame, text="  Full name*", anchor="w", justify="left",
+                         image=self.name_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 24))
+        self.email_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter your full name")
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Email entry
         if self.email_icon:
-            ctk.CTkLabel(master=self.frame, text="  Email", anchor="w", justify="left",
-                         image=self.email_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 24))
-        self.email_entry = ctk.CTkEntry(master=self.frame, border_width=2, placeholder_text="Ex: playnexus@youremail.com")
+            ctk.CTkLabel(master=content_frame, text="  Email*", anchor="w", justify="left",
+                         image=self.email_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 24))
+        self.email_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Ex: playnexus@youremail.com")
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Password entry
         if self.password_icon:
-            ctk.CTkLabel(master=self.frame, text="  Password", anchor="w", justify="left",
-                         image=self.password_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="Enter your password")
+            ctk.CTkLabel(master=content_frame, text="  Password*", anchor="w", justify="left",
+                         image=self.password_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
+        self.passw_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="Enter your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Confirm password entry
         if self.password_icon:
-            ctk.CTkLabel(master=self.frame, text="Confirm Password*", anchor="w", justify="left",
-                         image=None, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="Please, confirm your password")
+            ctk.CTkLabel(master=content_frame, text="Confirm Password*", anchor="w", justify="left",
+                         image=None, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
+        self.passw_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="Please, confirm your password")
         self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Birthdate entry
         if self.birth_icon:
-            ctk.CTkLabel(master=self.frame, text="  Enter your birth date*", anchor="w", justify="left",
-                         image=self.birth_icon, compound="left").pack(anchor="w", pady=(16, 0), padx=(24, 0))
-        self.birth_entry = ctk.CTkEntry(master=self.frame, border_width=2, show="*", placeholder_text="DD/MM/YY")
+            ctk.CTkLabel(master=content_frame, text="  Enter your birth date*", anchor="w", justify="left",
+                         image=self.birth_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
+        self.birth_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="DD/MM/YY")
         self.birth_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Error message label
-        self.error_label = ctk.CTkLabel(master=self.frame, text="Wrong email or password", text_color="#FF0000",
+        self.error_label = ctk.CTkLabel(master=content_frame, text="Wrong email or password", text_color="#FF0000",
                                         anchor="w", justify="left")
         self.error_label.pack(anchor="w", padx=(25, 0))
         self.error_label.pack_forget()  # Hide initially
 
         # Login button
-        content_frame = ctk.CTkFrame(master=self.frame, fg_color="transparent")
-        content_frame.pack(anchor="w", fill="x", pady=(32, 8), padx=(24, 24))
-
         cancel_button = ctk.CTkButton(master=content_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
                                       border_width=2, border_color="#b3b3b3", width=132, command=self.return_to_previous_page)
-        cancel_button.pack(anchor="w", side="left", padx=(0, 8))
+        cancel_button.pack(anchor="w", side="left", padx=(24, 0), pady=(8, 0))
         login_button = ctk.CTkButton(master=content_frame, text="Create account", width=132)
-        login_button.pack(anchor="w", side="right")
+        login_button.pack(anchor="w", side="right", padx=(8, 24), pady=(8, 0))
 
-        agreements_frame = ctk.CTkFrame(master=self.frame, fg_color="transparent")
+        agreements_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
         agreements_frame.pack(anchor="w", fill="x", padx=(24, 24))
 
         self.create_agreement_label(agreements_frame)
