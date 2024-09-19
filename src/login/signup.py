@@ -91,7 +91,7 @@ class Signup:
         if self.birth_icon:
             ctk.CTkLabel(master=content_frame, text="  Enter your birth date*", anchor="w", justify="left",
                          image=self.birth_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
-        self.birth_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="DD/MM/YY")
+        self.birth_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="DD/MM/YY")
         self.birth_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Error message label
