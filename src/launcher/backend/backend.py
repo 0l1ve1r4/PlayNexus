@@ -46,7 +46,8 @@ def get_games_path(account: str) -> str:
 
 def get_game_path(account: str, game_title: str) -> str:
     """Return the path to the game."""
-    game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
+    #game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
+    game_path = ""
     return game_path
 
 ######################################################################################################

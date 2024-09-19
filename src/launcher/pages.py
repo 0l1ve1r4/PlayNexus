@@ -1,10 +1,7 @@
 import customtkinter as ctk
 
-from PIL import Image
 from .utils import *
 from .backend.backend import *
-from functools import partial
-from launcher import Launcher
 import tkinter as tk
 
 SIDE_BAR_COLOR = "#2a2a2a"
@@ -24,6 +21,7 @@ class Pages:
 
         self.name = "Admin"
         self.email = "admin@playnexus.com"
+        self.screen_size = ["1920x1080"]
     
     def home_page(self) -> None:
         """Return to the home page."""
