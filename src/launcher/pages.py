@@ -124,14 +124,14 @@ class Pages:
             ctk.CTkLabel(master=account_frame, text="Account settings", anchor="w", font=self.body_bold).pack(fill="x")
 
             ##Change name
-            change_name_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
+            """change_name_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
             change_name_frame.pack(fill="x", anchor="w", pady=(16, 0))
             headline = ctk.CTkFrame(master=change_name_frame, fg_color="transparent")
             headline.pack(fill="x", side="left",anchor="w")
 
             ctk.CTkLabel(master=headline, text="Name", anchor="w", font=self.body).pack(anchor="w")
             ctk.CTkLabel(master=headline, text="Change your name", anchor="w", font=self.small, text_color="#b3b3b3").pack()
-            ctk.CTkEntry(master=change_name_frame, border_width=2, placeholder_text=self.name, width=245).pack(side="right")
+            ctk.CTkEntry(master=change_name_frame, border_width=2, placeholder_text=self.name, width=245).pack(side="right")"""
 
             ##Change email
             change_email_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
@@ -167,12 +167,22 @@ class Pages:
             change_color_btn = ctk.CTkFrame(master=change_theme, height=32, width=310, fg_color="#4d4d4d")
             change_color_btn.pack(side="right") 
 
-            ctk.CTkButton(master=change_color_btn, text="Dark", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
-            ctk.CTkButton(master=change_color_btn, text="White", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(master=change_color_btn, text="Dark", height=22, width=100, corner_radius=4, fg_color="transparent", command=self.dark_theme).pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(master=change_color_btn, text="White", height=22, width=100, corner_radius=4, fg_color="transparent", command=self.white_theme).pack(fill="both", side="left", padx=(5), pady=(5))
             ctk.CTkButton(master=change_color_btn, text="System", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
 
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)
+
+    def dark_theme(self):
+        """Change the theme to dark."""
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme(THEMES_PATH + "purple.json")
+
+    def white_theme(self):
+        """"Change the theme to white."""
+        ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme(THEMES_PATH + "white.json")
 
     def game_page(self) -> None:
         """Show the game page."""
@@ -385,7 +395,8 @@ class Pages:
     def profile_page(self) -> None:
         """Show the user's profile page."""
         if "profile_page" not in self.frames:
-            global name_Label, bio_Label, user_info
+            global name_Label, bio_Label, user_info, profile_info
+
             profile_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             profile_frame.pack(fill="both", expand=True)
             self.frames["profile_page"] = profile_frame
@@ -456,8 +467,14 @@ class Pages:
             self.bio_entry.pack_forget()
             bio_Label.pack(fill="x")
 
+            self.set_alterations.pack_forget()
+
             self.editing = False
         else:
+
+            self.set_alterations = ctk.CTkButton(master=profile_info, text="Ok", command=self.set_alterations_btn, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Ok"))
+            self.set_alterations.pack(side="left", anchor="s", pady=10, padx=10)
+
             name_Label.pack_forget()
             self.name_entry = ctk.CTkEntry(master=user_info, border_width=2, placeholder_text=self.name, width=250)
             self.name_entry.insert(0, self.name)
@@ -469,6 +486,12 @@ class Pages:
             self.bio_entry.pack(pady=10)
 
             self.editing = True
+
+    def set_alterations_btn(self):
+        """Confirm the alterations made to the user's profile."""
+        #update_user_username(new_name, self.email)
+        print("Updadte name")
+    
 
     def manage_accounts_page(self) -> None:
         """Show the page to manage accounts."""
