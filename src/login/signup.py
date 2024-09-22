@@ -91,8 +91,23 @@ class Signup:
         if self.birth_icon:
             ctk.CTkLabel(master=content_frame, text="  Enter your birth date*", anchor="w", justify="left",
                          image=self.birth_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
-        self.birth_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="DD/MM/YY")
-        self.birth_entry.pack(anchor="w", padx=(24, 24), fill="x")
+        
+        birth_info_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+        birth_info_frame.pack(anchor="w", fill="x", padx=(24, 24))
+
+        birth_info_frame.grid_columnconfigure(0, weight=1)
+        birth_info_frame.grid_columnconfigure(1, weight=1)
+        birth_info_frame.grid_columnconfigure(2, weight=1)
+
+        self.birth_day = ctk.CTkEntry(master=birth_info_frame, border_width=2, placeholder_text="DD")
+        self.birth_day.grid(row=0, column=0, sticky="ew", padx=(0,4))
+
+        self.birth_month = ctk.CTkEntry(master=birth_info_frame, border_width=2, placeholder_text="MM")
+        self.birth_month.grid(row=0, column=1, sticky="ew", padx=(4,4))
+
+        self.birth_year = ctk.CTkEntry(master=birth_info_frame, border_width=2, placeholder_text="YYYY")
+        self.birth_year.grid(row=0, column=2, sticky="ew", padx=(4,0))
+
 
         # Error message label
         self.error_label = ctk.CTkLabel(master=content_frame, text="Wrong email or password", text_color="#FF0000",
