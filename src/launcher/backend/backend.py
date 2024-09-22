@@ -97,7 +97,12 @@ def update_user_password(email: str, new_password: str) -> bool:
 
 def fetch_user_details(email: str) -> dict:
     """Fetch user details from the database."""
-    pass
+    database = ConnectDB()
+    database.execute("SELECT email, type FROM Account WHERE email = %s", (email,))
+    result = database.result()
+    if result is None: return None
+    return {"email": result[0], "type": result[1]}
+
 
 def log_user_activity(user_id: int, activity: str) -> None:
     """Log user activity."""
@@ -119,6 +124,14 @@ def create_gamer(account: str, username: str, birth_date: str, country: str) -> 
     database.commit()
     return True
 
+def fetch_gamer_details(account: str) -> dict:
+    """Fetch gamer details from the database."""
+    database = ConnectDB()
+    database.execute("SELECT * FROM Gamer WHERE account = %s", (account,))
+    result = database.result()
+    if result is None: return None
+    return {"account": result[0], "username": result[1], "birth_date": result[2], "country": result[3], "bio": result[4]}
+
 def count_gamers() -> int:
     """Count the number of gamers in the database."""
     database = ConnectDB()
@@ -133,6 +146,14 @@ def create_publisher(account: str, name: str) -> bool:
     database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (account, name))
     database.commit()
     return True
+
+def fetch_publisher_details(account: str) -> dict:
+    """Fetch publisher details from the database."""
+    database = ConnectDB()
+    database.execute("SELECT * FROM Publisher WHERE account = %s", (account,))
+    result = database.result()
+    if result is None: return None
+    return {"account": result[0], "name": result[1]}
 
 def count_publishers() -> int:
     """Count the number of publishers in the database."""
