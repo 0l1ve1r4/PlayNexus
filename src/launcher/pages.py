@@ -22,6 +22,7 @@ class Pages:
 
         self.game_in_library = False
         self.editing = False
+        self.window_open = False
 
 
         self.name = "Admin"
@@ -122,16 +123,6 @@ class Pages:
             account_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             account_frame.pack(fill="x", anchor="w", pady=(24, 0))
             ctk.CTkLabel(master=account_frame, text="Account settings", anchor="w", font=self.body_bold).pack(fill="x")
-
-            ##Change name
-            """change_name_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
-            change_name_frame.pack(fill="x", anchor="w", pady=(16, 0))
-            headline = ctk.CTkFrame(master=change_name_frame, fg_color="transparent")
-            headline.pack(fill="x", side="left",anchor="w")
-
-            ctk.CTkLabel(master=headline, text="Name", anchor="w", font=self.body).pack(anchor="w")
-            ctk.CTkLabel(master=headline, text="Change your name", anchor="w", font=self.small, text_color="#b3b3b3").pack()
-            ctk.CTkEntry(master=change_name_frame, border_width=2, placeholder_text=self.name, width=245).pack(side="right")"""
 
             ##Change email
             change_email_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
@@ -395,7 +386,7 @@ class Pages:
     def profile_page(self) -> None:
         """Show the user's profile page."""
         if "profile_page" not in self.frames:
-            global name_Label, bio_Label, user_info, profile_info
+            global name_Label, bio_Label, user_info, profile_info, ed
 
             profile_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             profile_frame.pack(fill="both", expand=True)
@@ -454,26 +445,12 @@ class Pages:
 
     def edit_profile(self) -> None:
         """Edit the user's profile."""
-        if self.editing:
-            new_name = self.name_entry.get()
-            self.name = new_name
-            name_Label.configure(text=self.name)
-            self.name_entry.pack_forget()
-            name_Label.pack(fill="x")
+        if not self.editing:
 
-            new_bio = self.bio_entry.get()
-            self.bio = new_bio
-            bio_Label.configure(text=self.bio)
-            self.bio_entry.pack_forget()
-            bio_Label.pack(fill="x")
-
-            self.set_alterations.pack_forget()
-
-            self.editing = False
-        else:
-
-            self.set_alterations = ctk.CTkButton(master=profile_info, text="Ok", command=self.set_alterations_btn, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Ok"))
+            self.set_alterations = ctk.CTkButton(master=profile_info, text="Ok", command=self.warning_window, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Ok"))
             self.set_alterations.pack(side="left", anchor="s", pady=10, padx=10)
+
+            ed.pack_forget()
 
             name_Label.pack_forget()
             self.name_entry = ctk.CTkEntry(master=user_info, border_width=2, placeholder_text=self.name, width=250)
@@ -487,11 +464,52 @@ class Pages:
 
             self.editing = True
 
-    def set_alterations_btn(self):
+    def warning_window(self):
         """Confirm the alterations made to the user's profile."""
-        #update_user_username(new_name, self.email)
-        print("Updadte name")
-    
+        self.window = ctk.CTkToplevel()
+        self.window.title("Confirm Changes")
+        self.window.geometry("300x150")
+
+        window_label = ctk.CTkLabel(master=self.window, text="Save changes?", font=("Roboto", 16), width = len("Save changes"))
+        window_label.pack(pady=16)
+
+        window_confirm = ctk.CTkButton(master=self.window, text="Confirm", command=self.confirm_changes, fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
+        window_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
+
+        window_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.discard_changes, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
+        window_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
+
+    def confirm_changes(self) -> None:
+        new_name = self.name_entry.get()
+        self.name = new_name
+        name_Label.configure(text=self.name)
+        self.name_entry.pack_forget()
+        name_Label.pack(fill="x")
+
+        new_bio = self.bio_entry.get()
+        self.bio = new_bio
+        bio_Label.configure(text=self.bio)
+        self.bio_entry.pack_forget()
+        bio_Label.pack(fill="x")
+
+        ed.pack(side="right", anchor="s")
+
+        self.set_alterations.pack_forget()
+
+        #update_username(self.name, self.email)
+
+    def discard_changes(self) -> None:
+        self.name_entry.pack_forget()
+        name_Label.pack(fill="x")
+
+        self.bio_entry.pack_forget()
+        bio_Label.pack(fill="x")
+
+        ed.pack(side="right", anchor="s")
+
+        self.set_alterations.pack_forget()
+
+        self.editing = False
 
     def manage_accounts_page(self) -> None:
         """Show the page to manage accounts."""
