@@ -9,7 +9,7 @@ class ConnectDB:
 
     db_host = "localhost"
     db_user = "root"
-    db_password = "bl4ckm1rr0r"
+    db_password = "12345"
     db_name = "PlayNexus"
 
     def __init__(self):

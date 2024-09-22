@@ -12,8 +12,6 @@ class Pages:
         self.main_view = main_view
         self.frames = {}
 
-        self.Admin = True
-
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
@@ -24,6 +22,8 @@ class Pages:
         self.editing = False
         self.window_open = False
 
+
+###### Define logged user
 
         self.name = "Admin"
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."

@@ -4,6 +4,8 @@ from PIL import Image
 from typing import Tuple
 import tkinter as tk
 
+from launcher.backend import backend
+
 ctk.set_default_color_theme("res/themes/purple.json") 
 
 class Signup:
