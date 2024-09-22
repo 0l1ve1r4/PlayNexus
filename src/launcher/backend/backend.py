@@ -56,10 +56,13 @@ def get_games_path(account: str) -> str:
 
 def get_game_path(account: str, game_title: str) -> str:
     """Return the path to the game."""
+    #game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
+    game_path = ""
     if platform.system() == "Linux": extension = ".run"
     elif platform.system() == "Windows": extension = ".exe"
-    else: return None
-    game_path = os.path.join(get_games_path(account), f"{game_title.replace(" ", "_")}{extension}")
+    else: 
+        return None
+    #game_path = os.path.join(get_games_path(account), f"{game_title.replace(" ", "_")}{extension}")
     return game_path
 
 ######################################################################################################
@@ -99,6 +102,13 @@ def fetch_user_details(email: str) -> dict:
 def log_user_activity(user_id: int, activity: str) -> None:
     """Log user activity."""
     pass
+
+def update_username(username: str, email: str) -> bool:
+    """Update the user's username in the database."""
+    database = ConnectDB()
+    database.execute("UPDATE Gamer SET username = %s WHERE username = %s AND email = %s", (username, username, email))
+    database.commit()
+    return True
 
 def create_gamer(account: str, username: str, birth_date: str, country: str) -> bool:
     """Create and set gamer details in the database."""
@@ -164,6 +174,7 @@ def get_all_games() -> list:
 def count_games_in_store() -> int:
     """Count the number of games in the store."""
     return len(get_all_games())
+
 
 def search_in_store(query: str) -> dict:
     """Search for a game in the store by title or description."""

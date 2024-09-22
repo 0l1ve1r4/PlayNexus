@@ -102,7 +102,7 @@ class SideBar(Pages):
         email = ctk.CTkLabel(master=profile_btn, text="admin@gmail.com", text_color="#b3b3b3",
                              font=ctk.CTkFont(family='Helvetica', size=12), fg_color="transparent")
         email.place(x=117,y=40, anchor="center")
-        name = ctk.CTkLabel(master=profile_btn, text="Admin", fg_color="transparent", 
+        name = ctk.CTkLabel(master=profile_btn, text=self.name, fg_color="transparent", 
                             font=ctk.CTkFont(family='Helvetica', size=16), justify="center")
         name.place(x=90,y=20, anchor="center")
 
