@@ -1,9 +1,7 @@
 import customtkinter as ctk
-
 from PIL import Image, ImageTk
 from .utils import *
 from .backend.backend import *
-from functools import partial
 import tkinter as tk
 
 SIDE_BAR_COLOR = "#2a2a2a"
@@ -23,11 +21,13 @@ class Pages:
         self.small = ctk.CTkFont(family="Roboto", size=12)
 
         self.game_in_library = False
+        self.editing = False
+        self.window_open = False
 
 
         self.name = "Admin"
+        self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
         self.email = "admin@playnexus.com"
-        self.bio = "Welcome to PlayNexus! This is an administator account."
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -124,16 +124,6 @@ class Pages:
             account_frame.pack(fill="x", anchor="w", pady=(24, 0))
             ctk.CTkLabel(master=account_frame, text="Account settings", anchor="w", font=self.body_bold).pack(fill="x")
 
-            ##Change name
-            change_name_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
-            change_name_frame.pack(fill="x", anchor="w", pady=(16, 0))
-            headline = ctk.CTkFrame(master=change_name_frame, fg_color="transparent")
-            headline.pack(fill="x", side="left",anchor="w")
-
-            ctk.CTkLabel(master=headline, text="Name", anchor="w", font=self.body).pack(anchor="w")
-            ctk.CTkLabel(master=headline, text="Change your name", anchor="w", font=self.small, text_color="#b3b3b3").pack()
-            ctk.CTkEntry(master=change_name_frame, border_width=2, placeholder_text=self.name, width=245).pack(side="right")
-
             ##Change email
             change_email_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
             change_email_frame.pack(fill="x", anchor="w", pady=(16, 0))
@@ -151,13 +141,39 @@ class Pages:
             self.add_setting_btn(account_frame, "Manage accounts", self.go_to_manage, "right_arrow.png")
 
             #APP SETTINGS
-            app_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            app_frame.pack(fill="x", anchor="w", pady=(0, 24))
-            self.add_separator(app_frame)
-            ctk.CTkLabel(master=app_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
+            settings_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            settings_frame.pack(fill="x", anchor="w", pady=(24, 0))
+            self.add_separator(settings_frame)
+            ctk.CTkLabel(master=settings_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
+
+            ##Change theme
+            change_theme = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
+            change_theme.pack(fill="x", anchor="w", pady=(24, 0))
+            headline = ctk.CTkFrame(master=change_theme, fg_color="transparent")
+            headline.pack(fill="x", side="left", anchor="w")
+
+            ctk.CTkLabel(master=headline, text="Theme Color", anchor="w", font=self.body).pack(anchor="w")
+
+            ##Theme options
+            change_color_btn = ctk.CTkFrame(master=change_theme, height=32, width=310, fg_color="#4d4d4d")
+            change_color_btn.pack(side="right") 
+
+            ctk.CTkButton(master=change_color_btn, text="Dark", height=22, width=100, corner_radius=4, fg_color="transparent", command=self.dark_theme).pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(master=change_color_btn, text="White", height=22, width=100, corner_radius=4, fg_color="transparent", command=self.white_theme).pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(master=change_color_btn, text="System", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
 
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)
+
+    def dark_theme(self):
+        """Change the theme to dark."""
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme(THEMES_PATH + "purple.json")
+
+    def white_theme(self):
+        """"Change the theme to white."""
+        ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme(THEMES_PATH + "white.json")
 
     def game_page(self) -> None:
         """Show the game page."""
@@ -165,8 +181,6 @@ class Pages:
             game_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             game_frame.pack(fill="both", expand=True)
             self.frames["game_page"] = game_frame
-
-
 
             content_frame = ctk.CTkFrame(master=game_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
@@ -372,6 +386,8 @@ class Pages:
     def profile_page(self) -> None:
         """Show the user's profile page."""
         if "profile_page" not in self.frames:
+            global name_Label, bio_Label, user_info, profile_info, ed
+
             profile_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             profile_frame.pack(fill="both", expand=True)
             self.frames["profile_page"] = profile_frame
@@ -388,41 +404,112 @@ class Pages:
             user_info = ctk.CTkFrame(master=profile_info, fg_color="transparent")
             user_info.pack(padx=(16, 0), side="left", anchor="nw")
 
-            ctk.CTkLabel(master=user_info, text=self.name, anchor="nw", justify="left", font=("Roboto", 24)).pack(fill="x")
-            ctk.CTkLabel(master=user_info, text=self.bio, anchor="nw", justify="left", font=("Roboto", 16), text_color="#b3b3b3", wraplength=250).pack(fill="x")
+            name_Label = ctk.CTkLabel(master=user_info, text=self.name, anchor="nw", justify="left", font=("Roboto", 24))
+            name_Label.pack(fill="x")
 
-            ctk.CTkButton(master=profile_info, text="Edit profile", fg_color="transparent", hover_color="#4d4d4d",
-                            border_width=2, border_color="#b3b3b3", width=len("Edit profile")).pack(side="right", anchor="s")
+            bio_Label = ctk.CTkLabel(master=user_info, text=self.bio, anchor="nw", justify="left", font=("Roboto", 16), text_color="#b3b3b3", wraplength=250)
+            bio_Label.pack()
+
+            ed = ctk.CTkButton(master=profile_info, text="Edit profile", command=self.edit_profile, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Edit profile"))
+            ed.pack(side="right", anchor="s")
 
             ##Account insights
             insights_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            insights_frame.pack(fill="x", pady=24, expand=True)
+            insights_frame.pack(fill="x", pady=24, ipady=16, side="left")
 
             clock=ctk.CTkImage(dark_image=load_image("clock.png"), light_image=load_image("clock.png"), size=(64,64))
             reviews_icon=ctk.CTkImage(dark_image=load_image("review.png"), light_image=load_image("review.png"), size=(64,64))
             gaming_pad=ctk.CTkImage(dark_image=load_image("gaming_pad.png"), light_image=load_image("gaming_pad.png"), size=(64,64))
 
             inlibrary = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
-            inlibrary.pack(side="left", anchor="w", padx=(0,16), ipadx=16)
+            inlibrary.pack(side="left", anchor="w", padx=(0,16), ipadx=36)
             ctk.CTkLabel(master=inlibrary, text="Games in library").pack(fill="x", pady=16)
             ctk.CTkLabel(master=inlibrary, text="", image=gaming_pad).pack(fill="x")
             ctk.CTkLabel(master=inlibrary, text="0", font=self.h1).pack(fill="x", pady=16)
 
             hrsplayed = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
-            hrsplayed.pack(side="left", anchor="e", padx=(0,16), ipadx=16)
-            ctk.CTkLabel(master=hrsplayed, text="Hours played").pack(fill="x", pady=16)
-            ctk.CTkLabel(master=hrsplayed, text="", image=clock).pack(fill="x")
-            ctk.CTkLabel(master=hrsplayed, text="0",font=self.h1).pack(fill="x", pady=16)
+            hrsplayed.pack(side="left", anchor="e", padx=(16,16), ipadx=38)
+            ctk.CTkLabel(master=hrsplayed, text="Hours played").pack(pady=16)
+            ctk.CTkLabel(master=hrsplayed, text="", image=clock).pack()
+            ctk.CTkLabel(master=hrsplayed, text="0",font=self.h1).pack(pady=16)
 
             reviews = ctk.CTkFrame(master=insights_frame, fg_color="#2a2a2a", width=200)
-            reviews.pack(side="left", pady=16, ipadx=16)
-            ctk.CTkLabel(master=reviews, text="Reviews").pack(fill="x", pady=16)
-            ctk.CTkLabel(master=reviews, text="", image=reviews_icon).pack(fill="x")
-            ctk.CTkLabel(master=reviews, text="0", font=self.h1).pack(fill="x", pady=16)
+            reviews.pack(side="right", anchor="e",padx=(16,16), pady=16, ipadx=42)
+            ctk.CTkLabel(master=reviews, text="Reviews").pack(pady=16)
+            ctk.CTkLabel(master=reviews, text="", image=reviews_icon).pack()
+            ctk.CTkLabel(master=reviews, text="0", font=self.h1).pack( pady=16)
 
             
         else:
             self.frames["profile_page"].pack(fill="both", expand=True)
+
+    def edit_profile(self) -> None:
+        """Edit the user's profile."""
+        if not self.editing:
+
+            self.set_alterations = ctk.CTkButton(master=profile_info, text="Ok", command=self.warning_window, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Ok"))
+            self.set_alterations.pack(side="left", anchor="s", pady=10, padx=10)
+
+            ed.pack_forget()
+
+            name_Label.pack_forget()
+            self.name_entry = ctk.CTkEntry(master=user_info, border_width=2, placeholder_text=self.name, width=250)
+            self.name_entry.insert(0, self.name)
+            self.name_entry.pack()
+
+            bio_Label.pack_forget()
+            self.bio_entry = ctk.CTkEntry(master=user_info, border_width=2, height=50, placeholder_text=self.bio, width=250)
+            self.bio_entry.insert(0, self.bio)
+            self.bio_entry.pack(pady=10)
+
+            self.editing = True
+
+    def warning_window(self):
+        """Confirm the alterations made to the user's profile."""
+        self.window = ctk.CTkToplevel()
+        self.window.title("Confirm Changes")
+        self.window.geometry("300x150")
+
+        window_label = ctk.CTkLabel(master=self.window, text="Save changes?", font=("Roboto", 16), width = len("Save changes"))
+        window_label.pack(pady=16)
+
+        window_confirm = ctk.CTkButton(master=self.window, text="Confirm", command=self.confirm_changes, fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
+        window_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
+
+        window_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.discard_changes, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
+        window_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
+
+    def confirm_changes(self) -> None:
+        new_name = self.name_entry.get()
+        self.name = new_name
+        name_Label.configure(text=self.name)
+        self.name_entry.pack_forget()
+        name_Label.pack(fill="x")
+
+        new_bio = self.bio_entry.get()
+        self.bio = new_bio
+        bio_Label.configure(text=self.bio)
+        self.bio_entry.pack_forget()
+        bio_Label.pack(fill="x")
+
+        ed.pack(side="right", anchor="s")
+
+        self.set_alterations.pack_forget()
+
+        #update_username(self.name, self.email)
+
+    def discard_changes(self) -> None:
+        self.name_entry.pack_forget()
+        name_Label.pack(fill="x")
+
+        self.bio_entry.pack_forget()
+        bio_Label.pack(fill="x")
+
+        ed.pack(side="right", anchor="s")
+
+        self.set_alterations.pack_forget()
+
+        self.editing = False
 
     def manage_accounts_page(self) -> None:
         """Show the page to manage accounts."""
