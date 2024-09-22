@@ -106,7 +106,7 @@ class Signup:
         cancel_button = ctk.CTkButton(master=content_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
                                       border_width=2, border_color="#b3b3b3", width=132, command=self.return_to_previous_page)
         cancel_button.pack(anchor="w", side="left", padx=(24, 0), pady=(8, 0))
-        login_button = ctk.CTkButton(master=content_frame, text="Create account",command=backend.create_user, width=132)
+        login_button = ctk.CTkButton(master=content_frame, text="Create account", width=132)
         login_button.pack(anchor="w", side="right", padx=(8, 24), pady=(8, 0))
 
         agreements_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
