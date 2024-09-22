@@ -3,6 +3,8 @@ import os
 from PIL import Image, ImageTk
 from typing import Tuple
 
+from launcher.backend import backend
+
 ctk.set_default_color_theme("res/themes/purple.json")
 
 class Login:
@@ -156,7 +158,7 @@ class Login:
         email = self.email_entry.get()
         password = self.passw_entry.get()
 
-        wrong_credentials = not self.authenticate_user(email, password)
+        wrong_credentials = not backend.authenticate_user(email, password)
 
         if wrong_credentials and self.missed_attempts == 0:
             self.missed_attempts += 1
@@ -168,16 +170,12 @@ class Login:
             self.error_label.pack_forget()
             self.break_loop()
 
-    def authenticate_user(self, email: str, password: str) -> bool:
-        """Return true if credentials are valid, false otherwise."""
-        print(f"Email: {email}, Password: {password}")
-        self.is_logged_in = True
-
-        return email == "admin" and password == "admin"
 
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
+        import launcher
+        launcher.Launcher()
 
     def goto_passw_recovery(self):
         from .passw_recovery import PasswRecovery
