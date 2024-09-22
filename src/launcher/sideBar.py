@@ -93,8 +93,6 @@ class SideBar(Pages):
         pbtn = ctk.CTkFrame(master=bottom_buttons_frame, fg_color="transparent", height=41,width=110)
         pbtn.pack(fill="x", expand=False, padx=16, pady=(16,0))
 
-        name1 = "Admin"
-        email1 = "admin@gmail.com"
 
         profile_btn = ctk.CTkButton(master=pbtn, text="", fg_color="transparent",image=profile_img,hover_color="#4d4d4d",
                                       border_width=2, border_color="#4d4d4d", anchor="w", command=partial(self.show_frame, self.profile_page))
