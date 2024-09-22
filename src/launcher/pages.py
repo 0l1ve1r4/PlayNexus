@@ -14,8 +14,6 @@ class Pages:
         self.main_view = main_view
         self.frames = {}
 
-        self.Admin = True
-
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
@@ -24,8 +22,8 @@ class Pages:
 
         self.game_in_library = False
 
-
-        self.name = "Admin"
+###### Define logged user
+        self.name = "Teste"
         self.email = "admin@playnexus.com"
         self.bio = "Welcome to PlayNexus! This is an administator account."
     
