@@ -69,13 +69,14 @@ def get_game_path(account: str, game_title: str) -> str:
 # The following methods are used to interact with the USERS.                                         #
 ######################################################################################################
 
-def authenticate_user(email: str, password: str) -> bool:
+def authenticate_user(email: str, password: str) -> dict:
     """Check if the provided credentials are valid."""
     database = ConnectDB()
-    database.execute("SELECT * FROM Account WHERE email = %s AND password = %s", (email, password))
-    if database.result() is None: return False
+    database.execute("SELECT email, type FROM Account WHERE email = %s AND password = %s", (email, password))
+    result = database.result()
+    if result is None: return {'success': False, 'account':{'email': None, 'type': None}}
     get_user_path(email)
-    return True
+    return {'success': True, 'account':{'email': result[0], 'type': result[1]}}
 
 def create_user(email: str, password: str, user_type: str) -> bool:
     """Create a new user in the database."""

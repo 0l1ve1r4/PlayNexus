@@ -158,7 +158,9 @@ class Login:
         email = self.email_entry.get()
         password = self.passw_entry.get()
 
-        wrong_credentials = not backend.authenticate_user(email, password)
+        authentication = backend.authenticate_user(email, password)
+        wrong_credentials = not authentication['success']
+        account = authentication['account']
 
         if wrong_credentials and self.missed_attempts == 0:
             self.missed_attempts += 1
