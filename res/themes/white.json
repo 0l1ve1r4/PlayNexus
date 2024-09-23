@@ -105,7 +105,7 @@
     "border_spacing": 4,
     "fg_color": "#B3B3B3",
     "button_color": "gray55",
-    "button_hover_color": "g4D4D4D"
+    "button_hover_color": "#g4D4D4D"
   },
   "CTkSegmentedButton": {
     "corner_radius": 6,
@@ -123,7 +123,7 @@
     "border_width": 0,
     "fg_color": "#B3B3B3",
     "border_color": "#979DA2",
-    "text_color":"gray10",
+    "text_color":"#000000",
     "scrollbar_button_color": "gray55",
     "scrollbar_button_hover_color": "gray40"
   },

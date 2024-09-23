@@ -109,10 +109,10 @@ def log_user_activity(user_id: int, activity: str) -> None:
     """Log user activity."""
     pass
 
-def update_username(username: str, email: str) -> bool:
+def update_username(new_username:str, username: str, email: str) -> bool:
     """Update the user's username in the database."""
     database = ConnectDB()
-    database.execute("UPDATE Gamer SET username = %s WHERE username = %s AND email = %s", (username, username, email))
+    database.execute("UPDATE Gamer SET username = %s WHERE username = %s AND email = %s", (new_username, username, email))
     database.commit()
     return True
 
