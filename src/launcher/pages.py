@@ -11,7 +11,7 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.frames = {}
-
+        self.Admin = False
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
@@ -25,9 +25,9 @@ class Pages:
 
 ###### Define logged user
 
-        self.name = "Admin"
+        self.name = "TESTE"
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
-        self.email = "admin@playnexus.com"
+        self.email = "TESTE"
     
     def home_page(self) -> None:
         """Return to the home page."""

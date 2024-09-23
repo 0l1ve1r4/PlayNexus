@@ -171,13 +171,13 @@ class Login:
         else:
             self.error_label.pack_forget()
             self.break_loop()
+            import launcher
+            launcher.Launcher()
 
 
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
-        import launcher
-        launcher.Launcher()
 
     def goto_passw_recovery(self):
         from .passw_recovery import PasswRecovery
