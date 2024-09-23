@@ -2,9 +2,9 @@
 -- WARNING: Running this will erase and rebuild the database!
 -- Requires a MySQL database server to run.
 
-DROP DATABASE IF EXISTS PlayNexus;
+DROP SCHEMA IF EXISTS PlayNexus;
 
-CREATE DATABASE PlayNexus;
+CREATE SCHEMA PlayNexus;
 
 USE PlayNexus;
 
