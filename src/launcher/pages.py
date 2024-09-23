@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from .utils import *
 from .backend.backend import *
 import tkinter as tk
+from launcher import sideBar
 
 SIDE_BAR_COLOR = "#2a2a2a"
 
@@ -43,7 +44,7 @@ class Pages:
             self.frames["home_page"].pack(fill="both", expand=True)
 
     def store_page(self,master) -> None:
-        search_frame = ctk.CTkFrame(master=master, fg_color="transparent")
+        search_frame = ctk.CTkFrame(master=master)
         search_frame.pack(anchor="n", fill="both", padx=24, pady=24)
 
         self.create_search_bar(search_frame, " Search in store")
@@ -95,7 +96,7 @@ class Pages:
             search_button = ctk.CTkButton(
                 master=first_line, height=30, text="Search", text_color="#ffffff",
                 width=112, command=lambda: self.execute_search(search_entry.get()), compound="left", image=icon)
-            search_button.pack(anchor="w", padx=(8, 0), side="right")
+            search_button.pack(anchor="w", padx=(0, 0), side="left")
 
             #Add external game button
             img=ctk.CTkImage(dark_image=load_image("plus.png"), light_image=load_image("plus.png"), size=(16, 16))
@@ -165,12 +166,12 @@ class Pages:
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)
 
-    def dark_theme(self):
+    def dark_theme(self) -> None:
         """Change the theme to dark."""
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme(THEMES_PATH + "purple.json")
 
-    def white_theme(self):
+    def white_theme(self) -> None:
         """"Change the theme to white."""
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme(THEMES_PATH + "white.json")
@@ -302,7 +303,7 @@ class Pages:
     def add_tag(self, master: ctk.CTkFrame, category: str) -> None:
         """Add a tag to the provided frame."""
         width = len(category)
-        ctk.CTkButton(master=master, text=category, fg_color="#4d4d4d", hover_color="#3c3c3c", width=width).pack(anchor="w")
+        ctk.CTkButton(master=master, text=category, fg_color="#4d4d4d", hover_color="#3c3c3c", width=width).pack(anchor="w", pady=3)
 
     def new_game_page(self) -> None:
         """Show the page to add a new game."""
@@ -376,12 +377,34 @@ class Pages:
             ##Buttons frame
             buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             buttons_frame.pack(fill="x", pady=16, padx=16)
-            ctk.CTkButton(master=buttons_frame, text="Publish").pack(side="right")
-            ctk.CTkButton(master=buttons_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
+            ctk.CTkButton(master=buttons_frame, text="Publish", command=self.new_game_page_warning, fg_color="#7C439E").pack(side="right")
+            ctk.CTkButton(master=buttons_frame, text="Cancel", command=self.cancel_add_game,fg_color="transparent", hover_color="#4d4d4d",
                           border_width=2, border_color="#b3b3b3").pack(side="right", padx=(0,8))            
 
         else:
+            self.frames["home_page"].pack_forget()
             self.frames["new_game_page"].pack(fill="both", expand=True)
+    
+    def cancel_add_game(self) -> None:
+        """Cancel the addition of a new game."""
+        self.frames["new_game_page"].pack_forget()
+        self.frames["home_page"].pack(fill="both", expand=True)
+
+
+    def new_game_page_warning(self) -> None:
+        """Show a warning window before publishing a new game."""
+        self.window = ctk.CTkToplevel()
+        self.window.title("Confirm Changes")
+        self.window.geometry("300x150")
+
+        window_label = ctk.CTkLabel(master=self.window, text="Publish new game?", font=("Roboto", 16), width = len("Publish new game"))
+        window_label.pack(pady=16)
+
+        window_btn_confirm = ctk.CTkButton(master=self.window, text="Confirm", fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
+        window_btn_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
+
+        window_btn_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.window.destroy,fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
+        window_btn_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
 
     def profile_page(self) -> None:
         """Show the user's profile page."""
@@ -473,20 +496,23 @@ class Pages:
         window_label = ctk.CTkLabel(master=self.window, text="Save changes?", font=("Roboto", 16), width = len("Save changes"))
         window_label.pack(pady=16)
 
-        window_confirm = ctk.CTkButton(master=self.window, text="Confirm", command=self.confirm_changes, fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
-        window_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
+        window_btn_confirm = ctk.CTkButton(master=self.window, text="Confirm", command=self.confirm_changes, fg_color="#7C439E", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
+        window_btn_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
 
-        window_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.discard_changes, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
-        window_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
+        window_btn_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.discard_changes, fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
+        window_btn_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
 
     def confirm_changes(self) -> None:
+        """Save alterations made to the user's profile."""
         new_name = self.name_entry.get()
+        new_bio = self.bio_entry.get()
+       
+        update_username(new_name, self.name, self.email)
         self.name = new_name
         name_Label.configure(text=self.name)
         self.name_entry.pack_forget()
         name_Label.pack(fill="x")
 
-        new_bio = self.bio_entry.get()
         self.bio = new_bio
         bio_Label.configure(text=self.bio)
         self.bio_entry.pack_forget()
@@ -496,9 +522,10 @@ class Pages:
 
         self.set_alterations.pack_forget()
 
-        #update_username(self.name, self.email)
+        self.window.destroy()
 
     def discard_changes(self) -> None:
+        """Discard the alterations made to the user's profile."""
         self.name_entry.pack_forget()
         name_Label.pack(fill="x")
 
@@ -510,6 +537,7 @@ class Pages:
         self.set_alterations.pack_forget()
 
         self.editing = False
+        self.window.destroy()
 
     def manage_accounts_page(self) -> None:
         """Show the page to manage accounts."""

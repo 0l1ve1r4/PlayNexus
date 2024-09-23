@@ -14,6 +14,7 @@ class SideBar(Pages):
         self.res_path = "res/"
         self.pages = Pages(self.app)
         self.frames = {}
+        self.logo = Image.open(self.res_path + "primary-logo-white.png")
 
     def show_frame(self, frame_method: callable) -> None:
         """Show the selected frame and hide the current one."""
@@ -36,8 +37,7 @@ class SideBar(Pages):
 
     def add_logo(self) -> None:
         """Add the logo image to the sidebar."""
-        logo_img_data = Image.open(self.res_path + "primary-logo-white.png")
-        logo_img = ctk.CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(182, 34))
+        logo_img = ctk.CTkImage(light_image=self.logo, size=(182, 34))
         ctk.CTkLabel(master=self.sidebar_frame, text="", image=logo_img).pack(
             fill="x", pady=(24, 0), anchor="center"
         )
