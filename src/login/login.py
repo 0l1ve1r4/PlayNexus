@@ -4,8 +4,6 @@ from PIL import Image, ImageTk
 from typing import Tuple
 import launcher
 from launcher.backend import backend
-from login.signup import Signup
-
 
 ctk.set_default_color_theme("res/themes/purple.json")
 

@@ -229,7 +229,6 @@ class Signup:
     
     def process_signup(self):
         # Collect common data
-        full_name = self.full_name_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
         confirm_password = self.confirm_password_entry.get()
