@@ -7,7 +7,7 @@ import tkinter as tk
 SIDE_BAR_COLOR = "#2a2a2a"
 
 class Pages:
-    def __init__(self, main_view: ctk.CTkFrame) -> None:
+    def __init__(self, main_view: ctk.CTkFrame, mail) -> None:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.frames = {}
@@ -24,10 +24,11 @@ class Pages:
 
 
 ###### Define logged user
-
-        self.name = "TESTE"
+        self.email = mail
+        self.user = fetch_gamer_details(self.email)
+        self.name = self.user["username"]
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
-        self.email = "TESTE"
+        
     
     def home_page(self) -> None:
         """Return to the home page."""

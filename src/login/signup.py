@@ -62,11 +62,11 @@ class Signup:
                      justify="left", font=("Inter", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 24))
 
         # Full name entry
-        if self.email_icon:
+        if self.name_icon:
             ctk.CTkLabel(master=content_frame, text="  Full name*", anchor="w", justify="left",
                          image=self.name_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 24))
-        self.email_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter your full name")
-        self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
+        self.name_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter your full name")
+        self.name_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Email entry
         if self.email_icon:
@@ -121,7 +121,7 @@ class Signup:
         cancel_button = ctk.CTkButton(master=content_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
                                       border_width=2, border_color="#b3b3b3", width=132, command=self.return_to_previous_page)
         cancel_button.pack(anchor="w", side="left", padx=(24, 0), pady=(8, 0))
-        login_button = ctk.CTkButton(master=content_frame, text="Create account", width=132)
+        login_button = ctk.CTkButton(master=content_frame, text="Create account",command=self.create_user, width=132)
         login_button.pack(anchor="w", side="right", padx=(8, 24), pady=(8, 0))
 
         agreements_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
@@ -130,6 +130,15 @@ class Signup:
         self.create_agreement_label(agreements_frame)
 
         # self.app.bind("<Return>")
+
+    def create_user(self):
+        mail = self.email_entry.get()
+        pwd = self.passw_entry.get()
+        name = self.name_entry.get()
+        backend.create_user(mail, pwd, "Gamer")
+        self.return_to_previous_page()
+        
+        
 
     def create_agreement_label(self, master):
         text_widget = tk.Text(master, wrap="word", bg="#1a1a1a", fg="#b3b3b3", font=("Roboto", 12), borderwidth=0, highlightthickness=0)

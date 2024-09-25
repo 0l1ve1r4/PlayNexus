@@ -5,11 +5,12 @@ from .sideBar import SideBar
 from .utils import THEMES_PATH
 
 class Launcher:
-    def __init__(self) -> None:
+    def __init__(self, mail) -> None:
         """Main class for the launcher application."""
+        self.email = mail
         ctk.set_default_color_theme(THEMES_PATH + "purple.json")
         self.app = ctk.CTk()
-        self.side_bar = SideBar(self.app)
+        self.side_bar = SideBar(self.app, self.email)
         self.res_path = "res/"
         
         self.configure_app()

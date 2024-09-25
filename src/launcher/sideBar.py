@@ -6,13 +6,13 @@ from functools import partial
 import tkinter as tk
 
 class SideBar(Pages):
-    def __init__(self, app) -> None:
+    def __init__(self, app, mail) -> None:
         """Create the sidebar for the launcher application."""
-        super().__init__(app)
+        super().__init__(app, mail)
         self.app = app
         self.current_frame = None        
         self.res_path = "res/"
-        self.pages = Pages(self.app)
+        self.pages = Pages(self.app, mail)
         self.frames = {}
 
     def show_frame(self, frame_method: callable) -> None:

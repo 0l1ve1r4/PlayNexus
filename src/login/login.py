@@ -2,7 +2,7 @@ import customtkinter as ctk
 import os
 from PIL import Image, ImageTk
 from typing import Tuple
-
+import launcher
 from launcher.backend import backend
 
 ctk.set_default_color_theme("res/themes/purple.json")
@@ -171,8 +171,7 @@ class Login:
         else:
             self.error_label.pack_forget()
             self.break_loop()
-            import launcher
-            launcher.Launcher()
+            launcher.Launcher(email)
 
 
     def break_loop(self) -> None:
