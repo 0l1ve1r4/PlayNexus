@@ -1,8 +1,9 @@
-import login
-from login import signup
+# main.py
+
+from login.login import Login  # Importando a classe Login
 import user
 import launcher
 
 if __name__ == "__main__":
-    login = login.Login()
-    login.app.mainloop()
+    login_instance = Login()  # Renomeei a variável para evitar conflito
+    login_instance.app.mainloop()

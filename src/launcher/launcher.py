@@ -1,16 +1,17 @@
-import os
-import customtkinter as ctk
+# src/launcher/launcher.py
 
+import customtkinter as ctk
 from .sideBar import SideBar
 from .utils import THEMES_PATH
+import os
 
 class Launcher:
-    def __init__(self, mail) -> None:
+    def __init__(self, email: str = "") -> None:
         """Main class for the launcher application."""
-        self.email = mail
-        ctk.set_default_color_theme(THEMES_PATH + "purple.json")
+        ctk.set_default_color_theme(os.path.join(THEMES_PATH, "purple.json"))
         self.app = ctk.CTk()
-        self.side_bar = SideBar(self.app, self.email)
+        self.Admin = False
+        self.side_bar = SideBar(self.app, admin=self.Admin, email=email)
         self.res_path = "res/"
         
         self.configure_app()

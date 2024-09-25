@@ -171,8 +171,7 @@ class Login:
         else:
             self.error_label.pack_forget()
             self.break_loop()
-            launcher.Launcher(email)
-
+            launcher.Launcher(email)  # Passa 'email' corretamente
 
     def break_loop(self) -> None:
         """Close the application if login is successful."""
