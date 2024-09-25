@@ -2,7 +2,7 @@ import customtkinter as ctk
 import os
 from PIL import Image, ImageTk
 from typing import Tuple
-
+import launcher
 from launcher.backend import backend
 
 ctk.set_default_color_theme("res/themes/purple.json")
@@ -171,13 +171,12 @@ class Login:
         else:
             self.error_label.pack_forget()
             self.break_loop()
+            launcher.Launcher(email)
 
 
     def break_loop(self) -> None:
         """Close the application if login is successful."""
         self.app.destroy()
-        import launcher
-        launcher.Launcher()
 
     def goto_passw_recovery(self):
         from .passw_recovery import PasswRecovery

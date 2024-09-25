@@ -78,13 +78,15 @@ def authenticate_user(email: str, password: str) -> dict:
     get_user_path(email)
     return {'success': True, 'account':{'email': result[0], 'type': result[1]}}
 
-def create_user(email: str, password: str, user_type: str) -> bool:
+def create_user(email: str, password: str, user_type: str, dayoB: int, moB: int, yoB: int) -> bool:
     """Create a new user in the database."""
     if user_type not in ["Gamer", "Publisher"]: return False
     database = ConnectDB()
     database.execute("SELECT * FROM Account WHERE email = %s", (email,))
     if database.result() is not None: return False
     database.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
+    database.commit()
+    database.execute("INSERT INTO gamer (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
     database.commit()
     return True
 
