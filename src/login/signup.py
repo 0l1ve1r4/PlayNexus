@@ -3,8 +3,9 @@ import os
 from PIL import Image
 from typing import Tuple
 import tkinter as tk
+import datetime
 
-from launcher.backend import backend
+from launcher.backend.backend import create_user, create_gamer, create_publisher
 
 ctk.set_default_color_theme("res/themes/purple.json") 
 
@@ -51,94 +52,146 @@ class Signup:
     def create_widgets(self) -> None:
         """Create and place all widgets in the window."""
 
-        content_frame = ctk.CTkFrame(master=self.frame, corner_radius=8)
-        content_frame.pack()
+        # Usar CTkScrollableFrame sem largura fixa
+        content_frame = ctk.CTkScrollableFrame(master=self.frame, corner_radius=8)
+        content_frame.pack(padx=20, pady=20, fill="both", expand=True)
 
         if self.login_logo:
             ctk.CTkLabel(master=content_frame, text="", image=self.login_logo).pack(anchor="nw", padx=(24, 0), pady=(24, 0))
 
         # Header
-        ctk.CTkLabel(master=content_frame, text="Create a new account", anchor="w",
-                     justify="left", font=("Inter", 24)).pack(anchor="w", pady=(8, 0), padx=(24, 24))
+        ctk.CTkLabel(
+            master=content_frame,
+            text="Create a new account",
+            anchor="w",
+            justify="left",
+            font=("Inter", 24)
+        ).pack(anchor="w", pady=(8, 0), padx=(24, 24))
 
         # Full name entry
-        if self.name_icon:
-            ctk.CTkLabel(master=content_frame, text="  Full name*", anchor="w", justify="left",
-                         image=self.name_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 24))
-        self.name_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Enter your full name")
-        self.name_entry.pack(anchor="w", padx=(24, 24), fill="x")
+        ctk.CTkLabel(
+            master=content_frame,
+            text="  Full name*",
+            anchor="w",
+            justify="left",
+            image=self.name_icon,
+            compound="left"
+        ).pack(anchor="w", pady=(8, 0), padx=(24, 24))
+        self.full_name_entry = ctk.CTkEntry(
+            master=content_frame,
+            border_width=2,
+            placeholder_text="Enter your full name"
+        )
+        self.full_name_entry.pack(anchor="w", padx=(24, 24), fill="x", expand=True)
 
         # Email entry
-        if self.email_icon:
-            ctk.CTkLabel(master=content_frame, text="  Email*", anchor="w", justify="left",
-                         image=self.email_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 24))
+        ctk.CTkLabel(master=content_frame, text="  Email*", anchor="w", justify="left",
+                     image=self.email_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 24))
         self.email_entry = ctk.CTkEntry(master=content_frame, border_width=2, placeholder_text="Ex: playnexus@youremail.com")
         self.email_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Password entry
-        if self.password_icon:
-            ctk.CTkLabel(master=content_frame, text="  Password*", anchor="w", justify="left",
-                         image=self.password_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="Enter your password")
-        self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
+        ctk.CTkLabel(master=content_frame, text="  Password*", anchor="w", justify="left",
+                     image=self.password_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
+        self.password_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="Enter your password")
+        self.password_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
         # Confirm password entry
-        if self.password_icon:
-            ctk.CTkLabel(master=content_frame, text="Confirm Password*", anchor="w", justify="left",
-                         image=None, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
-        self.passw_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="Please, confirm your password")
-        self.passw_entry.pack(anchor="w", padx=(24, 24), fill="x")
+        ctk.CTkLabel(master=content_frame, text="Confirm Password*", anchor="w", justify="left",
+                     image=None, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
+        self.confirm_password_entry = ctk.CTkEntry(master=content_frame, border_width=2, show="*", placeholder_text="Please confirm your password")
+        self.confirm_password_entry.pack(anchor="w", padx=(24, 24), fill="x")
 
-        # Birthdate entry
-        if self.birth_icon:
-            ctk.CTkLabel(master=content_frame, text="  Enter your birth date*", anchor="w", justify="left",
-                         image=self.birth_icon, compound="left").pack(anchor="w", pady=(8, 0), padx=(24, 0))
-        
-        birth_info_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-        birth_info_frame.pack(anchor="w", fill="x", padx=(24, 24))
+        # Account Type Selection
+        account_type_label = ctk.CTkLabel(master=content_frame, text="Select Account Type*", anchor="w")
+        account_type_label.pack(anchor="w", pady=(8, 0), padx=(24, 24))
 
-        birth_info_frame.grid_columnconfigure(0, weight=1)
-        birth_info_frame.grid_columnconfigure(1, weight=1)
-        birth_info_frame.grid_columnconfigure(2, weight=1)
+        self.account_type_var = tk.StringVar(value="Gamer")
+        account_type_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+        account_type_frame.pack(anchor="w", padx=(24, 24))
 
-        self.birth_day = ctk.CTkEntry(master=birth_info_frame, border_width=2, placeholder_text="DD")
-        self.birth_day.grid(row=0, column=0, sticky="ew", padx=(0,4))
+        gamer_radio = ctk.CTkRadioButton(master=account_type_frame, text="Gamer", variable=self.account_type_var, value="Gamer")
+        gamer_radio.pack(side="left")
 
-        self.birth_month = ctk.CTkEntry(master=birth_info_frame, border_width=2, placeholder_text="MM")
-        self.birth_month.grid(row=0, column=1, sticky="ew", padx=(4,4))
+        publisher_radio = ctk.CTkRadioButton(master=account_type_frame, text="Publisher", variable=self.account_type_var, value="Publisher")
+        publisher_radio.pack(side="left", padx=(10, 0))
 
-        self.birth_year = ctk.CTkEntry(master=birth_info_frame, border_width=2, placeholder_text="YYYY")
-        self.birth_year.grid(row=0, column=2, sticky="ew", padx=(4,0))
+        # Additional Fields
+        self.additional_fields_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+        self.additional_fields_frame.pack(anchor="w", fill="x", padx=(24, 24), pady=(8, 0))
+
+        def update_additional_fields(*args):
+            # Limpar campos existentes
+            for widget in self.additional_fields_frame.winfo_children():
+                widget.destroy()
+            
+            if self.account_type_var.get() == "Gamer":
+                # Campos para Gamer
+                ctk.CTkLabel(master=self.additional_fields_frame, text="Username*", anchor="w").pack(anchor="w")
+                self.username_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="Enter your username")
+                self.username_entry.pack(anchor="w", fill="x", pady=(0, 8))
+                
+                ctk.CTkLabel(master=self.additional_fields_frame, text="Country*", anchor="w").pack(anchor="w")
+                self.country_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="Enter your country")
+                self.country_entry.pack(anchor="w", fill="x", pady=(0, 8))
+                
+                ctk.CTkLabel(master=self.additional_fields_frame, text="Birth Date (YYYY-MM-DD)*", anchor="w").pack(anchor="w")
+                self.birth_date_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="YYYY-MM-DD")
+                self.birth_date_entry.pack(anchor="w", fill="x", pady=(0, 8))
+            else:
+                # Campos para Publisher
+                ctk.CTkLabel(master=self.additional_fields_frame, text="Publisher Name*", anchor="w").pack(anchor="w")
+                self.publisher_name_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="Enter publisher name")
+                self.publisher_name_entry.pack(anchor="w", fill="x", pady=(0, 8))
+
+        update_additional_fields()
+        self.account_type_var.trace("w", update_additional_fields)
+
+            # Label de erro
+        self.error_label = ctk.CTkLabel(
+            master=content_frame,
+            text="",
+            text_color="#FF0000",
+            anchor="w",
+            justify="left",
+            wraplength=400  # Ajuste conforme necessário
+        )
 
 
-        # Error message label
-        self.error_label = ctk.CTkLabel(master=content_frame, text="Wrong email or password", text_color="#FF0000",
-                                        anchor="w", justify="left")
-        self.error_label.pack(anchor="w", padx=(25, 0))
-        self.error_label.pack_forget()  # Hide initially
+        # Frame para os botões
+        buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+        buttons_frame.pack(fill="x", padx=(24, 24), pady=(8, 0), expand=True)
 
-        # Login button
-        cancel_button = ctk.CTkButton(master=content_frame, text="Cancel", fg_color="transparent", hover_color="#4d4d4d",
-                                      border_width=2, border_color="#b3b3b3", width=132, command=self.return_to_previous_page)
-        cancel_button.pack(anchor="w", side="left", padx=(24, 0), pady=(8, 0))
-        login_button = ctk.CTkButton(master=content_frame, text="Create account",command=self.create_user, width=132)
-        login_button.pack(anchor="w", side="right", padx=(8, 24), pady=(8, 0))
+        # Configurar colunas
+        buttons_frame.columnconfigure(0, weight=0)  # Botão Cancel
+        buttons_frame.columnconfigure(1, weight=1)  # Botão Create Account
 
+        # Botão Cancel
+        cancel_button = ctk.CTkButton(
+            master=buttons_frame,
+            text="Cancel",
+            fg_color="transparent",
+            hover_color="#4d4d4d",
+            border_width=2,
+            border_color="#b3b3b3",
+            command=self.return_to_previous_page,
+            width=100  # Largura definida
+        )
+        cancel_button.grid(row=0, column=0, padx=(0, 8), pady=(8, 0), sticky="e")
+
+        # Botão Create Account
+        signup_button = ctk.CTkButton(
+            master=buttons_frame,
+            text="Create",
+            command=self.process_signup
+        )
+        signup_button.grid(row=0, column=1, padx=(8, 0), pady=(8, 0), sticky="w")
+
+        # Agreements
         agreements_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
         agreements_frame.pack(anchor="w", fill="x", padx=(24, 24))
 
         self.create_agreement_label(agreements_frame)
-
-        # self.app.bind("<Return>")
-
-    def create_user(self):
-        mail = self.email_entry.get()
-        pwd = self.passw_entry.get()
-        name = self.name_entry.get()
-        backend.create_user(mail, pwd, "Gamer")
-        self.return_to_previous_page()
-        
-        
 
     def create_agreement_label(self, master):
         text_widget = tk.Text(master, wrap="word", bg="#1a1a1a", fg="#b3b3b3", font=("Roboto", 12), borderwidth=0, highlightthickness=0)
@@ -168,11 +221,70 @@ class Signup:
         print("Terms and Conditions clicked")
 
     def return_to_previous_page(self):
-        from .login import Login  
+        from .login import Login 
         
         self.destroy_previous_frame()
         login = Login(self.frame, self.app)
         login.app.mainloop()
+    
+    def process_signup(self):
+        # Collect common data
+        full_name = self.full_name_entry.get()
+        email = self.email_entry.get()
+        password = self.password_entry.get()
+        confirm_password = self.confirm_password_entry.get()
+        
+        if password != confirm_password:
+            self.error_label.configure(text="Passwords do not match")
+            self.error_label.pack()
+            return
+
+        account_type = self.account_type_var.get()
+        
+        # Create account in the Account table
+        if not create_user(email, password, account_type):
+            self.error_label.configure(text="Error creating account. Email may already be in use.")
+            self.error_label.pack()
+            return
+        else:
+            print("Conta criada com sucesso no banco de dados.")
+
+        # Create specific details
+        if account_type == "Gamer":
+            username = self.username_entry.get()
+            country = self.country_entry.get()
+            birth_date_input = self.birth_date_entry.get()
+            
+            # Parse and reformat the birth date
+            try:
+                birth_date_parsed = datetime.datetime.strptime(birth_date_input, '%d/%m/%Y')
+                birth_date = birth_date_parsed.strftime('%Y-%m-%d')
+            except ValueError:
+                self.error_label.configure(text="Invalid birth date format. Please use DD/MM/YYYY.")
+                self.error_label.pack()
+                return
+            
+            if not create_gamer(email, username, birth_date, country):
+                self.error_label.configure(text="Error creating gamer profile.")
+                self.error_label.pack()
+                return
+        else:
+            publisher_name = self.publisher_name_entry.get()
+            if not create_publisher(email, publisher_name):
+                self.error_label.configure(text="Error creating publisher profile.")
+                self.error_label.pack()
+                return
+
+        # If everything succeeded, redirect to the login screen or launcher
+        self.go_to_login()
+    
+    def go_to_login(self):
+        """Navigate back to the login screen."""
+        from .login import Login  # Import the Login class
+
+        self.destroy_previous_frame()  # Destroy the current signup frame
+        login = Login(self.frame, self.app)  # Initialize the Login screen
+        # No need to call mainloop here
 
 if __name__ == "__main__":
     signup_app = Signup()

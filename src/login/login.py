@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 from typing import Tuple
 import launcher
 from launcher.backend import backend
+from login.signup import Signup
+
 
 ctk.set_default_color_theme("res/themes/purple.json")
 
@@ -171,8 +173,7 @@ class Login:
         else:
             self.error_label.pack_forget()
             self.break_loop()
-            launcher.Launcher(email)
-
+            launcher.Launcher(email)  # Passa 'email' corretamente
 
     def break_loop(self) -> None:
         """Close the application if login is successful."""
