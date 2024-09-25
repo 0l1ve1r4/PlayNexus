@@ -282,7 +282,7 @@ class Signup:
         from .login import Login  # Import the Login class
 
         self.destroy_previous_frame()  # Destroy the current signup frame
-        login = Login(self.frame, self.app)  # Initialize the Login screen
+        Login(self.frame, self.app)  # Chama a classe sem atribuição
         # No need to call mainloop here
 
 if __name__ == "__main__":
