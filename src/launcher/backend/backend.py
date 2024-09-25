@@ -35,34 +35,37 @@ class ConnectDB:
 ######################################################################################################
 # The following methods are used to interact with the FILE SYSTEM.                                   #
 ######################################################################################################
-
 def get_home_path() -> str:
     """Create a directory for PlayNexus in the user's home directory and return the path."""
     home_path = os.path.join(os.path.expanduser('~'), ".PlayNexus")
-    if os.path.exists(home_path) is False: os.mkdir(home_path)
+    if not os.path.exists(home_path):
+        os.mkdir(home_path)
     return home_path
 
 def get_user_path(account: str) -> str:
     """Create a directory for the user and return the path."""
     user_path = os.path.join(get_home_path(), account.split("@")[0].translate(str.maketrans("", "", string.punctuation)))
-    if os.path.exists(user_path) is False: os.mkdir(user_path)
+    if not os.path.exists(user_path):
+        os.mkdir(user_path)
     return user_path
 
 def get_games_path(account: str) -> str:
     """Create a directory for the game and return the path."""
     games_path = os.path.join(get_user_path(account), "games")
-    if os.path.exists(games_path) is False: os.mkdir(games_path)
+    if not os.path.exists(games_path):
+        os.mkdir(games_path)
     return games_path
 
 def get_game_path(account: str, game_title: str) -> str:
     """Return the path to the game."""
-    #game_path = f"{get_games_path(account)}/{game_title.replace(" ", "_")}.run"
     game_path = ""
-    if platform.system() == "Linux": extension = ".run"
-    elif platform.system() == "Windows": extension = ".exe"
-    else: 
+    if platform.system() == "Linux":
+        extension = ".run"
+    elif platform.system() == "Windows":
+        extension = ".exe"
+    else:
         return None
-    #game_path = os.path.join(get_games_path(account), f"{game_title.replace(" ", "_")}{extension}")
+    game_path = os.path.join(get_games_path(account), f"{game_title.replace(' ', '_')}{extension}")
     return game_path
 
 ######################################################################################################
@@ -74,21 +77,10 @@ def authenticate_user(email: str, password: str) -> dict:
     database = ConnectDB()
     database.execute("SELECT email, type FROM Account WHERE email = %s AND password = %s", (email, password))
     result = database.result()
-    if result is None: return {'success': False, 'account':{'email': None, 'type': None}}
+    if result is None:
+        return {'success': False, 'account': {'email': None, 'type': None}}
     get_user_path(email)
-    return {'success': True, 'account':{'email': result[0], 'type': result[1]}}
-
-def create_user(email: str, password: str, user_type: str, dayoB: int, moB: int, yoB: int) -> bool:
-    """Create a new user in the database."""
-    if user_type not in ["Gamer", "Publisher"]: return False
-    database = ConnectDB()
-    database.execute("SELECT * FROM Account WHERE email = %s", (email,))
-    if database.result() is not None: return False
-    database.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
-    database.commit()
-    database.execute("INSERT INTO gamer (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
-    database.commit()
-    return True
+    return {'success': True, 'account': {'email': result[0], 'type': result[1]}}
 
 def log_failed_login_attempt(email: str) -> None:
     """Log a failed login attempt."""
@@ -118,14 +110,51 @@ def update_username(new_username:str, username: str, email: str) -> bool:
     database.commit()
     return True
 
+def create_user(email: str, password: str, user_type: str) -> bool:
+    """Create a user in the Account table."""
+    database = ConnectDB()
+    # Verificar se o email já existe
+    database.execute("SELECT email FROM Account WHERE email = %s", (email,))
+    if database.result():
+        # Email já existe
+        print("Email já existe no banco de dados.")
+        return False
+    # Inserir nova conta
+    try:
+        database.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
+        database.commit()
+        print("Conta criada com sucesso.")
+        return True
+    except Exception as e:
+        print(f"Erro ao inserir na tabela Account: {e}")
+        return False
+
 def create_gamer(account: str, username: str, birth_date: str, country: str) -> bool:
     """Create and set gamer details in the database."""
     database = ConnectDB()
+    # Verificar se a conta existe e é do tipo Gamer
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (account,))
-    if database.result() is None: return False
-    database.execute("INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)", (account, username, birth_date, country))
-    database.commit()
-    return True
+    if database.result() is None:
+        print("Conta não encontrada ou não é do tipo Gamer.")
+        return False
+    # Verificar se o username já está em uso
+    database.execute("SELECT * FROM Gamer WHERE username = %s", (username,))
+    if database.result():
+        print("Username já está em uso.")
+        return False
+    # Inserir os detalhes do Gamer
+    try:
+        database.execute(
+            "INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)",
+            (account, username, birth_date, country)
+        )
+        database.commit()
+        print("Gamer criado com sucesso.")
+        return True
+    except Exception as e:
+        print(f"Erro ao inserir na tabela Gamer: {e}")
+        return False
+
 
 def fetch_gamer_details(account: str) -> dict:
     """Fetch gamer details from the database."""
@@ -144,11 +173,20 @@ def count_gamers() -> int:
 def create_publisher(account: str, name: str) -> bool:
     """Create and set publisher details in the database."""
     database = ConnectDB()
+    # Verificar se a conta existe e é do tipo Publisher
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (account,))
-    if database.result() is None: return False
-    database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (account, name))
-    database.commit()
-    return True
+    if database.result() is None:
+        print("Conta não encontrada ou não é do tipo Publisher.")
+        return False
+    # Inserir os detalhes do Publisher
+    try:
+        database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (account, name))
+        database.commit()
+        print("Publisher criado com sucesso.")
+        return True
+    except Exception as e:
+        print(f"Erro ao inserir na tabela Publisher: {e}")
+        return False
 
 def fetch_publisher_details(account: str) -> dict:
     """Fetch publisher details from the database."""

@@ -8,11 +8,12 @@ from launcher import sideBar
 SIDE_BAR_COLOR = "#2a2a2a"
 
 class Pages:
-    def __init__(self, main_view: ctk.CTkFrame, mail) -> None:
+    def __init__(self, main_view: ctk.CTkFrame, email: str) -> None:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
+        self.email = email  # Armazena o email do usuário
         self.frames = {}
-        self.Admin = False
+
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
@@ -25,11 +26,10 @@ class Pages:
 
 
 ###### Define logged user
-        self.email = mail
-        self.user = fetch_gamer_details(self.email)
-        self.name = self.user["username"]
+
+        self.name = "Admin"
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
-        
+        self.email = "admin@playnexus.com"
     
     def home_page(self) -> None:
         """Return to the home page."""
