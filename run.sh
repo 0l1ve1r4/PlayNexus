@@ -88,7 +88,8 @@ install_libs(){
 # ================== Main ==================
 
 clear
-check_install_package python3.10-venv
+
+# check_install_package python3.10-venv
 
 check_install_package python3.11-venv
 check_install_package python3-pip
@@ -104,4 +105,4 @@ fi
 
 ## Run the main script
 
-python3 src/main.py
+sudo -E venv/bin/python3 src/main.py
