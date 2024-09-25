@@ -147,7 +147,7 @@ class Signup:
         update_additional_fields()
         self.account_type_var.trace("w", update_additional_fields)
 
-            # Label de erro
+        # Label de erro
         self.error_label = ctk.CTkLabel(
             master=content_frame,
             text="",
