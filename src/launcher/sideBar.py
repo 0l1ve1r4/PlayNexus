@@ -1,14 +1,15 @@
 import customtkinter as ctk
-
 from PIL import Image, ImageDraw
 from .pages import Pages
 from functools import partial
 import tkinter as tk
 
 class SideBar(Pages):
-    def __init__(self, app) -> None:
+    def __init__(self, app, admin=False) -> None:
         """Create the sidebar for the launcher application."""
         super().__init__(app)
+        self.parent = app  # Define o parent como app
+        self.Admin = admin  # Define o atributo Admin
         self.app = app
         self.current_frame = None        
         self.res_path = "res/"

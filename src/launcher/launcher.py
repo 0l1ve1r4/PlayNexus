@@ -5,11 +5,12 @@ from .sideBar import SideBar
 from .utils import THEMES_PATH
 
 class Launcher:
-    def __init__(self) -> None:
+    def __init__(self, admin=False) -> None:
         """Main class for the launcher application."""
-        ctk.set_default_color_theme(THEMES_PATH + "purple.json")
+        ctk.set_default_color_theme(os.path.join(THEMES_PATH, "purple.json"))
         self.app = ctk.CTk()
-        self.side_bar = SideBar(self.app)
+        self.Admin = admin  # Define o atributo Admin aqui
+        self.side_bar = SideBar(self.app, admin=self.Admin)  # Passa admin para SideBar
         self.res_path = "res/"
         
         self.configure_app()
