@@ -224,7 +224,7 @@ class Pages:
                 width=100,
                 corner_radius=4,
                 fg_color="transparent",
-                command=self.system_theme  # Implementar este método se necessário
+                command=self.system_theme
             ).pack(fill="both", side="left", padx=5, pady=5)
 
         else:
