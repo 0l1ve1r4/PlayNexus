@@ -16,7 +16,7 @@ class Pages:
         self.email = email  # Armazena o email do usuário
         self.name = self.getUsername(self.email) #gets the username from the database
         self.frames = {}
-        self.Admin = self.getAdmin(self.email)
+        
         
         
 
@@ -35,6 +35,7 @@ class Pages:
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
     
     def home_page(self) -> None:
+        self.Admin = self.getAdmin(self.email)
         """Return to the home page."""
         
         if "home_page" not in self.frames:
@@ -45,10 +46,16 @@ class Pages:
             self.home_frame = home_frame
             
             self.frames["home_page"] = home_frame
-            self.store_page(home_frame, None)
+            print(f"Admin status: {self.Admin}")
+            
+            if self.Admin:
+                self.admin_page(home_frame)
+            else:
+                self.store_page(home_frame)
+            
+            
 
         else:
-
             self.count = not self.count
             try:
                 # Destroy existing widgets and home frame
@@ -477,45 +484,45 @@ class Pages:
             ctk.CTkLabel(master=general_info, text="General info", anchor="w", justify="left",
                         font=("Roboto", 20, "bold")).pack(fill="x")
             ctk.CTkLabel(master=general_info, text="Title", anchor="w", justify="left").pack(fill="x")
-            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game title").pack(fill="x")
+            self.title = ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game title").pack(fill="x")
 
             ctk.CTkLabel(master=general_info, text="Developer", anchor="w", justify="left").pack(fill="x")
-            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game developer").pack(fill="x")
+            self.dev =  ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game developer").pack(fill="x")
 
             ctk.CTkLabel(master=general_info, text="Game description", anchor="w", justify="left").pack(fill="x")
-            ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Tell the users more about this game",
+            self.game_desc = ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Tell the users more about this game",
                          height=68).pack(fill="x")
             
             ###Price frame
-            price = ctk.CTkFrame(master=general_info, fg_color="transparent")
-            price.pack(fill="x")
+            self.price = ctk.CTkFrame(master=general_info, fg_color="transparent")
+            self.price.pack(fill="x")
 
-            sale_price= ctk.CTkFrame(master=price, fg_color="transparent")
-            sale_price.pack(side="left", anchor="w")
-            ctk.CTkLabel(master=sale_price, text="Price", anchor="w", justify="left", width=250).pack()
-            ctk.CTkEntry(master=sale_price, border_width=2, placeholder_text="R$1000", width=250).pack(anchor="nw")
+            self.sale_price= ctk.CTkFrame(master=self.price, fg_color="transparent")
+            self.sale_price.pack(side="left", anchor="w")
+            ctk.CTkLabel(master=self.sale_price, text="Price", anchor="w", justify="left", width=250).pack()
+            ctk.CTkEntry(master=self.sale_price, border_width=2, placeholder_text="R$1000", width=250).pack(anchor="nw")
 
-            discount = ctk.CTkFrame(master=price, fg_color="transparent")
-            discount.pack(side="right")
-            ctk.CTkLabel(master=discount, text="Discount", anchor="w", justify="left", width=250).pack()
-            ctk.CTkEntry(master=discount, border_width=2, placeholder_text="R$0", width=250).pack()
+            self.discount = ctk.CTkFrame(master=self.price, fg_color="transparent")
+            self.discount.pack(side="right")
+            ctk.CTkLabel(master=self.discount, text="Discount", anchor="w", justify="left", width=250).pack()
+            ctk.CTkEntry(master=self.discount, border_width=2, placeholder_text="R$0", width=250).pack()
 
             ctk.CTkLabel(master=general_info, text="Publish date", anchor="w", justify="left").pack(fill="x")
             ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="DD/MM/YY").pack(fill="x")
 
             ##Requirements frame
-            requirements = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            requirements.pack(fill="x", padx=16, pady=16)
-            ctk.CTkLabel(master=requirements, text="Requirements", anchor="w", justify="left", font=("Roboto",20,"bold")).pack(fill="x")
+            self.requirements = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            self.requirements.pack(fill="x", padx=16, pady=16)
+            ctk.CTkLabel(master=self.requirements, text="Requirements", anchor="w", justify="left", font=("Roboto",20,"bold")).pack(fill="x")
 
-            ctk.CTkLabel(master=requirements, text="Minimum", anchor="w", justify="left").pack(fill="x")
-            ctk.CTkEntry(master=requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
+            ctk.CTkLabel(master=self.requirements, text="Minimum", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=self.requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
                          height=68).pack(fill="x")
-            ctk.CTkLabel(master=requirements, text="Recommended", anchor="w", justify="left").pack(fill="x")
-            ctk.CTkEntry(master=requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
+            ctk.CTkLabel(master=self.requirements, text="Recommended", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=self.requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
                          height=68).pack(fill="x")
-            ctk.CTkLabel(master=requirements, text="Maximum", anchor="w", justify="left").pack(fill="x")
-            ctk.CTkEntry(master=requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
+            ctk.CTkLabel(master=self.requirements, text="Maximum", anchor="w", justify="left").pack(fill="x")
+            ctk.CTkEntry(master=self.requirements, border_width=2, placeholder_text="OS, Processor, Memory, Graphics, Storage",
                          height=68).pack(fill="x")
             
             ##Tags frame and complementary info
@@ -551,11 +558,14 @@ class Pages:
         window_label = ctk.CTkLabel(master=self.window, text="Publish new game?", font=("Roboto", 16), width = len("Publish new game"))
         window_label.pack(pady=16)
 
-        window_btn_confirm = ctk.CTkButton(master=self.window, text="Confirm", fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
+        window_btn_confirm = ctk.CTkButton(master=self.window, text="Confirm",command =self.publishGame,fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
         window_btn_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
 
         window_btn_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.window.destroy,fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
         window_btn_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
+
+    def publishGame(self):
+        print((self.title.get()))
 
     def profile_page(self) -> None:
         """Show the user's profile page."""
