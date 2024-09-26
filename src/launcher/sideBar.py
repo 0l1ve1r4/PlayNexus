@@ -57,6 +57,10 @@ class SideBar(Pages):
             fill="x", pady=(24, 0), anchor="center"
         )
 
+    def call_home_button(self) -> None:
+        """Call the home button command."""
+        self.home_button.invoke()
+
     def add_buttons(self) -> None:
         """Add the buttons to the sidebar."""
         top_buttons_frame = ctk.CTkFrame(master=self.sidebar_frame, fg_color="transparent")
@@ -82,6 +86,8 @@ class SideBar(Pages):
                 hover_color=hover_color,
                 anchor="w"
             ).pack(anchor="center", fill="x", ipady=16, pady=(pady, 0), padx=16)
+
+        self.home_button = top_buttons_frame.winfo_children()[0]
 
         bottom_buttons_data = [
             ("download.png", "Downloads", self.home_page, "transparent", "#4d4d4d", 0),

@@ -28,7 +28,7 @@ class Pages:
         self.game_in_library = False
         self.editing = False
         self.window_open = False
-
+        self.count = False
 
 ###### Define logged user
 
@@ -49,6 +49,8 @@ class Pages:
             self.store_page(home_frame, None)
 
         else:
+
+            self.count = not self.count
             try:
                 # Destroy existing widgets and home frame
                 for widget in self.main_view.winfo_children():
@@ -78,6 +80,9 @@ class Pages:
         search_frame.pack(anchor="n", fill="both", padx=24, pady=24)
 
         self.create_search_bar(search_frame, " Search in store")
+
+        if self.count:
+            self.home_page()
 
         if games == None:
             self.create_labels_and_content(master,"Recently added", games)
@@ -283,6 +288,10 @@ class Pages:
                   game_tags: list = ["NULL, NULL"]
                   ) -> None:
         """Show the game page."""
+
+        for widget in self.main_view.winfo_children():
+            widget.destroy()
+        
         if "game_page" not in self.frames:
             
             game_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
