@@ -246,24 +246,35 @@ def count_publishers() -> int:
 # The following methods are used to interact with the GAME STORE.                                    #
 ######################################################################################################
 
-def publish_game(title: str, publisher: str, developer: str, genre: str, description: str, cover_path: str, linux_installer_path: str, windows_installer_path: str, price: float) -> bool:
+def publish_game(game) -> bool:
+    
+    title = game["title"]
+    developer = game["dev"]
+    price = game ["price"]
+    description = game["description"]
+    genre = game["genre"]
+    cover_path = None
+    linux_installer_path = None
+    windows_installer_path = None
+    publisher = game["pub"]
+    
     """Publish a game in the store."""
     database = ConnectDB()
     database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher,))
     if database.result() is None: return False
     database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
     if database.result() is not None: return False
-    if os.path.exists(cover_path) is False: return False
-    cover = zlib.compress(open(cover_path, "rb").read())
-    if linux_installer_path is not None:
-        if os.path.exists(linux_installer_path) is False: return False
-        linux_installer = zlib.compress(open(linux_installer_path, "rb").read())
-    else: linux_installer = None
-    if windows_installer_path is not None:
-        if os.path.exists(windows_installer_path) is False: return False
-        windows_installer = zlib.compress(open(windows_installer_path, "rb").read())
-    else: windows_installer = None
-    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, cover, linux_installer, windows_installer, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, cover, linux_installer, windows_installer, price))
+    #if os.path.exists(cover_path) is False: return False
+    #cover = zlib.compress(open(cover_path, "rb").read())
+    #if linux_installer_path is not None:
+    #    if os.path.exists(linux_installer_path) is False: return False
+    #    linux_installer = zlib.compress(open(linux_installer_path, "rb").read())
+    #else: linux_installer = None
+    #if windows_installer_path is not None:
+    #    if os.path.exists(windows_installer_path) is False: return False
+    #    windows_installer = zlib.compress(open(windows_installer_path, "rb").read())
+    #else: windows_installer = None
+    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, price) VALUES (%s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, price))
     database.commit()
     return True
 
