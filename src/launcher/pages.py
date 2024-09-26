@@ -556,6 +556,9 @@ class Pages:
             "genre": self.genre.get()
         }
         backend.publish_game(game)
+        self.window.destroy()
+        self.frames["new_game_page"].pack_forget()
+        self.frames["home_page"].pack(fill="both", expand=True)
 
     def profile_page(self) -> None:
         """Show the user's profile page."""
