@@ -30,8 +30,13 @@ class SideBar(Pages):
         except TypeError:
             print("Error: Frame method not found.")
             pass
+        
+        try:
+            self.current_frame = self.frames.get(frame_method.__name__)
+        except AttributeError:
+            print("Error: Frame not found.")
+            pass
 
-        self.current_frame = self.frames.get(frame_method.__name__)
         ctk.CTkLabel(master=self.sidebar_frame, text="", fg_color="#302c2c").pack(expand=True)
 
     def create_sidebar(self) -> None:

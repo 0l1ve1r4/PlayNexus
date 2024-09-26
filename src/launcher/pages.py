@@ -27,32 +27,62 @@ class Pages:
 
 ###### Define logged user
 
-        self.name = "Admin"
+        self.name = email.split("@")[0]
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
         self.email = email
     
     def home_page(self) -> None:
         """Return to the home page."""
+        
         if "home_page" not in self.frames:
             print("Home page not found")
-
-
             home_frame = ctk.CTkScrollableFrame(master=self.main_view)
             home_frame.pack(fill="both", expand=True)
-            self.frames["home_page"] = home_frame
-            if self.Admin == False:
-                self.store_page(home_frame)
-            else:
-                self.admin_page(home_frame)
-        else:
-            self.frames["home_page"].pack(fill="both", expand=True)
 
-    def store_page(self,master) -> None:
+            self.home_frame = home_frame
+            
+            self.frames["home_page"] = home_frame
+            self.store_page(home_frame, None)
+
+        else:
+            try:
+                # Destroy existing widgets and home frame
+                for widget in self.main_view.winfo_children():
+                    widget.destroy()
+
+                # Remove the home page frame from frames dictionary
+                for frame in self.frames:
+                    self.frames.pop(frame)                
+
+                home_frame = ctk.CTkScrollableFrame(master=self.main_view)
+                home_frame.pack(fill="both", expand=True)
+                self.home_frame = home_frame
+                self.frames["home_page"] = home_frame
+                self.store_page(home_frame, None)
+
+            except Exception as e:
+                print(f"Error while resetting home page: {e}")
+                self.home_page()
+
+
+
+    def store_page(self, master, games = None) -> None:
+        for widget in self.home_frame.winfo_children():
+            widget.destroy()
+
         search_frame = ctk.CTkFrame(master=master)
         search_frame.pack(anchor="n", fill="both", padx=24, pady=24)
 
         self.create_search_bar(search_frame, " Search in store")
-        self.create_labels_and_content(master,"Recently added")
+
+        if games == None:
+            self.create_labels_and_content(master,"Recently added", games)
+
+        else:
+            self.create_labels_and_content(master,"Search Result", games)
+
+
+        
 
     def admin_page(self,master) -> None:
         content_frame = ctk.CTkFrame(master=master, fg_color="transparent")
@@ -679,6 +709,9 @@ class Pages:
 
     def execute_search(self, query: str) -> None:
         """Handle the search action by querying the store and displaying results."""
+        
+        print(f"Buscando por: {query}")
+        
         if query:
             try:
                 results = search_in_store(query)  # Chama a função de busca com o termo fornecido
@@ -689,24 +722,19 @@ class Pages:
         else:
             print("Por favor, insira um termo de pesquisa.")
             # Opcional: exibir uma mensagem na interface solicitando o termo de pesquisa
+
     def display_search_results(self, results: list) -> None:
         """Display the search results in the interface."""
         # Primeiro, criar um novo frame ou limpar o existente para exibir os resultados
-        results_frame = ctk.CTkFrame(master=self.main_view, fg_color="transparent")
-        results_frame.pack(fill="both", expand=True, padx=24, pady=24)
+        
+        self.store_page(self.home_frame, results)
 
-        # Adicionar um título
-        ctk.CTkLabel(master=results_frame, text="Resultados da Busca", font=self.h1).pack(anchor="w", pady=(0, 16))
-
-        # Exibir cada jogo encontrado
-        for game in results:
-            game_info = f"Título: {game['title']}, Publisher: {game['publisher']}, Preço: R${game['price']}"
-            ctk.CTkLabel(master=results_frame, text=game_info, font=self.body).pack(anchor="w", pady=4)
+        
     
     # Opcional: Adicionar botões ou outras funcionalidades para cada resultado
 
 
-    def create_labels_and_content(self, master: ctk.CTkFrame, header) -> None:
+    def create_labels_and_content(self, master: ctk.CTkFrame, header, games=None) -> None:
         """Create labels and content sections."""
         ctk.CTkLabel(master=master, text=header, anchor="w", justify="left",
                      font=("Roboto Bold", 24)).pack(anchor="w", pady=(8, 16), padx=24)
@@ -714,15 +742,31 @@ class Pages:
         recently_added_frame = ctk.CTkFrame(master, fg_color="transparent")
         recently_added_frame.pack(fill="x", pady=(10, 0),padx=(24,0))
         
+        is_search = False
 
+        if games is not None:
+            games = [list(game.values()) for game in games]
+            is_search = True
+        
+        else:
+            games = get_all_games()
+
+        for i in range(min(5, len(games))):  # Ensure i does not exceed the length of games
+            try:
+                # Ensure the game list has enough elements
+                title = games[i][0] if len(games[i]) > 0 else None
+                developer = games[i][2] if len(games[i]) > 2 else None
+                description = games[i][5] if len(games[i]) > 4 else None
+                genre = games[i][3] if len(games[i]) > 3 else None
+                
+                self.game_card(recently_added_frame, title, developer, description, genre).pack(side="left", padx=(0, 8), pady=8)
+
+            except IndexError:
+                pass  # If there's an index error, skip this game
+
+        self.add_separator(master)                
 
         games = get_all_games()
-
-        print(games)
-
-        for i in range(5):
-            self.game_card(recently_added_frame, games[i][0], games[i][2], games[i][5], games[i][3]).pack(side="left", padx=(0,8), pady=8)
-        self.add_separator(master)
 
         # Tabs:
         tabs = ["All"]
@@ -743,10 +787,15 @@ class Pages:
 
         num_columns = 3
 
-        for i in range(len(games) - 5):
+
+        minus_index = 5
+        if is_search:
+            minus_index = 0 
+
+        for i in range(len(games) - minus_index):
             row = i // num_columns
             column = i % num_columns
-            self.game_card(cards_frame, games[i+5][0], games[i+5][2], games[i+5][5], games[i+5][3]).grid(row=row, column=column, padx=8, pady=8, sticky="nsew")
+            self.game_card(cards_frame, games[i+minus_index][0], games[i+minus_index][2], games[i+minus_index][5], games[i+minus_index][3]).grid(row=row, column=column, padx=8, pady=8, sticky="nsew")
 
         for col in range(num_columns):
             cards_frame.grid_columnconfigure(col, weight=1)
@@ -827,7 +876,7 @@ class Pages:
             image=left_arrow,
             fg_color="transparent",
             hover_color=SIDE_BAR_COLOR,
-            command=lambda: [self.show_frame(return_frame), header.destroy(), master.master.destroy(), master.master.pack_forget() ], 
+            command=lambda: [self.home_page()], 
             text='',
             width=29,
             height=29
