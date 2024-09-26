@@ -5,6 +5,8 @@ from .backend.backend import *
 import tkinter as tk
 from launcher import sideBar
 
+from launcher.backend import backend
+
 SIDE_BAR_COLOR = "#2a2a2a"
 
 class Pages:
@@ -12,7 +14,10 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.email = email  # Armazena o email do usuário
+        self.getUsername(self.email) #gets the username from the database
         self.frames = {}
+        
+        
 
         #Fonts
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
@@ -23,13 +28,7 @@ class Pages:
         self.game_in_library = False
         self.editing = False
         self.window_open = False
-
-
-###### Define logged user
-
-        self.name = "Admin"
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
-        self.email = email
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -367,6 +366,10 @@ class Pages:
         """Remove the game from the library."""
         pass
 
+    def getUsername(self,mail):
+        temp = backend.fetch_gamer_details(mail)
+        self.name = temp["username"]
+    
     def add_tag(self, master: ctk.CTkFrame, category: str) -> None:
         """Add a tag to the provided frame."""
         width = len(category)
