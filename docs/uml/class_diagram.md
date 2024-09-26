@@ -1,4 +1,3 @@
-
 # UML Class Diagram - PlayNexus System
 
 This document provides an overview of the **UML Class Diagram** of the PlayNexus system, describing the structure, relationships, and responsibilities of each class. The class diagram details how the different parts of the system are connected and interact with each other.
@@ -128,7 +127,7 @@ The class diagram is composed of the following main components:
 
 Here is the class diagram of the system:
 
-![1727366956815](image/test/1727366956815.png)
+![1727367822418](image/class_/1727367822418.png)
 
 ## Conclusion
 
