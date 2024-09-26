@@ -74,6 +74,7 @@ class Pages:
 
 
     def store_page(self, master, games = None) -> None:
+        
         for widget in self.home_frame.winfo_children():
             widget.destroy()
 
