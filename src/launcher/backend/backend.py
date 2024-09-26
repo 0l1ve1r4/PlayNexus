@@ -221,6 +221,15 @@ def count_publishers() -> int:
     database.execute("SELECT * FROM Publisher")
     return len(database.results())
 
+def getAdmin(self, email: str) -> bool:
+        """Check if the user is an admin (publisher)."""
+        sql = "SELECT type FROM Account WHERE email = %s"
+        self.execute(sql, (email,))
+        result = self.result()
+        if result and result[0] == 'Publisher':
+            return True
+        return False
+
 ######################################################################################################
 # The following methods are used to interact with the GAME STORE.                                    #
 ######################################################################################################
