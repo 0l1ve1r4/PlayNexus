@@ -24,7 +24,13 @@ class SideBar(Pages):
         """Show the selected frame and hide the current one."""
         if self.current_frame:
             self.current_frame.pack_forget()
-        frame_method()  # This should show the frame and pack it
+
+        try:
+            frame_method()  # This should show the frame and pack it
+        except TypeError:
+            print("Error: Frame method not found.")
+            pass
+
         self.current_frame = self.frames.get(frame_method.__name__)
         ctk.CTkLabel(master=self.sidebar_frame, text="", fg_color="#302c2c").pack(expand=True)
 
@@ -55,7 +61,7 @@ class SideBar(Pages):
 
         top_buttons_data = [
             ("home-smile.png", "Home", self.home_page, "transparent", "#4d4d4d", 0),
-            ("backpack.png", "Library", self.library_page, "transparent", "#4d4d4d", 8),
+            # ("backpack.png", "Library", self.library_page, "transparent", "#4d4d4d", 8),
         ]
 
         for img_file, text, command, fg_color, hover_color, pady in top_buttons_data:

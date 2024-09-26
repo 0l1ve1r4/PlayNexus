@@ -34,6 +34,9 @@ class Pages:
     def home_page(self) -> None:
         """Return to the home page."""
         if "home_page" not in self.frames:
+            print("Home page not found")
+
+
             home_frame = ctk.CTkScrollableFrame(master=self.main_view)
             home_frame.pack(fill="both", expand=True)
             self.frames["home_page"] = home_frame
@@ -74,6 +77,8 @@ class Pages:
     def library_page(self) -> None:
         """Show the user's library."""
         if "library_page" not in self.frames:
+
+
             library_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             library_frame.pack(fill="both", expand=True)
             self.frames["library_page"] = library_frame
@@ -245,6 +250,7 @@ class Pages:
                   ) -> None:
         """Show the game page."""
         if "game_page" not in self.frames:
+            
             game_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
             game_frame.pack(fill="both", expand=True)
             self.frames["game_page"] = game_frame
@@ -816,15 +822,25 @@ class Pages:
 
         arrow_left = load_image("arrow-left.png")
         left_arrow = ctk.CTkImage(dark_image=arrow_left, light_image=arrow_left, size=(29, 29))
-        ctk.CTkButton(master=header, image=left_arrow, fg_color="transparent", hover_color=SIDE_BAR_COLOR,
-                      command=lambda: self.show_frame(return_frame), text='', width=29, height=29).pack(anchor="w", side="left", padx=(0, 32), fill="y")
+        ctk.CTkButton(
+            master=header,
+            image=left_arrow,
+            fg_color="transparent",
+            hover_color=SIDE_BAR_COLOR,
+            command=lambda: [self.show_frame(return_frame), header.destroy(), master.master.destroy(), master.master.pack_forget() ], 
+            text='',
+            width=29,
+            height=29
+        ).pack(anchor="w", side="left", padx=(0, 32), fill="y")
 
         text_frame = ctk.CTkFrame(master=header, fg_color="transparent")
         text_frame.pack(fill="x", expand=True, side="left")
 
-        title_label = ctk.CTkLabel(master=text_frame, text=title, anchor="w", justify="left",font=self.h1)
+        title_label = ctk.CTkLabel(master=text_frame, text=title, anchor="w", justify="left", font=self.h1)
         title_label.pack(anchor="w", expand=True)
-        publisher_label = ctk.CTkLabel(master=text_frame, text=publisher, anchor="w", justify="left",font=self.body, text_color="#b3b3b3")
+        
+        publisher_label = ctk.CTkLabel(master=text_frame, text=publisher, anchor="w", justify="left",
+                                    font=self.body, text_color="#b3b3b3")
         publisher_label.pack(anchor="w", expand=True)
 
     def add_separator(self, master) -> None:
