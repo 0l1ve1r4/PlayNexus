@@ -43,24 +43,25 @@ class Pages:
             home_frame.pack(fill="both", expand=True)
 
             self.home_frame = home_frame
-            
             self.frames["home_page"] = home_frame
-            self.store_page(home_frame, None)
+            print(f"Admin status: {self.Admin}")
 
+            if self.Admin:
+                self.admin_page(home_frame)
+            else:
+                self.store_page(home_frame)
         else:
-
             self.count = not self.count
             try:
                 # Destroy existing widgets and home frame
                 
                 for widget in self.main_view.winfo_children():
                     widget.destroy()
-
-                # Remove the home page frame from frames dictionary
                 
-                for frame in self.frames:
-                    self.frames.pop(frame)                
-
+                # Remove the home page frame from frames dictionary
+                frames_to_remove = list(self.frames.keys())
+                for frame in frames_to_remove:
+                    self.frames.pop(frame)
                 home_frame = ctk.CTkScrollableFrame(master=self.main_view)
                 home_frame.pack(fill="both", expand=True)
                 self.home_frame = home_frame
@@ -74,7 +75,7 @@ class Pages:
 
 
     def store_page(self, master, games = None) -> None:
-        
+        print("Store page loaded")
         for widget in self.home_frame.winfo_children():
             widget.destroy()
 
@@ -96,6 +97,7 @@ class Pages:
         
 
     def admin_page(self,master) -> None:
+        print("Admin page loaded")
         content_frame = ctk.CTkFrame(master=master, fg_color="transparent")
         content_frame.pack(anchor="n", fill="both", padx=24, pady=24)
 
@@ -290,10 +292,15 @@ class Pages:
 
     def getAdmin(self, mail):
         user = backend.fetch_user_details(mail)
+        print(f"User details fetched: {user}")  # depuracao
         if user["type"] == 'Gamer':
             return False
-        else:
+        elif user["type"] == 'Publisher':
             return True
+        else:
+            print(f"Unknown user type: {user['type']}")
+            return False
+
 
     def dark_theme(self) -> None:
         """Change the theme to dark."""
