@@ -14,8 +14,9 @@ class Pages:
         """Initialize Pages with a main view and frame management."""
         self.main_view = main_view
         self.email = email  # Armazena o email do usuário
-        self.getUsername(self.email) #gets the username from the database
+        self.name = self.getUsername(self.email) #gets the username from the database
         self.frames = {}
+        self.Admin = self.getAdmin(self.email)
         
         
 
@@ -29,10 +30,7 @@ class Pages:
         self.editing = False
         self.window_open = False
         self.count = False
-
-###### Define logged user
-
-        self.name = email.split("@")[0]
+    
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
     
     def home_page(self) -> None:
@@ -274,6 +272,13 @@ class Pages:
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)
 
+    def getAdmin(self, mail):
+        user = backend.fetch_user_details(mail)
+        if user["type"] == 'Gamer':
+            return False
+        else:
+            return True
+
     def dark_theme(self) -> None:
         """Change the theme to dark."""
         ctk.set_appearance_mode("dark")
@@ -417,7 +422,8 @@ class Pages:
         pass
 
     def getUsername(self,mail):
-        return "User"
+        user = backend.fetch_account_details(mail)
+        return (user["name"])
 
     def add_tag(self, master: ctk.CTkFrame, category: str) -> None:
         """Add a tag to the provided frame."""
