@@ -29,7 +29,7 @@ class Pages:
 
         self.name = "Admin"
         self.bio = "Welcome to your admin page! Here you can manage your games and account settings."
-        self.email = "admin@playnexus.com"
+        self.email = email
     
     def home_page(self) -> None:
         """Return to the home page."""
@@ -118,51 +118,114 @@ class Pages:
             content_frame = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="both", padx=24, pady=24, expand=True)
 
-            #self.add_header(content_frame, "Settings", self.home_page)
-            ctk.CTkLabel(master=content_frame, text="Settings", anchor="w", justify="left", font=self.h1).pack(anchor="w", fill="y", expand=True)
+            # Cabeçalho da página de Configurações
+            ctk.CTkLabel(
+                master=content_frame,
+                text="Settings",
+                anchor="w",
+                justify="left",
+                font=self.h1
+            ).pack(anchor="w", fill="y", expand=True)
 
-            #ACCOUNT SETTINGS
+            # SEÇÃO DE CONFIGURAÇÕES DE CONTA
             account_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             account_frame.pack(fill="x", anchor="w", pady=(24, 0))
-            ctk.CTkLabel(master=account_frame, text="Account settings", anchor="w", font=self.body_bold).pack(fill="x")
+            ctk.CTkLabel(
+                master=account_frame,
+                text="Account settings",
+                anchor="w",
+                font=self.body_bold
+            ).pack(fill="x")
 
-            ##Change email
+            ## Exibição do Email do Usuário
             change_email_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
             change_email_frame.pack(fill="x", anchor="w", pady=(16, 0))
             headline = ctk.CTkFrame(master=change_email_frame, fg_color="transparent")
-            headline.pack(fill="x", side="left",anchor="w")
+            headline.pack(fill="x", side="left", anchor="w")
 
-            ctk.CTkLabel(master=headline, text="Email", anchor="w", font=self.body).pack(anchor="w")
-            ctk.CTkLabel(master=headline, text="Change your email", anchor="w", font=self.small, text_color="#b3b3b3").pack()
-            ctk.CTkEntry(master=change_email_frame, border_width=2, placeholder_text=self.email, width=245).pack(side="right")
+            # Título e Subtítulo
+            ctk.CTkLabel(
+                master=headline,
+                text="Email",
+                anchor="w",
+                font=self.body
+            ).pack(anchor="w")
+            ctk.CTkLabel(
+                master=headline,
+                text="Your registered email address",
+                anchor="w",
+                font=self.small,
+                text_color="#b3b3b3"
+            ).pack()
 
-            ##Change password
+            # Exibição do Email como Rótulo (Não Editável)
+            email_label = ctk.CTkLabel(
+                master=change_email_frame,
+                text=self.email,
+                font=self.body,
+                anchor="w"
+            )
+            email_label.pack(side="right", padx=(0, 8))
+
+            ## Botões de Configuração Adicionais
             self.add_setting_btn(account_frame, "Change password", self.change_password, "link_external.png")
-
-            ##Manage accounts
             self.add_setting_btn(account_frame, "Manage accounts", self.go_to_manage, "right_arrow.png")
 
-            #APP SETTINGS
-            settings_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
-            settings_frame.pack(fill="x", anchor="w", pady=(24, 0))
-            self.add_separator(settings_frame)
-            ctk.CTkLabel(master=settings_frame, text="App settings", anchor="w", font=self.body_bold).pack(fill="x", pady=(16, 0))
+            # SEÇÃO DE CONFIGURAÇÕES DO APLICATIVO
+            app_settings_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
+            app_settings_frame.pack(fill="x", anchor="w", pady=(24, 0))
+            self.add_separator(app_settings_frame)
+            ctk.CTkLabel(
+                master=app_settings_frame,
+                text="App settings",
+                anchor="w",
+                font=self.body_bold
+            ).pack(fill="x", pady=(16, 0))
 
-            ##Change theme
-            change_theme = ctk.CTkFrame(master=settings_frame, fg_color="transparent")
+            ## Alterar Tema
+            change_theme = ctk.CTkFrame(master=app_settings_frame, fg_color="transparent")
             change_theme.pack(fill="x", anchor="w", pady=(24, 0))
             headline = ctk.CTkFrame(master=change_theme, fg_color="transparent")
             headline.pack(fill="x", side="left", anchor="w")
 
-            ctk.CTkLabel(master=headline, text="Theme Color", anchor="w", font=self.body).pack(anchor="w")
+            ctk.CTkLabel(
+                master=headline,
+                text="Theme Color",
+                anchor="w",
+                font=self.body
+            ).pack(anchor="w")
 
-            ##Theme options
+            ## Opções de Tema
             change_color_btn = ctk.CTkFrame(master=change_theme, height=32, width=310, fg_color="#4d4d4d")
             change_color_btn.pack(side="right") 
 
-            ctk.CTkButton(master=change_color_btn, text="Dark", height=22, width=100, corner_radius=4, fg_color="transparent", command=self.dark_theme).pack(fill="both", side="left", padx=(5), pady=(5))
-            ctk.CTkButton(master=change_color_btn, text="White", height=22, width=100, corner_radius=4, fg_color="transparent", command=self.white_theme).pack(fill="both", side="left", padx=(5), pady=(5))
-            ctk.CTkButton(master=change_color_btn, text="System", height=22, width=100, corner_radius=4, fg_color="transparent", command="").pack(fill="both", side="left", padx=(5), pady=(5))
+            ctk.CTkButton(
+                master=change_color_btn,
+                text="Dark",
+                height=22,
+                width=100,
+                corner_radius=4,
+                fg_color="transparent",
+                command=self.dark_theme
+            ).pack(fill="both", side="left", padx=5, pady=5)
+            ctk.CTkButton(
+                master=change_color_btn,
+                text="White",
+                height=22,
+                width=100,
+                corner_radius=4,
+                fg_color="transparent",
+                command=self.white_theme
+            ).pack(fill="both", side="left", padx=5, pady=5)
+            ctk.CTkButton(
+                master=change_color_btn,
+                text="System",
+                height=22,
+                width=100,
+                corner_radius=4,
+                fg_color="transparent",
+                command=self.system_theme
+            ).pack(fill="both", side="left", padx=5, pady=5)
 
         else:
             self.frames["settings_page"].pack(fill="both", expand=True)

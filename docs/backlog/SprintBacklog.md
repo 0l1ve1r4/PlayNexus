@@ -1,6 +1,6 @@
 ## 1st Sprint Backlog
 
-> #### **As an administrator, I would like to register a game.**
+> #### **As a publisher, I would like to register a game.**
 >
 > * Structure the database to store game information | **Lucas**
 > * Create the game registration form in the graphical interface | **Mateus**
@@ -12,7 +12,7 @@
     <img src="../../res/prototype/add-new-game-page.png" alt="Login Figma" style="width: 50%;margin-right: 10px;">
 </div>
 
-> #### **As a user, I would like to create an account.**
+> #### **As a gamer, I would like to create an account.**
 >
 > * Structure the database to store user accounts | **Lucas**
 > * Develop the user account creation interface | **Arthur**
@@ -24,7 +24,7 @@
     <img src="../../res/prototype/signup.png" alt="Login Figma" style="width: 50%;margin-right: 10px;">
 </div>
 
-> #### **As a user, I would like to buy a game in the store.**
+> #### **As a gamer, I would like to buy a game in the store.**
 >
 > * Structure the database to store purchase information | **Franklin**
 > * Develop the game purchase interface in the store | **Mateus and Arthur**
@@ -36,7 +36,7 @@
     <img src="../../res/prototype/game-page1.png" alt="Login Figma" style="width: 40%;margin-right: 10px;">
 </div>
 
-> #### **As a user, I would like to view the games that are in my library.**
+> #### **As a gamer, I would like to view the games that are in my library.**
 >
 > * Configure the database to store the user's library game information | **Lucas**
 > * Create the interface to view the user's game library | **Mateus and Arthur**
@@ -48,7 +48,7 @@
     <img src="../../res/prototype/library-page-variant.png" alt="Login Figma" style="width: 40%;margin-right: 10px;">
 </div>
 
-> #### **As a user, I would like to start a game from my library.**
+> #### **As a gamer, I would like to start a game from my library.**
 >
 > * Structure the database to store game installation information | **Lucas**
 > * Develop the interface to start games from the library | **Mateus and Arthur**
