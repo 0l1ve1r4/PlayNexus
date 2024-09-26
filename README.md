@@ -34,5 +34,8 @@
 - **Diagram**
 
   - [Diagram Model](/docs/diagram/diagramModel.md)
+- **UML**
+
+  - [UML Diagram](docs\uml\class_diagram.md)
 
 ---
