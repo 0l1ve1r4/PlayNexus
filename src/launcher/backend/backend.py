@@ -155,6 +155,25 @@ def create_gamer(account: str, username: str, birth_date: str, country: str) -> 
         print(f"Erro ao inserir na tabela Gamer: {e}")
         return False
 
+def fetch_account_details(account: str) -> dict:
+    """Fetch account details based on account type (Gamer or Publisher) from the database."""
+    database = ConnectDB()
+    
+    # First, check the account type from the Account table
+    database.execute("SELECT type FROM Account WHERE email = %s", (account,))
+    account_type = database.result()
+    
+    if account_type is None: 
+        return None
+    
+    # Fetch details based on account type
+    if account_type[0] == 'Gamer':
+        return fetch_gamer_details(account)
+    
+    elif account_type[0] == 'Publisher':
+        return fetch_publisher_details(account)
+        
+    return None
 
 def fetch_gamer_details(account: str) -> dict:
     """Fetch gamer details from the database."""
@@ -162,7 +181,7 @@ def fetch_gamer_details(account: str) -> dict:
     database.execute("SELECT * FROM Gamer WHERE account = %s", (account,))
     result = database.result()
     if result is None: return None
-    return {"account": result[0], "username": result[1], "birth_date": result[2], "country": result[3], "bio": result[4]}
+    return {"account": result[0], "name": result[1], "birth_date": result[2], "country": result[3], "bio": result[4]}
 
 def count_gamers() -> int:
     """Count the number of gamers in the database."""
