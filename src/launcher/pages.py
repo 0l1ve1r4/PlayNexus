@@ -21,6 +21,7 @@ class Pages:
         
 
         #Fonts
+        
         self.h1 = ctk.CTkFont(family="Roboto", size=24, weight="bold")
         self.body = ctk.CTkFont(family="Roboto", size=16)
         self.body_bold = ctk.CTkFont(family="Roboto", size=16, weight="bold")
@@ -53,6 +54,7 @@ class Pages:
             self.count = not self.count
             try:
                 # Destroy existing widgets and home frame
+                
                 for widget in self.main_view.winfo_children():
                     widget.destroy()
                 
@@ -60,8 +62,6 @@ class Pages:
                 frames_to_remove = list(self.frames.keys())
                 for frame in frames_to_remove:
                     self.frames.pop(frame)
-                            
-
                 home_frame = ctk.CTkScrollableFrame(master=self.main_view)
                 home_frame.pack(fill="both", expand=True)
                 self.home_frame = home_frame
@@ -118,7 +118,7 @@ class Pages:
         list_button.pack(anchor="w", side="right")
 
     def library_page(self) -> None:
-        """Show the user's library."""
+        #"""Show the user's library."""
         if "library_page" not in self.frames:
 
 
@@ -132,6 +132,7 @@ class Pages:
             header_frame.pack(fill="x")
 
             #Search bar
+            
             first_line = ctk.CTkFrame(master=header_frame, fg_color="transparent")
             first_line.pack(anchor="n", fill="x", side="left")
 
@@ -148,6 +149,7 @@ class Pages:
             search_button.pack(anchor="w", padx=(0, 0), side="left")
 
             #Add external game button
+            
             img=ctk.CTkImage(dark_image=load_image("plus.png"), light_image=load_image("plus.png"), size=(16, 16))
             ctk.CTkButton(master=header_frame, text="Add game", fg_color="transparent", hover_color="#4d4d4d",
                           border_width=2, border_color="#b3b3b3", image=img).pack(anchor="w", side="right")
@@ -167,6 +169,7 @@ class Pages:
             content_frame.pack(anchor="w", fill="both", padx=24, pady=24, expand=True)
 
             # Cabeçalho da página de Configurações
+            
             ctk.CTkLabel(
                 master=content_frame,
                 text="Settings",
@@ -176,6 +179,7 @@ class Pages:
             ).pack(anchor="w", fill="y", expand=True)
 
             # SEÇÃO DE CONFIGURAÇÕES DE CONTA
+            
             account_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             account_frame.pack(fill="x", anchor="w", pady=(24, 0))
             ctk.CTkLabel(
@@ -186,12 +190,14 @@ class Pages:
             ).pack(fill="x")
 
             ## Exibição do Email do Usuário
+            
             change_email_frame = ctk.CTkFrame(master=account_frame, fg_color="transparent")
             change_email_frame.pack(fill="x", anchor="w", pady=(16, 0))
             headline = ctk.CTkFrame(master=change_email_frame, fg_color="transparent")
             headline.pack(fill="x", side="left", anchor="w")
 
             # Título e Subtítulo
+            
             ctk.CTkLabel(
                 master=headline,
                 text="Email",
@@ -207,6 +213,7 @@ class Pages:
             ).pack()
 
             # Exibição do Email como Rótulo (Não Editável)
+            
             email_label = ctk.CTkLabel(
                 master=change_email_frame,
                 text=self.email,
@@ -216,10 +223,13 @@ class Pages:
             email_label.pack(side="right", padx=(0, 8))
 
             ## Botões de Configuração Adicionais
+            
+            
             self.add_setting_btn(account_frame, "Change password", self.change_password, "link_external.png")
             self.add_setting_btn(account_frame, "Manage accounts", self.go_to_manage, "right_arrow.png")
 
             # SEÇÃO DE CONFIGURAÇÕES DO APLICATIVO
+            
             app_settings_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             app_settings_frame.pack(fill="x", anchor="w", pady=(24, 0))
             self.add_separator(app_settings_frame)
@@ -231,6 +241,7 @@ class Pages:
             ).pack(fill="x", pady=(16, 0))
 
             ## Alterar Tema
+            
             change_theme = ctk.CTkFrame(master=app_settings_frame, fg_color="transparent")
             change_theme.pack(fill="x", anchor="w", pady=(24, 0))
             headline = ctk.CTkFrame(master=change_theme, fg_color="transparent")
@@ -244,6 +255,7 @@ class Pages:
             ).pack(anchor="w")
 
             ## Opções de Tema
+            
             change_color_btn = ctk.CTkFrame(master=change_theme, height=32, width=310, fg_color="#4d4d4d")
             change_color_btn.pack(side="right") 
 
@@ -320,17 +332,24 @@ class Pages:
             self.add_game_header(content_frame, game_title, publisher, self.library_page)
 
             # Game image
+            
+            #imagem do jogo
+            
             game_img_data = load_image("secondary-logo-colored.png")
             game_img = ctk.CTkImage(dark_image=game_img_data, light_image=game_img_data, size=(200, 168))
             ctk.CTkLabel(master=content_frame, image=game_img, text="", fg_color="#4d4d4d").pack(anchor="w", fill="x", pady=24,padx=0)
 
             # Buttons
+            ### botoes
             btns_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent", height=32)
             btns_frame.pack(fill="x", pady=(0, 24))
 
             ##Play/Dowload button (depending wether its in library or not
+            # botao de download
 
             ##Button to add to library/In library button
+            ## botao de adiciona a biblioteca
+            
             bookmark = ctk.CTkImage(dark_image=load_image("bookmark.png"), light_image=load_image("bookmark.png"), size=(16, 16))
             bookmarked = ctk.CTkImage(dark_image=load_image("bookmark_check.png"), light_image=load_image("bookmark_check.png"), size=(16, 16))
             play = ctk.CTkImage(dark_image=load_image("play.png"), light_image=load_image("play.png"), size=(16, 16))
@@ -345,12 +364,15 @@ class Pages:
                 add_button.pack(anchor="w", side="left", padx=(0, 8), fill="y")
             
             ##Favorite button
+            #botao de favorito
+            
             favorite = ctk.CTkImage(dark_image=load_image("heart.png"), light_image=load_image("heart.png"), size=(16, 16))
             favorite_button = ctk.CTkButton(master=btns_frame, image=favorite, text="", command=self.library_page, fg_color="transparent", border_color="#b3b3b3",
                                             hover_color="#4d4d4d", border_width=2, width=32)
             favorite_button.pack(anchor="w", side="right", fill="y")
             
             #About section
+            #Seção sobre
             about_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             about_frame.pack(fill="x")
             description = ctk.CTkFrame(master=about_frame, fg_color="transparent", width=431)

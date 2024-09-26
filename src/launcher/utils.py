@@ -15,11 +15,15 @@ def load_image(file_path: str) -> Image:
     return Image.open(RES_PATH + file_path)
 
 def load_theme() -> dict:
-    """Load the theme settings from the JSON file."""
+    
+    #"""Load the theme settings from the JSON file."""
+    
     return load_json(THEMES_PATH + 'purple.json')
 
 def show_frame(self, frame_name: str) -> None:
-    """Show the selected frame and hide the current one."""
+    
+    #"""Show the selected frame and hide the current one."""
+    
     if self.current_frame:
         self.current_frame.pack_forget()
     frame_method = self.frames.get(frame_name)

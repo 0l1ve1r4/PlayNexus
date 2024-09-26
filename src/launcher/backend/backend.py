@@ -5,7 +5,7 @@ import os # Import the os library for file operations.
 import platform # Import the platform library for platform information.
 
 class ConnectDB:
-    """Connect to the database."""
+   # """Connect to the database."""
 
     db_host = "localhost"
     db_user = "root"
@@ -13,6 +13,8 @@ class ConnectDB:
     db_name = "PlayNexus"
 
     def __init__(self):
+        ## connects to the database
+        
         self.session = mysql.connect(host=self.db_host, user=self.db_user, password=self.db_password, database=self.db_name)
         self.cursor = self.session.cursor()
 
@@ -36,28 +38,36 @@ class ConnectDB:
 # The following methods are used to interact with the FILE SYSTEM.                                   #
 ######################################################################################################
 def get_home_path() -> str:
-    """Create a directory for PlayNexus in the user's home directory and return the path."""
+    
+    #"""Create a directory for PlayNexus in the user's home directory and return the path."""
+    
     home_path = os.path.join(os.path.expanduser('~'), ".PlayNexus")
     if not os.path.exists(home_path):
         os.mkdir(home_path)
     return home_path
 
 def get_user_path(account: str) -> str:
-    """Create a directory for the user and return the path."""
+    
+    #"""Create a directory for the user and return the path."""
+    
     user_path = os.path.join(get_home_path(), account.split("@")[0].translate(str.maketrans("", "", string.punctuation)))
     if not os.path.exists(user_path):
         os.mkdir(user_path)
     return user_path
 
 def get_games_path(account: str) -> str:
-    """Create a directory for the game and return the path."""
+    
+    #"""Create a directory for the game and return the path."""
+    
     games_path = os.path.join(get_user_path(account), "games")
     if not os.path.exists(games_path):
         os.mkdir(games_path)
     return games_path
 
 def get_game_path(account: str, game_title: str) -> str:
-    """Return the path to the game."""
+    
+    #"""Return the path to the game."""
+    
     game_path = ""
     if platform.system() == "Linux":
         extension = ".run"
@@ -73,7 +83,8 @@ def get_game_path(account: str, game_title: str) -> str:
 ######################################################################################################
 
 def authenticate_user(email: str, password: str) -> dict:
-    """Check if the provided credentials are valid."""
+    #verifica as credenciais do usuario
+    #"""Check if the provided credentials are valid."""
     database = ConnectDB()
     database.execute("SELECT email, type FROM Account WHERE email = %s AND password = %s", (email, password))
     result = database.result()
@@ -83,14 +94,18 @@ def authenticate_user(email: str, password: str) -> dict:
     return {'success': True, 'account': {'email': result[0], 'type': result[1]}}
 
 def log_failed_login_attempt(email: str) -> None:
+    
+    #tentativa de login falha
     """Log a failed login attempt."""
     pass
 
 def update_user_password(email: str, new_password: str) -> bool:
+    #altera a senha do usuario
     """Update the user's password in the database."""
     pass
 
 def fetch_user_details(email: str) -> dict:
+    #retorna o tipo do usuario
     """Fetch user details from the database."""
     database = ConnectDB()
     database.execute("SELECT email, type FROM Account WHERE email = %s", (email,))
@@ -99,19 +114,21 @@ def fetch_user_details(email: str) -> dict:
     return {"email": result[0], "type": result[1]}
 
 
-def log_user_activity(user_id: int, activity: str) -> None:
-    """Log user activity."""
-    pass
-
 def update_username(new_username:str, username: str, email: str) -> bool:
-    """Update the user's username in the database."""
+    
+    #atualiza o nome do usuario
+    
+    #"""Update the user's username in the database."""
     database = ConnectDB()
     database.execute("UPDATE Gamer SET username = %s WHERE username = %s AND email = %s", (new_username, username, email))
     database.commit()
     return True
 
 def create_user(email: str, password: str, user_type: str) -> bool:
-    """Create a user in the Account table."""
+    
+    #cria um novo usuario
+    
+    #"""Create a user in the Account table."""
     database = ConnectDB()
     # Verificar se o email já existe
     database.execute("SELECT email FROM Account WHERE email = %s", (email,))
@@ -132,17 +149,17 @@ def create_user(email: str, password: str, user_type: str) -> bool:
 def create_gamer(account: str, username: str, birth_date: str, country: str) -> bool:
     """Create and set gamer details in the database."""
     database = ConnectDB()
-    # Verificar se a conta existe e é do tipo Gamer
+    # Verifica se a conta existe e é do tipo Gamer
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (account,))
     if database.result() is None:
         print("Conta não encontrada ou não é do tipo Gamer.")
         return False
-    # Verificar se o username já está em uso
+    # Verifica se o username já está em uso
     database.execute("SELECT * FROM Gamer WHERE username = %s", (username,))
     if database.result():
         print("Username já está em uso.")
         return False
-    # Inserir os detalhes do Gamer
+    # Insere os detalhes do Gamer
     try:
         database.execute(
             "INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)",
@@ -158,15 +175,15 @@ def create_gamer(account: str, username: str, birth_date: str, country: str) -> 
 def fetch_account_details(account: str) -> dict:
     """Fetch account details based on account type (Gamer or Publisher) from the database."""
     database = ConnectDB()
-    
-    # First, check the account type from the Account table
+    # verifica o tipo de usuario no banco
+    # Check the account type from the Account table
     database.execute("SELECT type FROM Account WHERE email = %s", (account,))
     account_type = database.result()
     
     if account_type is None: 
         return None
     
-    # Fetch details based on account type
+    # retorna os detalhes baseado no tipo // details based on account type
     if account_type[0] == 'Gamer':
         return fetch_gamer_details(account)
     
@@ -176,7 +193,7 @@ def fetch_account_details(account: str) -> dict:
     return None
 
 def fetch_gamer_details(account: str) -> dict:
-    """Fetch gamer details from the database."""
+    #"""Fetch gamer details from the database."""
     database = ConnectDB()
     database.execute("SELECT * FROM Gamer WHERE account = %s", (account,))
     result = database.result()
@@ -184,13 +201,13 @@ def fetch_gamer_details(account: str) -> dict:
     return {"account": result[0], "name": result[1], "birth_date": result[2], "country": result[3], "bio": result[4]}
 
 def count_gamers() -> int:
-    """Count the number of gamers in the database."""
+    #"""Count the number of gamers in the database."""
     database = ConnectDB()
     database.execute("SELECT * FROM Gamer")
     return len(database.results())
 
 def create_publisher(account: str, name: str) -> bool:
-    """Create and set publisher details in the database."""
+    #"""Create and set publisher details in the database."""
     database = ConnectDB()
     # Verificar se a conta existe e é do tipo Publisher
     database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (account,))
@@ -208,7 +225,9 @@ def create_publisher(account: str, name: str) -> bool:
         return False
 
 def fetch_publisher_details(account: str) -> dict:
-    """Fetch publisher details from the database."""
+    
+    #"""Fetch publisher details from the database."""
+    
     database = ConnectDB()
     database.execute("SELECT * FROM Publisher WHERE account = %s", (account,))
     result = database.result()
@@ -216,7 +235,9 @@ def fetch_publisher_details(account: str) -> dict:
     return {"account": result[0], "name": result[1]}
 
 def count_publishers() -> int:
-    """Count the number of publishers in the database."""
+   
+    #"""Count the number of publishers in the database."""
+    
     database = ConnectDB()
     database.execute("SELECT * FROM Publisher")
     return len(database.results())
@@ -256,7 +277,10 @@ def publish_game(title: str, publisher: str, developer: str, genre: str, descrip
     return True
 
 def get_all_games() -> list:
-    """Fetch all games from the database."""
+    
+    
+    #"""Fetch all games from the database."""
+    
     database = ConnectDB()
     database.execute("SELECT * FROM Game", ())  # Pass an empty tuple for the values argument
     return database.results()
@@ -270,7 +294,9 @@ def count_games_in_store() -> int:
 def search_in_store(query: str) -> dict:
     """Search for a game in the store by title or description."""
     database = ConnectDB()
+    
     # Usamos %query% para buscar termos parciais no título ou descrição
+    
     sql = """
     SELECT title, publisher, developer, genre, price 
     FROM Game 
@@ -297,21 +323,21 @@ def search_in_store(query: str) -> dict:
     return games
 
 
-def get_recently_added_games(limit: int = 5) -> list:
-    """Fetch recently added games from the database."""
-    pass
+#def get_recently_added_games(limit: int = 5) -> list:
+#    """Fetch recently added games from the database."""
+#    pass
 
-def get_popular_games() -> list:
-    """Fetch popular games from the database."""
-    pass
+#def get_popular_games() -> list:
+#    """Fetch popular games from the database."""
+ #   pass
 
-def get_new_games() -> list:
-    """Fetch new games from the database."""
-    pass
+#def get_new_games() -> list:
+ #   """Fetch new games from the database."""
+#    pass
 
-def get_upcoming_games() -> list:
-    """Fetch upcoming games from the database."""
-    pass
+#def get_upcoming_games() -> list:
+#    """Fetch upcoming games from the database."""
+#    pass
 
 ######################################################################################################
 # The following methods are used to interact with the GAME LIBRARY.                                  #
