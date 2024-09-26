@@ -240,7 +240,9 @@ class Pages:
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme(THEMES_PATH + "white.json")
 
-    def game_page(self) -> None:
+    def game_page(self, game_title: str = "Game title", publisher: str = "Publisher", game_description: str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                  game_tags: list = ["NULL, NULL"]
+                  ) -> None:
         """Show the game page."""
         if "game_page" not in self.frames:
             game_frame = ctk.CTkScrollableFrame(master=self.main_view, fg_color="transparent")
@@ -250,7 +252,7 @@ class Pages:
             content_frame = ctk.CTkFrame(master=game_frame, fg_color="transparent")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
 
-            self.add_game_header(content_frame, "Game title", "Publisher", self.library_page)
+            self.add_game_header(content_frame, game_title, publisher, self.library_page)
 
             # Game image
             game_img_data = load_image("secondary-logo-colored.png")
@@ -289,15 +291,16 @@ class Pages:
             description = ctk.CTkFrame(master=about_frame, fg_color="transparent", width=431)
             description.pack(side="left")
             ctk.CTkLabel(master=description, text="Game description", anchor="w", font=("Roboto",24,"bold")).pack(anchor="w")
-            ctk.CTkLabel(master=description,font=("Roboto",12), text="Lorem ipsum dolor sit amet, consecf",
+            ctk.CTkLabel(master=description,font=("Roboto",12), text=game_description,
                          anchor="w", wraplength=431).pack(anchor="w")
             
             tags = ctk.CTkFrame(master=about_frame, fg_color="transparent", width=200)
             tags.pack(side="right", anchor="nw")
             ctk.CTkLabel(master=tags, text="Tags: ", anchor="w", font=("Roboto",12,"bold"), text_color="#b3b3b3").pack(anchor="w")
-            self.add_tag(tags, "Action")
-            self.add_tag(tags, "Adventure")
-
+            
+            for tag in game_tags:
+                self.add_tag(tags, tag)
+        
             self.add_separator(content_frame)
 
             ##Requirements section
@@ -704,14 +707,19 @@ class Pages:
 
         recently_added_frame = ctk.CTkFrame(master, fg_color="transparent")
         recently_added_frame.pack(fill="x", pady=(10, 0),padx=(24,0))
+        
+
+
+        games = get_all_games()
+
+        print(games)
 
         for i in range(5):
-            self.game_card(recently_added_frame).pack(side="left", padx=(0,8), pady=8)
-
+            self.game_card(recently_added_frame, games[i][0], games[i][2], games[i][5], games[i][3]).pack(side="left", padx=(0,8), pady=8)
         self.add_separator(master)
 
         # Tabs:
-        tabs = ["All", "Popular", "New", "Upcoming"]
+        tabs = ["All"]
 
         games_frame = ctk.CTkFrame(master, fg_color="transparent")
         games_frame.pack(fill="x", pady=24, padx=24)
@@ -729,10 +737,10 @@ class Pages:
 
         num_columns = 3
 
-        for i in range(6):
+        for i in range(len(games) - 5):
             row = i // num_columns
             column = i % num_columns
-            self.game_card(cards_frame).grid(row=row, column=column, padx=8, pady=8, sticky="nsew")
+            self.game_card(cards_frame, games[i+5][0], games[i+5][2], games[i+5][5], games[i+5][3]).grid(row=row, column=column, padx=8, pady=8, sticky="nsew")
 
         for col in range(num_columns):
             cards_frame.grid_columnconfigure(col, weight=1)
@@ -742,7 +750,7 @@ class Pages:
         """Scroll the frame horizontally."""
         event.widget.xview("scroll", int(-1*(event.delta/120)), "units")
 
-    def game_card(self, master):
+    def game_card(self, master, game_title="Game Title", publisher="Publisher", description="NULL", tags="STR") -> ctk.CTkFrame:
         """Create and return a game card frame."""
         game_frame = ctk.CTkFrame(master, corner_radius=8, fg_color="transparent", width=150, height=200)
         
@@ -758,9 +766,10 @@ class Pages:
             image_label = ctk.CTkLabel(master=game_frame, image=ctk_image, text="")
             image_label.grid(row=0, column=0, padx=16, pady=16, sticky="nsew")
 
-        ctk.CTkLabel(master=game_frame, text="Game Title", text_color="#ffffff", anchor="w", justify="left",
+
+        ctk.CTkLabel(master=game_frame, text=game_title, text_color="#ffffff", anchor="w", justify="left",
                      font=("Roboto Bold", 12)).grid(row=1, column=0, sticky="w", padx=16, pady=(16, 0))
-        ctk.CTkLabel(master=game_frame, text="Publisher", text_color="#ffffff", anchor="w", justify="left",
+        ctk.CTkLabel(master=game_frame, text=publisher, text_color="#ffffff", anchor="w", justify="left",
                      font=("Roboto Bold", 12)).grid(row=2, column=0, sticky="w", padx=16, pady=(0, 16))
 
         def on_enter(event):
@@ -771,12 +780,14 @@ class Pages:
             event.widget.config(cursor="")
             game_frame.configure(fg_color="transparent")
 
-        game_frame.bind("<Button-1>", lambda e: self.show_frame(self.game_page))
+        tags = tags.split(", ")
+
+        game_frame.bind("<Button-1>", lambda e: self.show_frame(self.game_page(game_title, publisher, description, tags)))
         game_frame.bind("<Enter>", on_enter)
         game_frame.bind("<Leave>", on_leave)
 
         for widget in game_frame.winfo_children():
-            widget.bind("<Button-1>", lambda e: self.show_frame(self.game_page))
+            widget.bind("<Button-1>", lambda e: self.show_frame(self.game_page(game_title, publisher, description, tags)))
             widget.bind("<Enter>", on_enter)
             widget.bind("<Leave>", on_leave)
 

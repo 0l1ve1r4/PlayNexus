@@ -230,8 +230,9 @@ def publish_game(title: str, publisher: str, developer: str, genre: str, descrip
 def get_all_games() -> list:
     """Fetch all games from the database."""
     database = ConnectDB()
-    database.execute("SELECT * FROM Game")
+    database.execute("SELECT * FROM Game", ())  # Pass an empty tuple for the values argument
     return database.results()
+
 
 def count_games_in_store() -> int:
     """Count the number of games in the store."""

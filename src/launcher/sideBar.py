@@ -5,7 +5,7 @@ from functools import partial
 import os
 
 class SideBar(Pages):
-    def __init__(self, app, admin=False, email: str = "") -> None:
+    def __init__(self, app, admin=False, email: str = "", name: str = "") -> None:
         """Create the sidebar for the launcher application."""
         super().__init__(app, email)  # Passa 'email' para Pages
         self.parent = app
@@ -16,6 +16,9 @@ class SideBar(Pages):
         self.pages = Pages(self.app, email)  # Passa 'email' aqui também, se necessário
         self.frames = {}
         self.logo = Image.open(os.path.join(self.res_path, "primary-logo-white.png"))
+
+        self.name = name
+        self.email = email
 
     def show_frame(self, frame_method: callable) -> None:
         """Show the selected frame and hide the current one."""
@@ -98,7 +101,7 @@ class SideBar(Pages):
         profile_btn = ctk.CTkButton(master=pbtn, text="", fg_color="transparent",image=profile_img,hover_color="#4d4d4d",
                                       border_width=2, border_color="#4d4d4d", anchor="w", command=partial(self.show_frame, self.profile_page))
         profile_btn.pack(fill="x", expand=True)
-        email = ctk.CTkLabel(master=profile_btn, text="admin@gmail.com", text_color="#b3b3b3",
+        email = ctk.CTkLabel(master=profile_btn, text=self.email, text_color="#b3b3b3",
                              font=ctk.CTkFont(family='Helvetica', size=12), fg_color="transparent")
         email.place(x=117,y=40, anchor="center")
         name = ctk.CTkLabel(master=profile_btn, text=self.name, fg_color="transparent", 
