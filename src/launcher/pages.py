@@ -408,9 +408,8 @@ class Pages:
         pass
 
     def getUsername(self,mail):
-        temp = backend.fetch_gamer_details(mail)
-        self.name = temp["username"]
-    
+        return "User"
+
     def add_tag(self, master: ctk.CTkFrame, category: str) -> None:
         """Add a tag to the provided frame."""
         width = len(category)
@@ -735,6 +734,7 @@ class Pages:
         """Display the search results in the interface."""
         # Primeiro, criar um novo frame ou limpar o existente para exibir os resultados
         
+        print(f"Exibindo resultados: {results}")
         self.store_page(self.home_frame, results)
 
         
@@ -752,6 +752,8 @@ class Pages:
         
         is_search = False
 
+        
+
         if games is not None:
             games = [list(game.values()) for game in games]
             is_search = True
@@ -759,12 +761,13 @@ class Pages:
         else:
             games = get_all_games()
 
+        print("GAMES: {}".format(games))
         for i in range(min(5, len(games))):  # Ensure i does not exceed the length of games
             try:
                 # Ensure the game list has enough elements
                 title = games[i][0] if len(games[i]) > 0 else None
                 developer = games[i][2] if len(games[i]) > 2 else None
-                description = games[i][5] if len(games[i]) > 4 else None
+                description = games[i][4] if len(games[i]) > 4 else None  # Or use an appropriate default value
                 genre = games[i][3] if len(games[i]) > 3 else None
                 
                 self.game_card(recently_added_frame, title, developer, description, genre).pack(side="left", padx=(0, 8), pady=8)
