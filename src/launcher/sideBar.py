@@ -17,7 +17,7 @@ class SideBar(Pages):
         self.frames = {}
         self.logo = Image.open(os.path.join(self.res_path, "primary-logo-white.png"))
 
-        self.name = name
+        self.name = self.getUsername(self.email) #gets the username from the database
         self.email = email
 
     def show_frame(self, frame_method: callable) -> None:
@@ -120,10 +120,10 @@ class SideBar(Pages):
         profile_btn.pack(fill="x", expand=True)
         email = ctk.CTkLabel(master=profile_btn, text=self.email, text_color="#b3b3b3",
                              font=ctk.CTkFont(family='Helvetica', size=12), fg_color="transparent")
-        email.place(x=117,y=40, anchor="center")
+        email.place(x=137,y=40, anchor="center")
         name = ctk.CTkLabel(master=profile_btn, text=self.name, fg_color="transparent", 
                             font=ctk.CTkFont(family='Helvetica', size=16), justify="center")
-        name.place(x=90,y=20, anchor="center")
+        name.place(x=110,y=20, anchor="center")
 
         email.bind("<Enter>", lambda event: event.widget.config(cursor="hand2"))
         email.bind("<Leave>", lambda event: event.widget.config(cursor=""))
