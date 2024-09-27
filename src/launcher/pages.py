@@ -4,7 +4,7 @@ from .utils import *
 from .backend.backend import *
 import tkinter as tk
 from launcher import sideBar
-
+from tkinter import messagebox
 from launcher.backend import backend
 
 SIDE_BAR_COLOR = "#2a2a2a"
@@ -462,6 +462,15 @@ class Pages:
         """Add a tag to the provided frame."""
         width = len(category)
         ctk.CTkButton(master=master, text=category, fg_color="#4d4d4d", hover_color="#3c3c3c", width=width).pack(anchor="w", pady=3)
+    
+    def validate_price(self, value_if_allowed: str) -> bool:
+        """Validate that the price is a number and less than or equal to 1000."""
+        if value_if_allowed == "":
+            return True  # Permite campo vazio temporariamente
+        if value_if_allowed.isdigit():
+            if 0 <= int(value_if_allowed) <= 1000:
+                return True
+        return False
 
     def new_game_page(self) -> None:
         """Show the page to add a new game."""
@@ -474,52 +483,57 @@ class Pages:
             header_frame.pack(fill="x", padx=24, pady=(24,16))
             self.add_header(header_frame, "Add new game", self.home_page)
 
-            #Frame where all the content will be placed
+            # Frame onde todo o conteúdo será colocado
             content_frame = ctk.CTkFrame(master=new_game_frame, fg_color="#2a2a2a")
             content_frame.pack(anchor="w", fill="x", padx=24, pady=24)
 
-            ##Frame where the form will be placed
+            ## Frame onde o formulário será colocado
             general_info = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             general_info.pack(fill="x", padx=16, pady=16)
             ctk.CTkLabel(master=general_info, text="General info", anchor="w", justify="left",
-                        font=("Roboto", 20, "bold")).pack(fill="x")
+                         font=("Roboto", 20, "bold")).pack(fill="x")
             ctk.CTkLabel(master=general_info, text="Title", anchor="w", justify="left").pack(fill="x")
             self.title = ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game title")
             self.title.pack(fill="x")
 
             ctk.CTkLabel(master=general_info, text="Developer", anchor="w", justify="left").pack(fill="x")
-            self.dev =  ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game developer")
+            self.dev = ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Game developer")
             self.dev.pack(fill="x")
 
             ctk.CTkLabel(master=general_info, text="Game description", anchor="w", justify="left").pack(fill="x")
             self.game_desc = ctk.CTkEntry(master=general_info, border_width=2, placeholder_text="Tell the users more about this game",
-                         height=68)
+                                         height=68)
             self.game_desc.pack(fill="x")
             
-            ###Price frame
+            ### Price frame
             price = ctk.CTkFrame(master=general_info, fg_color="transparent")
             price.pack(fill="x")
 
-            sale_price= ctk.CTkFrame(master=price, fg_color="transparent")
+            sale_price = ctk.CTkFrame(master=price, fg_color="transparent")
             sale_price.pack(side="left", anchor="w")
             ctk.CTkLabel(master=sale_price, text="Price", anchor="w", justify="left", width=250).pack()
-            self.price = ctk.CTkEntry(master=sale_price, border_width=2, placeholder_text="R$1000", width=250)
+            
+            # Comando de validação para o widget Entry
+            vcmd = (self.main_view.register(self.validate_price), "%P")
+            
+            # Entry de Preço com validação
+            self.price = ctk.CTkEntry(master=sale_price, border_width=2, placeholder_text="1000", width=250,
+                                      validate="key", validatecommand=vcmd)
             self.price.pack(anchor="nw")
 
-            ##Tags frame and complementary info
+            ## Tags frame e informações complementares
             frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             frame.pack(fill="x", padx=16, pady=16)
             ctk.CTkLabel(master=frame, text="Tags", anchor="w", justify="left").pack(fill="x")
             self.genre = ctk.CTkEntry(master=frame, placeholder_text="Genre", fg_color="#4d4d4d")
             self.genre.pack(anchor="w", side="left")
 
-
-            ##Buttons frame
+            ## Frame de Botões
             buttons_frame = ctk.CTkFrame(master=content_frame, fg_color="transparent")
             buttons_frame.pack(fill="x", pady=16, padx=16)
             ctk.CTkButton(master=buttons_frame, text="Publish", command=self.new_game_page_warning, fg_color="#7C439E").pack(side="right")
-            ctk.CTkButton(master=buttons_frame, text="Cancel", command=self.cancel_add_game,fg_color="transparent", hover_color="#4d4d4d",
-                          border_width=2, border_color="#b3b3b3").pack(side="right", padx=(0,8))            
+            ctk.CTkButton(master=buttons_frame, text="Cancel", command=self.cancel_add_game, fg_color="transparent", hover_color="#4d4d4d",
+                          border_width=2, border_color="#b3b3b3").pack(side="right", padx=(0, 8))            
 
         else:
             self.frames["home_page"].pack_forget()
@@ -533,32 +547,67 @@ class Pages:
 
     def new_game_page_warning(self) -> None:
         """Show a warning window before publishing a new game."""
+        # Antes de abrir a janela de confirmação, verificar se os campos estão preenchidos
+        title = self.title.get().strip()
+        dev = self.dev.get().strip()
+        description = self.game_desc.get().strip()
+        price = self.price.get().strip()
+        tags = self.genre.get().strip()
+
+        if not title or not dev or not description or not price or not tags:
+            messagebox.showerror("Erro", "Todos os campos (Title, Developer, Game Description, Price e Tags) são obrigatórios.")
+            return
+
         self.window = ctk.CTkToplevel()
         self.window.title("Confirm Changes")
         self.window.geometry("300x150")
 
-        window_label = ctk.CTkLabel(master=self.window, text="Publish new game?", font=("Roboto", 16), width = len("Publish new game"))
+        window_label = ctk.CTkLabel(master=self.window, text="Publish new game?", font=("Roboto", 16), width=len("Publish new game"))
         window_label.pack(pady=16)
 
-        window_btn_confirm = ctk.CTkButton(master=self.window, text="Confirm",command =self.publishGame,fg_color="purple", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Confirm"))
+        window_btn_confirm = ctk.CTkButton(master=self.window, text="Confirm", command=self.publishGame, fg_color="purple", hover_color="#4d4d4d",
+                                        border_width=2, border_color="#b3b3b3", width=len("Confirm"))
         window_btn_confirm.pack(side="left", anchor="s", padx=(50, 0), pady=(0, 16))
 
-        window_btn_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.window.destroy,fg_color="transparent", hover_color="#4d4d4d",border_width=2, border_color="#b3b3b3", width=len("Cancel"))
+        window_btn_cancel = ctk.CTkButton(master=self.window, text="Cancel", command=self.window.destroy, fg_color="transparent", hover_color="#4d4d4d",
+                                        border_width=2, border_color="#b3b3b3", width=len("Cancel"))
         window_btn_cancel.pack(side="right", anchor="s", padx=(0, 50), pady=(0, 16))
 
-    def publishGame(self):
+
+    def publishGame(self) -> None:
+        """Publish the new game after validating required fields."""
+        title = self.title.get().strip()
+        dev = self.dev.get().strip()
+        description = self.game_desc.get().strip()
+        price = self.price.get().strip()
+        tags = self.genre.get().strip()
+
+        # Verificar se todos os campos obrigatórios estão preenchidos
+        if not title or not dev or not description or not price or not tags:
+            messagebox.showerror("Erro", "Todos os campos (Title, Developer, Game Description, Price e Tags) são obrigatórios.")
+            return
+
+        # Verificar se o preço é válido
+        if not price.isdigit() or not (0 <= int(price) <= 1000):
+            messagebox.showerror("Erro", "O campo Price deve ser um número entre 0 e 1000.")
+            return
+
         game = {
-            "title": self.title.get(),
-            "price": self.price.get(),
-            "dev": self.dev.get(),
-            "description": self.game_desc.get(),
-            "pub": (self.getUsername(self.email)),
-            "genre": self.genre.get()
+            "title": title,
+            "price": price,
+            "dev": dev,
+            "description": description,
+            "pub": self.email,  # Alterado para usar o email
+            "genre": tags
         }
-        backend.publish_game(game)
-        self.window.destroy()
-        self.frames["new_game_page"].pack_forget()
-        self.frames["home_page"].pack(fill="both", expand=True)
+
+        # Tentar publicar o jogo no backend
+        success = backend.publish_game(game)
+        if success:
+            messagebox.showinfo("Sucesso", "Jogo publicado com sucesso.")
+            self.home_page()
+        else:
+            messagebox.showerror("Erro", "Falha ao publicar o jogo.")
 
     def profile_page(self) -> None:
         """Show the user's profile page."""
