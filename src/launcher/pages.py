@@ -16,9 +16,6 @@ class Pages:
         self.email = email  # Armazena o email do usuário
         self.name = self.getUsername(self.email) #gets the username from the database
         self.frames = {}
-        
-        
-        
 
         #Fonts
         
@@ -973,10 +970,13 @@ class Pages:
         header = ctk.CTkFrame(master=master, fg_color="transparent")
         header.pack(fill="x")
 
+        content_left = ctk.CTkFrame(master=header, fg_color="transparent")
+        content_left.pack(fill="x", side="left", expand=True)
+
         arrow_left = load_image("arrow-left.png")
         left_arrow = ctk.CTkImage(dark_image=arrow_left, light_image=arrow_left, size=(29, 29))
         ctk.CTkButton(
-            master=header,
+            master=content_left,
             image=left_arrow,
             fg_color="transparent",
             hover_color=SIDE_BAR_COLOR,
@@ -986,7 +986,7 @@ class Pages:
             height=29
         ).pack(anchor="w", side="left", padx=(0, 32), fill="y")
 
-        text_frame = ctk.CTkFrame(master=header, fg_color="transparent")
+        text_frame = ctk.CTkFrame(master=content_left, fg_color="transparent")
         text_frame.pack(fill="x", expand=True, side="left")
 
         title_label = ctk.CTkLabel(master=text_frame, text=title, anchor="w", justify="left", font=self.h1)
@@ -995,6 +995,21 @@ class Pages:
         publisher_label = ctk.CTkLabel(master=text_frame, text=publisher, anchor="w", justify="left",
                                     font=self.body, text_color="#b3b3b3")
         publisher_label.pack(anchor="w", expand=True)
+
+        if self.Admin:
+            content_right = ctk.CTkFrame(master=header, fg_color="transparent")
+            content_right.pack(fill="x", side="right")
+            ctk.CTkButton(master=content_right, text="Edit", fg_color="transparent", hover_color="#4d4d4d",
+                            border_width=2, border_color="#b3b3b3", command=lambda: self.edit_game_page(title, publisher), width=64).pack(side="right", padx=(0, 16))
+            
+            ctk.CTkButton(master=content_right, text="Delete", fg_color="transparent", hover_color="#4d4d4d",
+                            border_width=2, border_color="#b3b3b3", command=lambda: self.delete_game(title), width=64).pack(side="right")
+        
+    def edit_game_page(self, title: str, publisher: str) -> None:
+        pass
+
+    def delete_game(self, title: str) -> None:
+        pass
 
     def add_separator(self, master) -> None:
         """Add a separator to the main view."""
