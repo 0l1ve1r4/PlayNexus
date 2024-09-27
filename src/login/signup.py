@@ -135,8 +135,8 @@ class Signup:
                 self.country_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="Enter your country")
                 self.country_entry.pack(anchor="w", fill="x", pady=(0, 8))
                 
-                ctk.CTkLabel(master=self.additional_fields_frame, text="Birth Date (YYYY-MM-DD)*", anchor="w").pack(anchor="w")
-                self.birth_date_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="YYYY-MM-DD")
+                ctk.CTkLabel(master=self.additional_fields_frame, text="Birth Date (DD/MM/YYYY)*", anchor="w").pack(anchor="w")
+                self.birth_date_entry = ctk.CTkEntry(master=self.additional_fields_frame, placeholder_text="DD/MM/YYYY")
                 self.birth_date_entry.pack(anchor="w", fill="x", pady=(0, 8))
             else:
                 # Campos para Publisher
