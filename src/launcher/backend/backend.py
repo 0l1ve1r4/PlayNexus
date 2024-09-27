@@ -22,7 +22,7 @@ class ConnectDB:
         self.cursor.close()
         self.session.close()
 
-    def execute(self, sql: str, values: tuple):
+    def execute(self, sql: str, values = ()):
         self.cursor.execute(sql, values)
 
     def result(self):
