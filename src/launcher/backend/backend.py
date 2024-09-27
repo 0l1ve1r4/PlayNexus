@@ -259,7 +259,7 @@ def count_gamers() -> int:
                      SELECT *
                      FROM Gamer
 
-                     """, ())
+                     """,)
     return len(database.results())
 
 def create_publisher(account: str, name: str) -> bool:
@@ -318,7 +318,7 @@ def count_publishers() -> int:
                      SELECT *
                      FROM Publisher
                      
-                     """, ())
+                     """,)
     return len(database.results())
 
 ######################################################################################################
@@ -393,7 +393,7 @@ def get_all_games() -> list:
     database.execute("""
                      
                      SELECT title, publisher, developer, genre, publisher, description, cover, price
-                     FROM Game""", ())  # Pass an empty tuple for the values argument
+                     FROM Game""",)  # Pass an empty tuple for the values argument
     
     return database.results()
 
