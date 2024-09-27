@@ -36,7 +36,7 @@ INSERT INTO Publisher VALUES
 -- Populate the Game table with sample data:
 INSERT INTO Game VALUES
     ('FIFA 24', 'ana.pereira@ea.com', 'EA Sports', 'Esporte', '2023-09-29', 'O mais recente jogo da série FIFA, oferecendo uma experiência de futebol realista com gráficos melhorados e novos modos de jogo.', NULL, NULL, NULL, 59.99),
-    ('Assassin\'s Creed Mirage', 'joao.almeida@ubsoft.com', 'Ubisoft Bordeaux', 'Ação/Aventura', '2023-10-05', 'Um jogo de ação e aventura ambientado na Bagdá medieval, com foco em furtividade e exploração.', NULL, NULL, NULL, 54.99),
+    ('Assassins Creed Mirage', 'joao.almeida@ubsoft.com', 'Ubisoft Bordeaux', 'Ação/Aventura', '2023-10-05', 'Um jogo de ação e aventura ambientado na Bagdá medieval, com foco em furtividade e exploração.', NULL, NULL, NULL, 54.99),
     ('Call of Duty: Modern Warfare II', 'julia.ferreira@activision.com', 'Infinity Ward', 'Tiro em Primeira Pessoa', '2022-10-28', 'A continuação da popular série Modern Warfare, com uma campanha intensa e modos multijogador expansivos.', NULL, NULL, NULL, 69.99),
     ('Starfield', 'tiago.melo@bethesda.com', 'Bethesda Game Studios', 'RPG', '2023-09-06', 'Um RPG espacial de mundo aberto, permitindo aos jogadores explorar uma galáxia vasta e cheia de mistérios.', NULL, NULL, NULL, 69.99),
     ('Grand Theft Auto VI', 'isabela.silva@take-two.com', 'Rockstar Games', 'Ação/Aventura', '2024-03-05', 'O aguardado próximo título da série GTA, prometendo uma cidade vibrante e uma narrativa rica com múltiplas opções de jogabilidade.', NULL, NULL, NULL, 74.99),
