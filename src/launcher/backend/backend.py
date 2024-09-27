@@ -68,7 +68,7 @@ def get_game_path(account: str, game_title: str) -> str:
     
     #"""Return the path to the game."""
     
-    game_path = ""
+    game_path = get_games_path(account)
     if platform.system() == "Linux":
         extension = ".run"
     elif platform.system() == "Windows":
@@ -108,9 +108,16 @@ def fetch_user_details(email: str) -> dict:
     #retorna o tipo do usuario
     """Fetch user details from the database."""
     database = ConnectDB()
-    database.execute("SELECT email, type FROM Account WHERE email = %s", (email,))
+    database.execute("""
+                     
+                     SELECT email, type
+                     FROM Account
+                     WHERE email = %s
+                     
+                     """, (email,))
     result = database.result()
-    if result is None: return None
+    if result is None:
+        return None
     return {"email": result[0], "type": result[1]}
 
 
@@ -120,7 +127,13 @@ def update_username(new_username:str, username: str, email: str) -> bool:
     
     #"""Update the user's username in the database."""
     database = ConnectDB()
-    database.execute("UPDATE Gamer SET username = %s WHERE username = %s AND email = %s", (new_username, username, email))
+    database.execute("""
+                     
+                     UPDATE Gamer
+                     SET username = %s
+                     WHERE username = %s AND email = %s
+                     
+                     """, (new_username, username, email))
     database.commit()
     return True
 
@@ -131,14 +144,25 @@ def create_user(email: str, password: str, user_type: str) -> bool:
     #"""Create a user in the Account table."""
     database = ConnectDB()
     # Verificar se o email já existe
-    database.execute("SELECT email FROM Account WHERE email = %s", (email,))
+    database.execute("""
+                     
+                     SELECT email
+                     FROM Account
+                     WHERE email = %s
+                     
+                     """, (email,))
     if database.result():
         # Email já existe
         print("Email já existe no banco de dados.")
         return False
     # Inserir nova conta
     try:
-        database.execute("INSERT INTO Account (email, password, type) VALUES (%s, %s, %s)", (email, password, user_type))
+        database.execute("""
+                         
+                         INSERT INTO Account (email, password, type)
+                         VALUES (%s, %s, %s)
+                         
+                         """, (email, password, user_type))
         database.commit()
         print("Conta criada com sucesso.")
         return True
@@ -150,21 +174,35 @@ def create_gamer(account: str, username: str, birth_date: str, country: str) -> 
     """Create and set gamer details in the database."""
     database = ConnectDB()
     # Verifica se a conta existe e é do tipo Gamer
-    database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Gamer'", (account,))
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Account
+                     WHERE email = %s AND type = 'Gamer'
+                     
+                     """, (account,))
     if database.result() is None:
         print("Conta não encontrada ou não é do tipo Gamer.")
         return False
     # Verifica se o username já está em uso
-    database.execute("SELECT * FROM Gamer WHERE username = %s", (username,))
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Gamer
+                     WHERE username = %s
+                     
+                     """, (username,))
     if database.result():
         print("Username já está em uso.")
         return False
     # Insere os detalhes do Gamer
     try:
-        database.execute(
-            "INSERT INTO Gamer (account, username, birth_date, country) VALUES (%s, %s, %s, %s)",
-            (account, username, birth_date, country)
-        )
+        database.execute("""
+                         
+                         INSERT INTO Gamer (account, username, birth_date, country)
+                         VALUES (%s, %s, %s, %s)
+                         
+                         """, (account, username, birth_date, country))
         database.commit()
         print("Gamer criado com sucesso.")
         return True
@@ -177,7 +215,13 @@ def fetch_account_details(account: str) -> dict:
     database = ConnectDB()
     # verifica o tipo de usuario no banco
     # Check the account type from the Account table
-    database.execute("SELECT type FROM Account WHERE email = %s", (account,))
+    database.execute("""
+                     
+                     SELECT type
+                     FROM Account
+                     WHERE email = %s
+                     
+                     """, (account,))
     account_type = database.result()
     
     if account_type is None: 
@@ -195,28 +239,51 @@ def fetch_account_details(account: str) -> dict:
 def fetch_gamer_details(account: str) -> dict:
     #"""Fetch gamer details from the database."""
     database = ConnectDB()
-    database.execute("SELECT * FROM Gamer WHERE account = %s", (account,))
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Gamer
+                     WHERE account = %s
+                     
+                     """, (account,))
     result = database.result()
-    if result is None: return None
+    if result is None:
+        return None
     return {"account": result[0], "name": result[1], "birth_date": result[2], "country": result[3], "bio": result[4]}
 
 def count_gamers() -> int:
     #"""Count the number of gamers in the database."""
     database = ConnectDB()
-    database.execute("SELECT * FROM Gamer")
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Gamer
+
+                     """, ())
     return len(database.results())
 
 def create_publisher(account: str, name: str) -> bool:
     #"""Create and set publisher details in the database."""
     database = ConnectDB()
     # Verificar se a conta existe e é do tipo Publisher
-    database.execute("SELECT * FROM Account WHERE email = %s AND type = 'Publisher'", (account,))
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Account
+                     WHERE email = %s AND type = 'Publisher'
+                     
+                     """, (account,))
     if database.result() is None:
         print("Conta não encontrada ou não é do tipo Publisher.")
         return False
     # Inserir os detalhes do Publisher
     try:
-        database.execute("INSERT INTO Publisher (account, name) VALUES (%s, %s)", (account, name))
+        database.execute("""
+                         
+                         INSERT INTO Publisher (account, name)
+                         VALUES (%s, %s)
+                         
+                         """, (account, name))
         database.commit()
         print("Publisher criado com sucesso.")
         return True
@@ -229,9 +296,16 @@ def fetch_publisher_details(account: str) -> dict:
     #"""Fetch publisher details from the database."""
     
     database = ConnectDB()
-    database.execute("SELECT * FROM Publisher WHERE account = %s", (account,))
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Publisher
+                     WHERE account = %s
+                     
+                     """, (account,))
     result = database.result()
-    if result is None: return None
+    if result is None:
+        return None
     return {"account": result[0], "name": result[1]}
 
 def count_publishers() -> int:
@@ -239,7 +313,12 @@ def count_publishers() -> int:
     #"""Count the number of publishers in the database."""
     
     database = ConnectDB()
-    database.execute("SELECT * FROM Publisher")
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Publisher
+                     
+                     """, ())
     return len(database.results())
 
 ######################################################################################################
@@ -260,11 +339,20 @@ def publish_game(game) -> bool:
     
     """Publish a game in the store."""
     database = ConnectDB()
-    database.execute("SELECT * FROM Publisher WHERE account = %s", (publisher,))
-    if database.result() is None: return False
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Publisher
+                     WHERE account = %s
+                     
+                     """, (publisher,))
+    if database.result() is None:
+        return False
     database.execute("SELECT * FROM Game WHERE title = %s AND publisher = %s", (title, publisher))
-    if database.result() is not None: return False
-    #if os.path.exists(cover_path) is False: return False
+    if database.result() is not None:
+        return False
+    #if os.path.exists(cover_path) is False:
+    #    return False
     #cover = zlib.compress(open(cover_path, "rb").read())
     #if linux_installer_path is not None:
     #    if os.path.exists(linux_installer_path) is False: return False
@@ -274,7 +362,12 @@ def publish_game(game) -> bool:
     #    if os.path.exists(windows_installer_path) is False: return False
     #    windows_installer = zlib.compress(open(windows_installer_path, "rb").read())
     #else: windows_installer = None
-    database.execute("INSERT INTO Game (title, publisher, developer, genre, description, price) VALUES (%s, %s, %s, %s, %s, %s)", (title, publisher, developer, genre, description, price))
+    database.execute("""
+                     
+                     INSERT INTO Game (title, publisher, developer, genre, description, price)
+                     VALUES (%s, %s, %s, %s, %s, %s)
+                     
+                     """, (title, publisher, developer, genre, description, price))
     database.commit()
     return True
 
@@ -283,16 +376,25 @@ def get_games_by_publisher(publisher: str) -> list:
         """Fetch games from the database by publisher."""
         
         database = ConnectDB()
-        database.execute("SELECT title, publisher, developer, genre, publisher, description, cover, price FROM Game WHERE publisher = %s", (publisher,))
+        database.execute("""
+                         
+                         SELECT title, publisher, developer, genre, publisher, description, cover, price
+                         FROM Game
+                         WHERE publisher = %s
+                         
+                         """, (publisher,))
         return database.results()
 
 def get_all_games() -> list:
-    
-    
+
     #"""Fetch all games from the database."""
     
     database = ConnectDB()
-    database.execute("SELECT * FROM Game", ())  # Pass an empty tuple for the values argument
+    database.execute("""
+                     
+                     SELECT title, publisher, developer, genre, publisher, description, cover, price
+                     FROM Game""", ())  # Pass an empty tuple for the values argument
+    
     return database.results()
 
 
@@ -306,14 +408,15 @@ def search_in_store(query: str) -> dict:
     database = ConnectDB()
     
     # Usamos %query% para buscar termos parciais no título ou descrição
-    
-    sql = """
-    SELECT title, publisher, developer, genre, price 
-    FROM Game 
-    WHERE title LIKE %s OR description LIKE %s
-    """
+
     search_term = f"%{query}%"
-    database.execute(sql, (search_term, search_term))
+    database.execute("""
+                     
+                     SELECT title, publisher, developer, genre, price
+                     FROM Game
+                     WHERE title LIKE %s OR description LIKE %s
+
+                     """, (search_term, search_term))
     
     # Pega todos os resultados da consulta
     results = database.results()
@@ -356,7 +459,13 @@ def search_in_store(query: str) -> dict:
 def get_library(gamer: str) -> list:
     """Fetch all games in the user's library."""
     database = ConnectDB()
-    database.execute("SELECT * FROM Purchase WHERE gamer = %s", (gamer,))
+    database.execute("""
+                     
+                     SELECT *
+                     FROM Purchase
+                     WHERE gamer = %s
+                     
+                     """, (gamer,))
     return database.results()
 
 def count_games_in_library(gamer: str) -> int:
@@ -369,34 +478,51 @@ def game_is_installed(gamer: str, game_title: str) -> bool:
 
 def install_game(gamer: str, game_title: str, game_publisher: str) -> bool:
     """Install a game from the user's library."""
-    if game_is_installed(gamer, game_title): return False
-    if platform.system() == "Linux": attribute = "linux_installer"
-    elif platform.system() == "Windows": attribute = "windows_installer"
-    else: return False
+    if game_is_installed(gamer, game_title):
+        return False
+    if platform.system() == "Linux":
+        attribute = "linux_installer"
+    elif platform.system() == "Windows":
+        attribute = "windows_installer"
+    else:
+        return False
     database = ConnectDB()
-    database.execute(f"SELECT {attribute} FROM Game WHERE title = %s AND publisher = %s", (game_title, game_publisher))
+    database.execute(f"""
+                     
+                     SELECT {attribute}
+                     FROM Game
+                     WHERE title = %s AND publisher = %s
+                     
+                     """, (game_title, game_publisher))
     result = database.result()
-    if result is None: return False
-    if result[0] is None: return False
+    if result is None:
+        return False
+    if result[0] is None:
+        return False
     installer = zlib.decompress(result[0])
     game_path = get_game_path(gamer, game_title)
-    with open(game_path, "wb") as file: file.write(installer)
+    with open(game_path, "wb") as file:
+        file.write(installer)
     return True
 
 def uninstall_game(gamer: str, game_title: str) -> bool:
     """Uninstall a game from the user's library."""
-    if game_is_installed(gamer, game_title) is False: return False
+    if game_is_installed(gamer, game_title) is False:
+        return False
     os.remove(get_game_path(gamer, game_title))
     return True
 
 def play_game(gamer: str, game_title: str) -> bool:
     """Play a game from the user's library."""
-    if game_is_installed(gamer, game_title) is False: return False
+    if game_is_installed(gamer, game_title) is False:
+        return False
     game_path = get_game_path(gamer, game_title)
     if platform.system() == "Linux":
         print("oi")
         os.system(f"chmod +x {game_path}")
         os.system(f"{game_path}")
-    elif platform.system() == "Windows": os.system(game_path)
-    else: return False
+    elif platform.system() == "Windows":
+        os.system(game_path)
+    else:
+        return False
     return True
