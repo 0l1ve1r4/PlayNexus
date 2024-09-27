@@ -278,6 +278,14 @@ def publish_game(game) -> bool:
     database.commit()
     return True
 
+def get_games_by_publisher(publisher: str) -> list:
+        
+        """Fetch games from the database by publisher."""
+        
+        database = ConnectDB()
+        database.execute("SELECT title, publisher, developer, genre, publisher, description, cover, price FROM Game WHERE publisher = %s", (publisher,))
+        return database.results()
+
 def get_all_games() -> list:
     
     
