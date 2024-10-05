@@ -125,10 +125,12 @@ The class diagram is composed of the following main components:
 
 ## Class Diagram
 
-Here is the class diagram of the system:
-
 ![1727367822418](image/class_/1727367822418.png)
 
-## Conclusion
+# UML Use Case
 
-The class diagram above provides a detailed view of the internal structure of the PlayNexus system, showing the responsibilities and interactions of the main classes. It serves as a valuable tool to understand how the system is organized and how its components interact.
+![1728133228324](image/class_diagram/1728133228324.png)
+
+# UML Activity Diagram
+
+![1728133391896](image/class_diagram/1728133391896.png)
