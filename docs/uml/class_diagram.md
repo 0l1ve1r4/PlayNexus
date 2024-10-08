@@ -127,9 +127,9 @@ The class diagram is composed of the following main components:
 
 ![1727367822418](image/class_/1727367822418.png)
 
-# UML Use Case
+# UML Use Case Diagram
 
-![1728133228324](image/class_diagram/1728133228324.png)
+![1728133228324](image/UCD_PlayNexus.png)
 
 # UML Activity Diagram
 
