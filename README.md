@@ -31,11 +31,10 @@
 
   - [Entity Relationship Model](/docs/database/entityRelationship.md)
   - [Relational Model](docs\database\relationalModel.md)
-- **Prototypes**
-
-  - [UI Prototypes](/docs/diagram/diagramModel.md)
 - **Diagrams**
 
   - [UML Diagrams](/docs/uml/class_diagram.md)
+- **Prototypes**
 
+  - [UI Prototypes](/docs/diagram/diagramModel.md)
 ---
